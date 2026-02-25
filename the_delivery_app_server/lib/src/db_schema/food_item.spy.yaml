@@ -1,0 +1,7 @@
+class: FoodItem
+table: food_item
+fields:
+  foodName: String
+  foodPrice: double
+  foodRating: double
+  foodThumbnail: String?

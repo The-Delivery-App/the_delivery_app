@@ -1,0 +1,9 @@
+class: RestaurantPlace
+table: restaurant_place
+fields:
+  city: String
+  restId: int, relation(parent=restaurant)
+  country: String
+  postcode: String
+  addressLine1: String
+  addressLine2: String?

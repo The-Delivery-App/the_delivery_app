@@ -1,0 +1,5 @@
+class: Restaurant
+table: restaurant
+fields:
+  restName: String
+  logoThumb: String?
