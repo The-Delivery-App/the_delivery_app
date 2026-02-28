@@ -1,0 +1,7 @@
+class: Courier
+table: courier
+fields:
+  fname: String
+  lname: String
+  carName: String
+  plateNum: String

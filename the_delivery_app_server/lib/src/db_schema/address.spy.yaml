@@ -1,0 +1,9 @@
+class: Address
+table: address
+fields:
+  userId: int, relation(parent=user)
+  country: String
+  city: String
+  postcode: String
+  addressLine1: String
+  addressLine2: String? 

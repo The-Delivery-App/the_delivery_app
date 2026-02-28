@@ -1,0 +1,6 @@
+class: SpecialDeals
+table: special_deals
+fields:
+  placeId: int, relation(parent=restaurant_place)
+  thumbnail: String?
+  description: String

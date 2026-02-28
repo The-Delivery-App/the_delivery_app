@@ -1,0 +1,6 @@
+class: FoodDeal
+table: food_deal
+fields:
+  specialDealId: int, relation(parent=special_deals)
+  foodId: int, relation(parent=food_item)
+  itemQty: int

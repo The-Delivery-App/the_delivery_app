@@ -1,0 +1,5 @@
+class: Basket
+table: basket
+fields:
+  userId: int, relation(parent=user)
+  lastUpdated: DateTime

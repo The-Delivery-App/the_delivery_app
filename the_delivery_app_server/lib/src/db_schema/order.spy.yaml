@@ -1,0 +1,6 @@
+class: Order
+table: order
+fields:
+  time: DateTime
+  isSplit: bool
+  currentStatus: String
