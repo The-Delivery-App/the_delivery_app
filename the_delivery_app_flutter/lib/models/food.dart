@@ -11,6 +11,9 @@ class Food {
   final Time deliveryTime;
   final FoodUnitType unitType;
   final int size;
+  final int calories;
+  final bool isDiscounted;
+
 
   const Food({
     required this.id,
@@ -25,5 +28,7 @@ class Food {
     required this.deliveryTime,
     required this.unitType,
     required this.size,
+    required this.calories,
+    required this.isDiscounted
   });
 }
