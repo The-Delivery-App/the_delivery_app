@@ -8,7 +8,7 @@ class Food {
   final String restaurantImageUrl;
   final Restaurant restaurant;
   final int recentOrders;
-  final Time deliveryTime;
+  final Duration deliveryTime;
   final FoodUnitType unitType;
   final int size;
   final int calories;
