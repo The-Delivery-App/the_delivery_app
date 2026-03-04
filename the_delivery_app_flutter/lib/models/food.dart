@@ -9,6 +9,8 @@ class Food {
   final Restaurant restaurant;
   final int recentOrders;
   final Time deliveryTime;
+  final FoodUnitType unitType;
+  final int size;
 
   const Food({
     required this.id,
@@ -20,6 +22,8 @@ class Food {
     required this.restaurantImageUrl,
     required this.restaurant,
     required this.recentOrders,
-    required this.deliveryTime
+    required this.deliveryTime,
+    required this.unitType,
+    required this.size,
   });
 }
