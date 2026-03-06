@@ -1,7 +1,1 @@
-enum foodUnitType {
-  ml,
-  l,
-  kg,
-  g,
-  pcs
-}
+enum FoodUnitType { ml, l, kg, g, pcs }

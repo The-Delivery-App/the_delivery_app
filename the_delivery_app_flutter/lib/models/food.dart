@@ -1,3 +1,6 @@
+import 'food_unit_type.dart';
+import 'restaurant.dart';
+
 class Food {
   final String id;
   final String name;
@@ -14,7 +17,6 @@ class Food {
   final int calories;
   final bool isDiscounted;
 
-
   const Food({
     required this.id,
     required this.name,
@@ -29,6 +31,6 @@ class Food {
     required this.unitType,
     required this.size,
     required this.calories,
-    required this.isDiscounted
+    required this.isDiscounted,
   });
 }

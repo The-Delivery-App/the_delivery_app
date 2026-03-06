@@ -1,6 +1,12 @@
+import '../models/device_profile.dart';
+import '../models/food.dart';
+import '../models/food_filters.dart';
+import '../models/food_sort_rule.dart';
+import '../models/location.dart';
+
 abstract class IFoodRepository {
   // Read USE CASE FROM THE WORD DOCUMENT(2.2) "SCROLLING FEED" TO UNDERSTAND WHATS GOING ON.
-  
+
   /// Initializes a new feed portion for the given session and location.
   /// This resets internal cursors and discards previous feed data.
   Future<void> initializeFeed({

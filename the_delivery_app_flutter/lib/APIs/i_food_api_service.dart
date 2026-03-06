@@ -1,3 +1,9 @@
+import '../dtos/feed_portion_dto.dart';
+import '../dtos/food_dto.dart';
+import '../dtos/price_tier_info_dto.dart';
+import '../models/food_filters.dart';
+import '../models/location.dart';
+
 abstract class IFoodApiService {
   /// Requests a feed portion for the given session and location.
   /// Returns up to 500 Food IDs mixed across restaurants.
