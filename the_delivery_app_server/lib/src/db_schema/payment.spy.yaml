@@ -2,7 +2,7 @@ class: Payment
 table: payment
 fields:
   userId: int, relation(parent=user)
-  orderId: int, relation(parent=orders)
+  orderId: int, relation(parent=order)
   amount: double
   createdAt: DateTime
   transactionTime: DateTime
