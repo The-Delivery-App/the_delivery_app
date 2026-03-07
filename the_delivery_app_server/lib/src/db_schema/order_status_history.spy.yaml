@@ -1,0 +1,6 @@
+class: OrderStatusHistory
+table: order_status_history
+fields:
+  orderId: int, relation(parent=order)
+  status: OrderStatus
+  time: DateTime

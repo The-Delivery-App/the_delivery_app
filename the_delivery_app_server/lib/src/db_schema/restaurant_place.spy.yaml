@@ -1,8 +1,9 @@
 class: RestaurantPlace
 table: restaurant_place
 fields:
-  city: String
   restId: int, relation(parent=restaurant)
+  name: String?
+  city: String
   country: String
   postcode: String
   addressLine1: String

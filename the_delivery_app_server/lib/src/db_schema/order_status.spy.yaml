@@ -1,0 +1,9 @@
+enum: OrderStatus
+serialized: byName
+values:
+  - placed
+  - confirmed
+  - assigned
+  - restaurant
+  - customer
+  - delivered

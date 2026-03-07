@@ -1,0 +1,4 @@
+class: Tag
+table: tag
+fields:
+  tagName: String

@@ -1,0 +1,5 @@
+class: FoodTag
+table: food_tag
+fields:
+  tagId: int, relation(parent=tag)
+  foodId: int, relation(parent=food_item)

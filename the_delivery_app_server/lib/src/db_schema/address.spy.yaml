@@ -2,6 +2,7 @@ class: Address
 table: address
 fields:
   userId: int, relation(parent=user)
+  isDefault: bool
   country: String
   city: String
   postcode: String

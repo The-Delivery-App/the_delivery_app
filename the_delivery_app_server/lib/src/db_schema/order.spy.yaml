@@ -1,6 +1,8 @@
 class: Order
 table: order
 fields:
+  courierId: int?, relation(parent=courier)
+  userId: int, relation(parent=user)
   time: DateTime
   isSplit: bool
-  currentStatus: String
+  currentStatus: OrderStatus

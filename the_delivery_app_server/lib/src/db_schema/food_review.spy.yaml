@@ -1,0 +1,7 @@
+class: FoodReview
+table: food_review
+fields:
+  userId: int, relation(parent=user)
+  foodId: int, relation(parent=food_item)
+  rating: double
+  comment: String?

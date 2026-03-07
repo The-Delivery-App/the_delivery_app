@@ -1,0 +1,6 @@
+class: BasketFood
+table: basket_food
+fields:
+  basketId: int, relation(parent=basket)
+  foodId: int, relation(parent=food_item)
+  qty: int

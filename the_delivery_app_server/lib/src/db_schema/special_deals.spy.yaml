@@ -4,3 +4,4 @@ fields:
   placeId: int, relation(parent=restaurant_place)
   thumbnail: String?
   description: String
+  discountAmount: double

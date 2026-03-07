@@ -3,5 +3,6 @@ table: courier
 fields:
   fname: String
   lname: String
+  phone: String
   carName: String
   plateNum: String
