@@ -1,3 +1,7 @@
+feedController:
+  - getFeedChunk:
+  - applyFilter:
+  - getMunicipalities:
 emailIdp:
   - login:
   - startRegistration:
