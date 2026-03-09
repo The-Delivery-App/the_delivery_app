@@ -48,7 +48,7 @@ class FeedController extends Endpoint {
       }
 
       // In Serverpod 2+, database access is via session.db (not server.database)
-      final foodDAO = FoodDAO(session.db);
+      final foodDAO = FoodDAO(session);
       final feedService = FeedService(foodDAO: foodDAO);
 
       final userLocation = Location(
@@ -140,7 +140,7 @@ class FeedController extends Endpoint {
   /// Retrieves available municipalities for location selection.
   Future<MunicipalitiesResponse> getMunicipalities(Session session) async {
     try {
-      final foodDAO = FoodDAO(session.db);
+      final foodDAO = FoodDAO(session);
       final municipalities = await foodDAO.getAllMunicipalities();
 
       return MunicipalitiesResponse(
