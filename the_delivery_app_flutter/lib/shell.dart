@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'views/feed/feed_view.dart';
-import 'views/search/search_view.dart';
 import 'views/basket/basket_view.dart';
 import 'views/orders/orders_view.dart';
 import 'views/account/account_view.dart';
@@ -18,7 +17,6 @@ class _ShellState extends State<Shell> {
   // Order must match NavigationBar destinations below
   static const _pages = <Widget>[
     FeedView(),
-    SearchView(),
     BasketView(),
     OrdersView(),
     AccountView(),
@@ -45,11 +43,6 @@ class _ShellState extends State<Shell> {
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home, color: Color(0xFFFF5722)),
             label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.search_outlined),
-            selectedIcon: Icon(Icons.search, color: Color(0xFFFF5722)),
-            label: 'Search',
           ),
           NavigationDestination(
             icon: Icon(Icons.shopping_basket_outlined),

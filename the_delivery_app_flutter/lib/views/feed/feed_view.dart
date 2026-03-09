@@ -110,12 +110,27 @@ class FeedView extends StatefulWidget {
 
 class _FeedViewState extends State<FeedView> {
   int _selectedFilter = 0;
+  String _searchQuery = '';
 
   // Applies the selected chip filter to the current feed data
   List<FoodDTO> get _filteredFeed {
-    if (_selectedFilter == 0) return _sampleFeed;
-    final label = _filterLabels[_selectedFilter];
-    return _sampleFeed.where((f) => f.tags.contains(label)).toList();
+    final byChip = _selectedFilter == 0
+        ? _sampleFeed
+        : _sampleFeed
+              .where((f) => f.tags.contains(_filterLabels[_selectedFilter]))
+              .toList();
+
+    if (_searchQuery.trim().isEmpty) return byChip;
+
+    final query = _searchQuery.toLowerCase().trim();
+    return byChip.where((f) {
+      final matchesName = f.name.toLowerCase().contains(query);
+      final matchesRestaurant = f.restaurantName.toLowerCase().contains(query);
+      final matchesTags = f.tags.any(
+        (tag) => tag.toLowerCase().contains(query),
+      );
+      return matchesName || matchesRestaurant || matchesTags;
+    }).toList();
   }
 
   @override
@@ -197,34 +212,35 @@ class _FeedViewState extends State<FeedView> {
   Widget _buildSearchBar(ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      // Placeholder search entry point until SearchView navigation is wired.
-      child: GestureDetector(
-        onTap: () {
-          // TODO: navigate to SearchView
-        },
-        child: Container(
-          height: 48,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.06),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              const SizedBox(width: 12),
-              const Icon(Icons.search, color: Colors.grey),
-              const SizedBox(width: 8),
-              Text(
-                'Search restaurants or dishes...',
-                style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
-              ),
-            ],
+
+      // Inline search lives in Home and filters the visible feed
+      child: Container(
+        height: 48,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: TextField(
+          onChanged: (value) => setState(() => _searchQuery = value),
+          decoration: InputDecoration(
+            prefixIcon: const Icon(Icons.search, color: Colors.grey),
+            hintText: 'Search restaurants or dishes...',
+            hintStyle: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(vertical: 14),
+            suffixIcon: _searchQuery.isEmpty
+                ? null
+                : IconButton(
+                    icon: const Icon(Icons.close, size: 18),
+                    onPressed: () => setState(() => _searchQuery = ''),
+                  ),
           ),
         ),
       ),
