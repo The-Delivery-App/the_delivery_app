@@ -2,6 +2,7 @@ import 'package:the_delivery_app_client/the_delivery_app_client.dart';
 import 'package:flutter/material.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
+import 'shell.dart';
 
 late final Client client;
 
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'The Delivery App',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const Placeholder(), // TODO: Add home screen here
+      home: const Shell(),
     );
   }
 }
