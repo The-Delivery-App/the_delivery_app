@@ -6,3 +6,7 @@ fields:
   foodPrice: double
   foodRating: double
   foodThumbnail: String?
+  description: String?
+  nutritionCals: int?
+  estimatedOrders: int, default=0
+  createdAt: DateTime

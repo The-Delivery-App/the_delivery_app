@@ -1,172 +1,192 @@
 import 'package:serverpod/serverpod.dart';
 import '../../business/models/food.dart';
 import '../../business/models/location.dart';
-import '../../business/models/restaurant.dart'; // changed: was restaurant_info.dart
+import '../../business/models/restaurant.dart';
+
+// ignore: uri_does_not_exist
+import 'package:the_delivery_app_server/src/generated/food_item.dart'
+    as gen_food;
+// ignore: uri_does_not_exist
+import 'package:the_delivery_app_server/src/generated/restaurant.dart'
+    as gen_rest;
+// ignore: uri_does_not_exist
+import 'package:the_delivery_app_server/src/generated/restaurant_place.dart'
+    as gen_place;
 
 /// Data Access Object for food-related database operations.
 /// Handles retrieving food items and restaurant information.
+
 class FoodDAO {
-  final Database _db;
+  final Session _session;
 
-  FoodDAO(this._db);
+  FoodDAO(this._session);
 
-  /// Retrieves food items within a specified distance from user location.
-  /// Applies filters and limits results based on feed parameters.
+  /// Retrieves food items for restaurants located in a given city/municipality.
+  /// Applies optional rating and price filters, then returns a paginated slice.
   Future<List<Food_DTO>> getFoodByMunicipality(
     String municipality, {
     int limit = 200,
     int offset = 0,
     Map<String, dynamic>? filters,
   }) async {
-    try {
-      String query = '''
-        SELECT DISTINCT f.* FROM food_item f
-        JOIN restaurant r ON f.restaurant_id = r.id
-        WHERE r.municipality = ?
-      ''';
+    // Step 1 — find all restaurant branches in the requested city.
+    final places = await gen_place.RestaurantPlace.db.find(
+      _session,
+      where: (t) => t.city.equals(municipality),
+    );
 
-      List<dynamic> values = [municipality];
+    if (places.isEmpty) return [];
 
-      if (filters != null && filters['minRating'] != null) {
-        query += ' AND f.rating >= ?';
-        values.add(filters['minRating']);
-      }
+    final restaurantIds = places.map((p) => p.restId).toSet();
 
-      if (filters != null && filters['maxPrice'] != null) {
-        query += ' AND f.price <= ?';
-        values.add(filters['maxPrice']);
-      }
+    // Step 2 — fetch food items for those restaurants, applying any filters.
+    final items = await gen_food.FoodItem.db.find(
+      _session,
+      where: (t) {
+        Expression expr = t.restId.inSet(restaurantIds);
 
-      query +=
-          ' ORDER BY f.rating DESC, f.estimated_orders DESC LIMIT ? OFFSET ?';
-      values.addAll([limit, offset]);
+        if (filters?['minRating'] != null) {
+          final minRating = (filters!['minRating'] as num).toDouble();
+          expr = expr & t.foodRating.greaterOrEquals(minRating);
+        }
 
-      final result = await _db.query(query, substitutionValues: values);
+        if (filters?['maxPrice'] != null) {
+          final maxPrice = (filters!['maxPrice'] as num).toDouble();
+          expr = expr & t.foodPrice.lessOrEquals(maxPrice);
+        }
 
-      return result.map((row) => _mapRowToFood(row)).toList();
-    } catch (e) {
-      rethrow;
-    }
+        return expr;
+      },
+      orderBy: (t) => t.foodRating,
+      orderDescending: true,
+      limit: limit,
+      offset: offset,
+    );
+
+    return items.map(_mapModelToFood).toList();
   }
 
-  /// Retrieves restaurant information by ID.
+  /// Retrieves restaurant information (brand + first branch location) by ID.
   Future<RestaurantInfo?> getRestaurantById(int restaurantId) async {
-    try {
-      final result = await _db.query(
-        '''SELECT id, name, icon_url, latitude, longitude, 
-                  municipality, estimated_delivery_time, cuisine 
-           FROM restaurant WHERE id = ?''',
-        substitutionValues: [restaurantId],
-      );
+    final restaurant = await gen_rest.Restaurant.db.findById(
+      _session,
+      restaurantId,
+    );
+    if (restaurant == null) return null;
 
-      if (result.isEmpty) {
-        return null;
-      }
+    final place = await gen_place.RestaurantPlace.db.findFirstRow(
+      _session,
+      where: (t) => t.restId.equals(restaurantId),
+    );
+    if (place == null) return null;
 
-      final row = result.first;
-      return _mapRowToRestaurantInfo(row);
-    } catch (e) {
-      rethrow;
-    }
+    return _mapModelsToRestaurantInfo(restaurant, place);
   }
 
   /// Retrieves multiple restaurants by their IDs.
   Future<Map<int, RestaurantInfo>> getRestaurantsByIds(
     List<int> restaurantIds,
   ) async {
-    try {
-      if (restaurantIds.isEmpty) {
-        return {};
-      }
+    if (restaurantIds.isEmpty) return {};
 
-      final placeholders = List.filled(restaurantIds.length, '?').join(',');
-      final result = await _db.query(
-        '''SELECT id, name, icon_url, latitude, longitude, 
-                  municipality, estimated_delivery_time, cuisine 
-           FROM restaurant WHERE id IN ($placeholders)''',
-        substitutionValues: restaurantIds,
-      );
+    final restaurants = await gen_rest.Restaurant.db.find(
+      _session,
+      where: (t) => t.id.inSet(restaurantIds.toSet()),
+    );
 
-      final map = <int, RestaurantInfo>{};
-      for (final row in result) {
-        final info = _mapRowToRestaurantInfo(row);
-        map[info.restaurantId] = info;
-      }
-      return map;
-    } catch (e) {
-      rethrow;
+    // Fetch all relevant places in one query.
+    final places = await gen_place.RestaurantPlace.db.find(
+      _session,
+      where: (t) => t.restId.inSet(restaurantIds.toSet()),
+    );
+
+    // Index the first place per restaurant.
+    final placeByRestId = <int, gen_place.RestaurantPlace>{};
+    for (final place in places) {
+      placeByRestId.putIfAbsent(place.restId, () => place);
     }
+
+    final result = <int, RestaurantInfo>{};
+    for (final restaurant in restaurants) {
+      final id = restaurant.id;
+      if (id == null) continue;
+      final place = placeByRestId[id];
+      if (place == null) continue;
+      result[id] = _mapModelsToRestaurantInfo(restaurant, place);
+    }
+    return result;
   }
 
-  /// Counts total food items available in a municipality.
+  /// Counts total food items available for restaurants in a municipality.
   Future<int> countFoodByMunicipality(String municipality) async {
-    try {
-      final result = await _db.query(
-        '''SELECT COUNT(*) as count FROM food_item f
-           JOIN restaurant r ON f.restaurant_id = r.id
-           WHERE r.municipality = ?''',
-        substitutionValues: [municipality],
-      );
+    final places = await gen_place.RestaurantPlace.db.find(
+      _session,
+      where: (t) => t.city.equals(municipality),
+    );
 
-      return (result.first['count'] as int?) ?? 0;
-    } catch (e) {
-      rethrow;
-    }
-  }
+    if (places.isEmpty) return 0;
 
-  /// Retrieves all municipalities available in the database.
-  Future<List<String>> getAllMunicipalities() async {
-    try {
-      final result = await _db.query(
-        'SELECT DISTINCT municipality FROM restaurant WHERE municipality IS NOT NULL ORDER BY municipality',
-      );
+    final restaurantIds = places.map((p) => p.restId).toSet();
 
-      return result.map((row) => row['municipality'] as String).toList();
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  /// Maps a database row to a Food object.
-  Food_DTO _mapRowToFood(Map<String, dynamic> row) {
-    return Food_DTO(
-      id: row['id'] as int,
-      restaurantId: row['restaurant_id'] as int,
-      name: row['name'] as String,
-      iconUrl: row['icon_url'] as String?,
-      price: (row['price'] as num).toDouble(),
-      rating: (row['rating'] as num?)?.toDouble() ?? 0.0,
-      estimatedOrdersAmount: (row['estimated_orders'] as int?) ?? 0,
-      description: row['description'] as String?,
-      nutritionCals: row['nutrition_cals'] as int?,
-      createdAt: DateTime.parse(row['created_at'] as String),
+    return gen_food.FoodItem.db.count(
+      _session,
+      where: (t) => t.restId.inSet(restaurantIds),
     );
   }
 
-  /// Maps a database row to a RestaurantInfo object.
-  RestaurantInfo _mapRowToRestaurantInfo(Map<String, dynamic> row) {
+  /// Retrieves all distinct cities that have at least one restaurant branch.
+  Future<List<String>> getAllMunicipalities() async {
+    // DISTINCT is not expressible through the ORM, so we use a raw query.
+    final result = await _session.db.unsafeQuery(
+      'SELECT DISTINCT city FROM restaurant_place'
+      ' WHERE city IS NOT NULL ORDER BY city',
+    );
+
+    return result.map((row) => row.toColumnMap()['city'] as String).toList();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Mappers
+  // ---------------------------------------------------------------------------
+
+  Food_DTO _mapModelToFood(gen_food.FoodItem item) {
+    return Food_DTO(
+      id: item.id,
+      restaurantId: item.restId,
+      name: item.foodName,
+      iconUrl: item.foodThumbnail,
+      price: item.foodPrice,
+      rating: item.foodRating,
+      estimatedOrdersAmount: item.estimatedOrders,
+      description: item.description,
+      nutritionCals: item.nutritionCals,
+      createdAt: item.createdAt,
+    );
+  }
+
+  RestaurantInfo _mapModelsToRestaurantInfo(
+    gen_rest.Restaurant restaurant,
+    gen_place.RestaurantPlace place,
+  ) {
     final location = Location(
-      latitude: (row['latitude'] as num).toDouble(),
-      longitude: (row['longitude'] as num).toDouble(),
-      municipality: row['municipality'] as String?,
+      latitude: place.latitude,
+      longitude: place.longitude,
+      municipality: place.city,
     );
 
     return RestaurantInfo(
-      restaurantId: row['id'] as int,
-      name: row['name'] as String,
-      iconUrl: row['icon_url'] as String?,
+      restaurantId: restaurant.id!,
+      name: restaurant.restName,
+      iconUrl: restaurant.logoThumb,
       location: location,
-      estimatedDeliverytime:
-          (row['estimated_delivery_time'] as num?)?.toDouble() ?? 30.0,
-      cuisine: _parseCuisine(row['cuisine'] as String?),
+      estimatedDeliverytime: restaurant.estimatedDeliveryTime,
+      cuisine: _parseCuisine(restaurant.cuisine),
     );
   }
 
-  /// Parses cuisine types from database format.
+  /// Parses a comma-separated cuisine string from the database.
   List<String>? _parseCuisine(String? cuisineStr) {
-    if (cuisineStr == null || cuisineStr.isEmpty) {
-      return null;
-    }
+    if (cuisineStr == null || cuisineStr.isEmpty) return null;
     return cuisineStr.split(',').map((c) => c.trim()).toList();
   }
 }

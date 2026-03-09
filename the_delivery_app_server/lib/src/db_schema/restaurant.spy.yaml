@@ -3,3 +3,5 @@ table: restaurant
 fields:
   restName: String
   logoThumb: String?
+  estimatedDeliveryTime: double, default=30.0
+  cuisine: String?

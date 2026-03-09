@@ -8,3 +8,5 @@ fields:
   postcode: String
   addressLine1: String
   addressLine2: String?
+  latitude: double
+  longitude: double
