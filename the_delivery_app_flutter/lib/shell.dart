@@ -15,6 +15,7 @@ class Shell extends StatefulWidget {
 class _ShellState extends State<Shell> {
   int _currentIndex = 0;
 
+  // Order must match NavigationBar destinations below
   static const _pages = <Widget>[
     FeedView(),
     SearchView(),
@@ -26,12 +27,16 @@ class _ShellState extends State<Shell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // IndexedStack keeps tab state alive when switching tabs
       body: IndexedStack(
         index: _currentIndex,
         children: _pages,
       ),
+
+      // Bottom navigation for switching between the apps primary sections
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
+
         onDestinationSelected: (index) => setState(() => _currentIndex = index),
         backgroundColor: Colors.white,
         indicatorColor: const Color(0xFFFFCCBC),
