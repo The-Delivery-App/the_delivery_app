@@ -1,4 +1,5 @@
 import 'package:the_delivery_app_server/src/business/models/location.dart';
+import 'restaurant.dart';
 
 /// Represents a food item available for delivery.
 class Food_DTO {
@@ -53,25 +54,6 @@ class Food_DTO {
       createdAt: createdAt ?? this.createdAt,
     );
   }
-}
-
-/// Represents a restaurant location with delivery information.
-class RestaurantInfo {
-  final int restaurantId;
-  final String name;
-  final String? iconUrl;
-  final Location location;
-  final double estimatedDeliverytime; // in minutes
-  final List<String>? cuisine; // Types of cuisine (e.g., "Italian", "Chinese")
-
-  RestaurantInfo({
-    required this.restaurantId,
-    required this.name,
-    this.iconUrl,
-    required this.location,
-    required this.estimatedDeliverytime,
-    this.cuisine,
-  });
 }
 
 /// Feed request containing device information and location data.

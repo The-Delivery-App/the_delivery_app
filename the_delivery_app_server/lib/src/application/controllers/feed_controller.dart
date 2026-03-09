@@ -3,7 +3,7 @@ import 'package:serverpod/serverpod.dart';
 import '../../business/services/feed_service.dart';
 import '../../business/models/food.dart';
 import '../../business/models/location.dart';
-import '../../business/models/restaurant.dart'; // changed: was restaurant_info.dart
+// changed: was restaurant_info.dart
 import '../../data_access/daos/food_dao.dart';
 
 /// Controller endpoint for feed operations.
@@ -76,7 +76,8 @@ class FeedController extends Endpoint {
           price: item.food.price,
           rating: item.food.rating,
           estimatedOrdersAmount: item.food.estimatedOrdersAmount,
-          estimatedDeliveryTime: item.restaurant.estimatedDeliverytime, // lowercase 't'
+          estimatedDeliveryTime:
+              item.restaurant.estimatedDeliverytime, // lowercase 't'
           distanceKm: item.distanceToRestaurant,
           restaurantName: item.restaurant.name,
           restaurantIconUrl: item.restaurant.iconUrl,
@@ -88,7 +89,7 @@ class FeedController extends Endpoint {
         foodItems: foodItems,
         restaurants: response.restaurants.map((r) {
           return RestaurantResponse(
-            id: r.restaurantId,              // changed: was r.id
+            id: r.restaurantId, // changed: was r.id
             name: r.name,
             iconUrl: r.iconUrl,
             estimatedDeliveryTime: r.estimatedDeliverytime, // lowercase 't'
@@ -157,8 +158,6 @@ class FeedController extends Endpoint {
   }
 }
 
-
-
 class FeedChunkResponse {
   final bool success;
   final List<FoodItemResponse> foodItems;
@@ -179,14 +178,14 @@ class FeedChunkResponse {
   });
 
   Map<String, dynamic> toJson() => {
-        'success': success,
-        'foodItems': foodItems.map((e) => e.toJson()).toList(),
-        'restaurants': restaurants.map((e) => e.toJson()).toList(),
-        'totalItemsAvailable': totalItemsAvailable,
-        'fetchedCount': fetchedCount,
-        'errorMessage': errorMessage,
-        'errorCode': errorCode,
-      };
+    'success': success,
+    'foodItems': foodItems.map((e) => e.toJson()).toList(),
+    'restaurants': restaurants.map((e) => e.toJson()).toList(),
+    'totalItemsAvailable': totalItemsAvailable,
+    'fetchedCount': fetchedCount,
+    'errorMessage': errorMessage,
+    'errorCode': errorCode,
+  };
 }
 
 class FoodItemResponse {
@@ -215,17 +214,17 @@ class FoodItemResponse {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'iconUrl': iconUrl,
-        'price': price,
-        'rating': rating,
-        'estimatedOrdersAmount': estimatedOrdersAmount,
-        'estimatedDeliveryTime': estimatedDeliveryTime,
-        'distanceKm': distanceKm,
-        'restaurantName': restaurantName,
-        'restaurantIconUrl': restaurantIconUrl,
-      };
+    'id': id,
+    'name': name,
+    'iconUrl': iconUrl,
+    'price': price,
+    'rating': rating,
+    'estimatedOrdersAmount': estimatedOrdersAmount,
+    'estimatedDeliveryTime': estimatedDeliveryTime,
+    'distanceKm': distanceKm,
+    'restaurantName': restaurantName,
+    'restaurantIconUrl': restaurantIconUrl,
+  };
 }
 
 class RestaurantResponse {
@@ -244,12 +243,12 @@ class RestaurantResponse {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'iconUrl': iconUrl,
-        'estimatedDeliveryTime': estimatedDeliveryTime,
-        'cuisine': cuisine,
-      };
+    'id': id,
+    'name': name,
+    'iconUrl': iconUrl,
+    'estimatedDeliveryTime': estimatedDeliveryTime,
+    'cuisine': cuisine,
+  };
 }
 
 class FilteredFeedResponse {
@@ -264,10 +263,10 @@ class FilteredFeedResponse {
   });
 
   Map<String, dynamic> toJson() => {
-        'success': success,
-        'itemCount': itemCount,
-        'message': message,
-      };
+    'success': success,
+    'itemCount': itemCount,
+    'message': message,
+  };
 }
 
 class MunicipalitiesResponse {
@@ -282,8 +281,8 @@ class MunicipalitiesResponse {
   });
 
   Map<String, dynamic> toJson() => {
-        'success': success,
-        'municipalities': municipalities,
-        'message': message,
-      };
+    'success': success,
+    'municipalities': municipalities,
+    'message': message,
+  };
 }
