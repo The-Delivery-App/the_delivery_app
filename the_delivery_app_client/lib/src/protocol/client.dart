@@ -12,15 +12,19 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
-import 'package:the_delivery_app_client/src/application/controllers/feed_controller.dart'
+import 'package:the_delivery_app_client/src/protocol/feed/feed_chunk_response.dart'
     as _i3;
-import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
+import 'package:the_delivery_app_client/src/protocol/feed/filtered_feed_response.dart'
     as _i4;
-import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+import 'package:the_delivery_app_client/src/protocol/feed/municipalities_response.dart'
     as _i5;
-import 'package:the_delivery_app_client/src/protocol/greetings/greeting.dart'
+import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _i6;
-import 'protocol.dart' as _i7;
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+    as _i7;
+import 'package:the_delivery_app_client/src/protocol/greetings/greeting.dart'
+    as _i8;
+import 'protocol.dart' as _i9;
 
 /// Controller endpoint for feed operations.
 /// Handles retrieving paginated food item feeds with geo-aware infinite scroll.
@@ -59,10 +63,10 @@ class EndpointFeedController extends _i1.EndpointRef {
   );
 
   /// Applies filters to a cached feed in memory without database queries.
-  _i2.Future<_i3.FilteredFeedResponse> applyFilter(
+  _i2.Future<_i4.FilteredFeedResponse> applyFilter(
     String cachedItemsJson,
     Map<String, dynamic> filters,
-  ) => caller.callServerEndpoint<_i3.FilteredFeedResponse>(
+  ) => caller.callServerEndpoint<_i4.FilteredFeedResponse>(
     'feedController',
     'applyFilter',
     {
@@ -72,8 +76,8 @@ class EndpointFeedController extends _i1.EndpointRef {
   );
 
   /// Retrieves available municipalities for location selection.
-  _i2.Future<_i3.MunicipalitiesResponse> getMunicipalities() =>
-      caller.callServerEndpoint<_i3.MunicipalitiesResponse>(
+  _i2.Future<_i5.MunicipalitiesResponse> getMunicipalities() =>
+      caller.callServerEndpoint<_i5.MunicipalitiesResponse>(
         'feedController',
         'getMunicipalities',
         {},
@@ -84,7 +88,7 @@ class EndpointFeedController extends _i1.EndpointRef {
 /// are made available on the server and enable the corresponding sign-in widget
 /// on the client.
 /// {@category Endpoint}
-class EndpointEmailIdp extends _i4.EndpointEmailIdpBase {
+class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
   EndpointEmailIdp(_i1.EndpointCaller caller) : super(caller);
 
   @override
@@ -100,10 +104,10 @@ class EndpointEmailIdp extends _i4.EndpointEmailIdpBase {
   ///
   /// Throws an [AuthUserBlockedException] if the auth user is blocked.
   @override
-  _i2.Future<_i5.AuthSuccess> login({
+  _i2.Future<_i7.AuthSuccess> login({
     required String email,
     required String password,
-  }) => caller.callServerEndpoint<_i5.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
     'emailIdp',
     'login',
     {
@@ -168,10 +172,10 @@ class EndpointEmailIdp extends _i4.EndpointEmailIdpBase {
   ///
   /// Returns a session for the newly created user.
   @override
-  _i2.Future<_i5.AuthSuccess> finishRegistration({
+  _i2.Future<_i7.AuthSuccess> finishRegistration({
     required String registrationToken,
     required String password,
-  }) => caller.callServerEndpoint<_i5.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
     'emailIdp',
     'finishRegistration',
     {
@@ -266,7 +270,7 @@ class EndpointEmailIdp extends _i4.EndpointEmailIdpBase {
 /// By extending [RefreshJwtTokensEndpoint], the JWT token refresh endpoint
 /// is made available on the server and enables automatic token refresh on the client.
 /// {@category Endpoint}
-class EndpointJwtRefresh extends _i5.EndpointRefreshJwtTokens {
+class EndpointJwtRefresh extends _i7.EndpointRefreshJwtTokens {
   EndpointJwtRefresh(_i1.EndpointCaller caller) : super(caller);
 
   @override
@@ -291,9 +295,9 @@ class EndpointJwtRefresh extends _i5.EndpointRefreshJwtTokens {
   /// This endpoint is unauthenticated, meaning the client won't include any
   /// authentication information with the call.
   @override
-  _i2.Future<_i5.AuthSuccess> refreshAccessToken({
+  _i2.Future<_i7.AuthSuccess> refreshAccessToken({
     required String refreshToken,
-  }) => caller.callServerEndpoint<_i5.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
     'jwtRefresh',
     'refreshAccessToken',
     {'refreshToken': refreshToken},
@@ -311,8 +315,8 @@ class EndpointGreeting extends _i1.EndpointRef {
   String get name => 'greeting';
 
   /// Returns a personalized greeting message: "Hello {name}".
-  _i2.Future<_i6.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i6.Greeting>(
+  _i2.Future<_i8.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_i8.Greeting>(
         'greeting',
         'hello',
         {'name': name},
@@ -321,13 +325,13 @@ class EndpointGreeting extends _i1.EndpointRef {
 
 class Modules {
   Modules(Client client) {
-    serverpod_auth_idp = _i4.Caller(client);
-    serverpod_auth_core = _i5.Caller(client);
+    serverpod_auth_idp = _i6.Caller(client);
+    serverpod_auth_core = _i7.Caller(client);
   }
 
-  late final _i4.Caller serverpod_auth_idp;
+  late final _i6.Caller serverpod_auth_idp;
 
-  late final _i5.Caller serverpod_auth_core;
+  late final _i7.Caller serverpod_auth_core;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -350,7 +354,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i7.Protocol(),
+         _i9.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,

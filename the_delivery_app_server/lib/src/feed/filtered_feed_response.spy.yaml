@@ -1,0 +1,6 @@
+class: FilteredFeedResponse
+
+fields:
+  success: bool
+  itemCount: int
+  message: String

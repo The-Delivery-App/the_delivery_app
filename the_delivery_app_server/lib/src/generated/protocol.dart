@@ -33,7 +33,12 @@ import 'db_schema/restaurant_place.dart' as _i18;
 import 'db_schema/special_deals.dart' as _i19;
 import 'db_schema/tag.dart' as _i20;
 import 'db_schema/user.dart' as _i21;
-import 'greetings/greeting.dart' as _i22;
+import 'feed/feed_chunk_response.dart' as _i22;
+import 'feed/filtered_feed_response.dart' as _i23;
+import 'feed/food_item_response.dart' as _i24;
+import 'feed/municipalities_response.dart' as _i25;
+import 'feed/restaurant_response.dart' as _i26;
+import 'greetings/greeting.dart' as _i27;
 export 'db_schema/address.dart';
 export 'db_schema/basket.dart';
 export 'db_schema/basket_food.dart';
@@ -51,6 +56,11 @@ export 'db_schema/restaurant_place.dart';
 export 'db_schema/special_deals.dart';
 export 'db_schema/tag.dart';
 export 'db_schema/user.dart';
+export 'feed/feed_chunk_response.dart';
+export 'feed/filtered_feed_response.dart';
+export 'feed/food_item_response.dart';
+export 'feed/municipalities_response.dart';
+export 'feed/restaurant_response.dart';
 export 'greetings/greeting.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
@@ -1276,8 +1286,23 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i21.User) {
       return _i21.User.fromJson(data) as T;
     }
-    if (t == _i22.Greeting) {
-      return _i22.Greeting.fromJson(data) as T;
+    if (t == _i22.FeedChunkResponse) {
+      return _i22.FeedChunkResponse.fromJson(data) as T;
+    }
+    if (t == _i23.FilteredFeedResponse) {
+      return _i23.FilteredFeedResponse.fromJson(data) as T;
+    }
+    if (t == _i24.FoodItemResponse) {
+      return _i24.FoodItemResponse.fromJson(data) as T;
+    }
+    if (t == _i25.MunicipalitiesResponse) {
+      return _i25.MunicipalitiesResponse.fromJson(data) as T;
+    }
+    if (t == _i26.RestaurantResponse) {
+      return _i26.RestaurantResponse.fromJson(data) as T;
+    }
+    if (t == _i27.Greeting) {
+      return _i27.Greeting.fromJson(data) as T;
     }
     if (t == _i1.getType<_i5.Address?>()) {
       return (data != null ? _i5.Address.fromJson(data) : null) as T;
@@ -1331,8 +1356,47 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i21.User?>()) {
       return (data != null ? _i21.User.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i22.Greeting?>()) {
-      return (data != null ? _i22.Greeting.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i22.FeedChunkResponse?>()) {
+      return (data != null ? _i22.FeedChunkResponse.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i23.FilteredFeedResponse?>()) {
+      return (data != null ? _i23.FilteredFeedResponse.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i24.FoodItemResponse?>()) {
+      return (data != null ? _i24.FoodItemResponse.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i25.MunicipalitiesResponse?>()) {
+      return (data != null ? _i25.MunicipalitiesResponse.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i26.RestaurantResponse?>()) {
+      return (data != null ? _i26.RestaurantResponse.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i27.Greeting?>()) {
+      return (data != null ? _i27.Greeting.fromJson(data) : null) as T;
+    }
+    if (t == List<_i24.FoodItemResponse>) {
+      return (data as List)
+              .map((e) => deserialize<_i24.FoodItemResponse>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_i26.RestaurantResponse>) {
+      return (data as List)
+              .map((e) => deserialize<_i26.RestaurantResponse>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<String>) {
+      return (data as List).map((e) => deserialize<String>(e)).toList() as T;
+    }
+    if (t == _i1.getType<List<String>?>()) {
+      return (data != null
+              ? (data as List).map((e) => deserialize<String>(e)).toList()
+              : null)
+          as T;
     }
     if (t == Map<String, dynamic>) {
       return (data as Map).map(
@@ -1380,7 +1444,12 @@ class Protocol extends _i1.SerializationManagerServer {
       _i19.SpecialDeals => 'SpecialDeals',
       _i20.Tag => 'Tag',
       _i21.User => 'User',
-      _i22.Greeting => 'Greeting',
+      _i22.FeedChunkResponse => 'FeedChunkResponse',
+      _i23.FilteredFeedResponse => 'FilteredFeedResponse',
+      _i24.FoodItemResponse => 'FoodItemResponse',
+      _i25.MunicipalitiesResponse => 'MunicipalitiesResponse',
+      _i26.RestaurantResponse => 'RestaurantResponse',
+      _i27.Greeting => 'Greeting',
       _ => null,
     };
   }
@@ -1432,7 +1501,17 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'Tag';
       case _i21.User():
         return 'User';
-      case _i22.Greeting():
+      case _i22.FeedChunkResponse():
+        return 'FeedChunkResponse';
+      case _i23.FilteredFeedResponse():
+        return 'FilteredFeedResponse';
+      case _i24.FoodItemResponse():
+        return 'FoodItemResponse';
+      case _i25.MunicipalitiesResponse():
+        return 'MunicipalitiesResponse';
+      case _i26.RestaurantResponse():
+        return 'RestaurantResponse';
+      case _i27.Greeting():
         return 'Greeting';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -1507,8 +1586,23 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'User') {
       return deserialize<_i21.User>(data['data']);
     }
+    if (dataClassName == 'FeedChunkResponse') {
+      return deserialize<_i22.FeedChunkResponse>(data['data']);
+    }
+    if (dataClassName == 'FilteredFeedResponse') {
+      return deserialize<_i23.FilteredFeedResponse>(data['data']);
+    }
+    if (dataClassName == 'FoodItemResponse') {
+      return deserialize<_i24.FoodItemResponse>(data['data']);
+    }
+    if (dataClassName == 'MunicipalitiesResponse') {
+      return deserialize<_i25.MunicipalitiesResponse>(data['data']);
+    }
+    if (dataClassName == 'RestaurantResponse') {
+      return deserialize<_i26.RestaurantResponse>(data['data']);
+    }
     if (dataClassName == 'Greeting') {
-      return deserialize<_i22.Greeting>(data['data']);
+      return deserialize<_i27.Greeting>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);

@@ -28,11 +28,16 @@ import 'db_schema/restaurant_place.dart' as _i15;
 import 'db_schema/special_deals.dart' as _i16;
 import 'db_schema/tag.dart' as _i17;
 import 'db_schema/user.dart' as _i18;
-import 'greetings/greeting.dart' as _i19;
+import 'feed/feed_chunk_response.dart' as _i19;
+import 'feed/filtered_feed_response.dart' as _i20;
+import 'feed/food_item_response.dart' as _i21;
+import 'feed/municipalities_response.dart' as _i22;
+import 'feed/restaurant_response.dart' as _i23;
+import 'greetings/greeting.dart' as _i24;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i20;
+    as _i25;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
-    as _i21;
+    as _i26;
 export 'db_schema/address.dart';
 export 'db_schema/basket.dart';
 export 'db_schema/basket_food.dart';
@@ -50,6 +55,11 @@ export 'db_schema/restaurant_place.dart';
 export 'db_schema/special_deals.dart';
 export 'db_schema/tag.dart';
 export 'db_schema/user.dart';
+export 'feed/feed_chunk_response.dart';
+export 'feed/filtered_feed_response.dart';
+export 'feed/food_item_response.dart';
+export 'feed/municipalities_response.dart';
+export 'feed/restaurant_response.dart';
 export 'greetings/greeting.dart';
 export 'client.dart';
 
@@ -138,8 +148,23 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i18.User) {
       return _i18.User.fromJson(data) as T;
     }
-    if (t == _i19.Greeting) {
-      return _i19.Greeting.fromJson(data) as T;
+    if (t == _i19.FeedChunkResponse) {
+      return _i19.FeedChunkResponse.fromJson(data) as T;
+    }
+    if (t == _i20.FilteredFeedResponse) {
+      return _i20.FilteredFeedResponse.fromJson(data) as T;
+    }
+    if (t == _i21.FoodItemResponse) {
+      return _i21.FoodItemResponse.fromJson(data) as T;
+    }
+    if (t == _i22.MunicipalitiesResponse) {
+      return _i22.MunicipalitiesResponse.fromJson(data) as T;
+    }
+    if (t == _i23.RestaurantResponse) {
+      return _i23.RestaurantResponse.fromJson(data) as T;
+    }
+    if (t == _i24.Greeting) {
+      return _i24.Greeting.fromJson(data) as T;
     }
     if (t == _i1.getType<_i2.Address?>()) {
       return (data != null ? _i2.Address.fromJson(data) : null) as T;
@@ -193,8 +218,47 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i18.User?>()) {
       return (data != null ? _i18.User.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i19.Greeting?>()) {
-      return (data != null ? _i19.Greeting.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i19.FeedChunkResponse?>()) {
+      return (data != null ? _i19.FeedChunkResponse.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i20.FilteredFeedResponse?>()) {
+      return (data != null ? _i20.FilteredFeedResponse.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i21.FoodItemResponse?>()) {
+      return (data != null ? _i21.FoodItemResponse.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i22.MunicipalitiesResponse?>()) {
+      return (data != null ? _i22.MunicipalitiesResponse.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i23.RestaurantResponse?>()) {
+      return (data != null ? _i23.RestaurantResponse.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i24.Greeting?>()) {
+      return (data != null ? _i24.Greeting.fromJson(data) : null) as T;
+    }
+    if (t == List<_i21.FoodItemResponse>) {
+      return (data as List)
+              .map((e) => deserialize<_i21.FoodItemResponse>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_i23.RestaurantResponse>) {
+      return (data as List)
+              .map((e) => deserialize<_i23.RestaurantResponse>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<String>) {
+      return (data as List).map((e) => deserialize<String>(e)).toList() as T;
+    }
+    if (t == _i1.getType<List<String>?>()) {
+      return (data != null
+              ? (data as List).map((e) => deserialize<String>(e)).toList()
+              : null)
+          as T;
     }
     if (t == Map<String, dynamic>) {
       return (data as Map).map(
@@ -212,10 +276,10 @@ class Protocol extends _i1.SerializationManager {
           as T;
     }
     try {
-      return _i20.Protocol().deserialize<T>(data, t);
+      return _i25.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     try {
-      return _i21.Protocol().deserialize<T>(data, t);
+      return _i26.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -239,7 +303,12 @@ class Protocol extends _i1.SerializationManager {
       _i16.SpecialDeals => 'SpecialDeals',
       _i17.Tag => 'Tag',
       _i18.User => 'User',
-      _i19.Greeting => 'Greeting',
+      _i19.FeedChunkResponse => 'FeedChunkResponse',
+      _i20.FilteredFeedResponse => 'FilteredFeedResponse',
+      _i21.FoodItemResponse => 'FoodItemResponse',
+      _i22.MunicipalitiesResponse => 'MunicipalitiesResponse',
+      _i23.RestaurantResponse => 'RestaurantResponse',
+      _i24.Greeting => 'Greeting',
       _ => null,
     };
   }
@@ -291,14 +360,24 @@ class Protocol extends _i1.SerializationManager {
         return 'Tag';
       case _i18.User():
         return 'User';
-      case _i19.Greeting():
+      case _i19.FeedChunkResponse():
+        return 'FeedChunkResponse';
+      case _i20.FilteredFeedResponse():
+        return 'FilteredFeedResponse';
+      case _i21.FoodItemResponse():
+        return 'FoodItemResponse';
+      case _i22.MunicipalitiesResponse():
+        return 'MunicipalitiesResponse';
+      case _i23.RestaurantResponse():
+        return 'RestaurantResponse';
+      case _i24.Greeting():
         return 'Greeting';
     }
-    className = _i20.Protocol().getClassNameForObject(data);
+    className = _i25.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_idp.$className';
     }
-    className = _i21.Protocol().getClassNameForObject(data);
+    className = _i26.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_core.$className';
     }
@@ -362,16 +441,31 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'User') {
       return deserialize<_i18.User>(data['data']);
     }
+    if (dataClassName == 'FeedChunkResponse') {
+      return deserialize<_i19.FeedChunkResponse>(data['data']);
+    }
+    if (dataClassName == 'FilteredFeedResponse') {
+      return deserialize<_i20.FilteredFeedResponse>(data['data']);
+    }
+    if (dataClassName == 'FoodItemResponse') {
+      return deserialize<_i21.FoodItemResponse>(data['data']);
+    }
+    if (dataClassName == 'MunicipalitiesResponse') {
+      return deserialize<_i22.MunicipalitiesResponse>(data['data']);
+    }
+    if (dataClassName == 'RestaurantResponse') {
+      return deserialize<_i23.RestaurantResponse>(data['data']);
+    }
     if (dataClassName == 'Greeting') {
-      return deserialize<_i19.Greeting>(data['data']);
+      return deserialize<_i24.Greeting>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
-      return _i20.Protocol().deserializeByClassName(data);
+      return _i25.Protocol().deserializeByClassName(data);
     }
     if (dataClassName.startsWith('serverpod_auth_core.')) {
       data['className'] = dataClassName.substring(20);
-      return _i21.Protocol().deserializeByClassName(data);
+      return _i26.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }
@@ -386,10 +480,10 @@ class Protocol extends _i1.SerializationManager {
       return null;
     }
     try {
-      return _i20.Protocol().mapRecordToJson(record);
+      return _i25.Protocol().mapRecordToJson(record);
     } catch (_) {}
     try {
-      return _i21.Protocol().mapRecordToJson(record);
+      return _i26.Protocol().mapRecordToJson(record);
     } catch (_) {}
     throw Exception('Unsupported record type ${record.runtimeType}');
   }

@@ -1,0 +1,13 @@
+class: FoodItemResponse
+
+fields:
+  id: int?
+  name: String
+  iconUrl: String?
+  price: double
+  rating: double
+  estimatedOrdersAmount: int
+  estimatedDeliveryTime: double
+  distanceKm: double?
+  restaurantName: String
+  restaurantIconUrl: String?

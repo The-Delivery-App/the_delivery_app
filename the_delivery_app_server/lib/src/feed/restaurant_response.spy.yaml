@@ -1,0 +1,8 @@
+class: RestaurantResponse
+
+fields:
+  id: int
+  name: String
+  iconUrl: String?
+  estimatedDeliveryTime: double
+  cuisine: List<String>?

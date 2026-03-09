@@ -1,0 +1,10 @@
+class: FeedChunkResponse
+
+fields:
+  success: bool
+  foodItems: List<FoodItemResponse>
+  restaurants: List<RestaurantResponse>
+  totalItemsAvailable: int
+  fetchedCount: int
+  errorMessage: String?
+  errorCode: String?

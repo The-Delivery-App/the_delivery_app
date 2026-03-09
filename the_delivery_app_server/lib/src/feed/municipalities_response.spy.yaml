@@ -1,0 +1,6 @@
+class: MunicipalitiesResponse
+
+fields:
+  success: bool
+  municipalities: List<String>
+  message: String
