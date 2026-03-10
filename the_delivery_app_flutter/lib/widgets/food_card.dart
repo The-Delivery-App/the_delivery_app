@@ -3,7 +3,8 @@ import '../dtos/food_dto.dart';
 
 class FoodCard extends StatelessWidget {
   final FoodDTO item;
-  const FoodCard({super.key, required this.item});
+  final VoidCallback? onTap;
+  const FoodCard({super.key, required this.item, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,10 @@ class FoodCard extends StatelessWidget {
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         color: Colors.white,
-        child: Column(
+        clipBehavior: Clip.hardEdge,
+        child: InkWell(
+          onTap: onTap,
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Thumbnail placeholder
@@ -195,6 +199,7 @@ class FoodCard extends StatelessWidget {
               ),
             ),
           ],
+        ),
         ),
       ),
     );

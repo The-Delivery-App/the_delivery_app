@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../dtos/food_dto.dart';
 import '../../widgets/food_card.dart';
+import '../food_item/food_item_view.dart';
 
 // Hardcoded sample data until the backend feed endpoint is wired up.
 final _sampleFeed = <FoodDTO>[
@@ -156,9 +157,18 @@ class _FeedViewState extends State<FeedView> {
                 ),
               ),
             ),
+
+            // Food card
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                (context, index) => FoodCard(item: _filteredFeed[index]),
+                (context, index) => FoodCard(
+                  item: _filteredFeed[index],
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => FoodItemView(item: _filteredFeed[index]),
+                    ),
+                  ),
+                ),
                 childCount: _filteredFeed.length,
               ),
             ),
