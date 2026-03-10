@@ -3,7 +3,8 @@ import '../../dtos/food_dto.dart';
 
 class FoodItemView extends StatefulWidget {
   final FoodDTO item;
-  const FoodItemView({super.key, required this.item});
+  final VoidCallback? onRestaurantTap;
+  const FoodItemView({super.key, required this.item, this.onRestaurantTap});
 
   @override
   State<FoodItemView> createState() => _FoodItemViewState();
@@ -137,15 +138,28 @@ class _FoodItemViewState extends State<FoodItemView> {
   }
 
   Widget _buildRestaurantRow(ThemeData theme, FoodDTO item) {
-    return Row(
-      children: [
-        const Icon(Icons.storefront, size: 16, color: Colors.grey),
-        const SizedBox(width: 6),
-        Text(
-          item.restaurantName,
-          style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
-        ),
-      ],
+    return GestureDetector(
+      onTap: widget.onRestaurantTap,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.storefront, size: 16, color: Colors.grey),
+          const SizedBox(width: 6),
+          Text(
+            item.restaurantName,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: Colors.grey,
+              decoration: widget.onRestaurantTap != null
+                  ? TextDecoration.underline
+                  : null,
+            ),
+          ),
+          if (widget.onRestaurantTap != null) ...[
+            const SizedBox(width: 4),
+            const Icon(Icons.chevron_right, size: 16, color: Colors.grey),
+          ],
+        ],
+      ),
     );
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../dtos/food_dto.dart';
 import '../../widgets/food_card.dart';
 import '../food_item/food_item_view.dart';
+import '../restaurant/restaurant_view.dart';
 
 // Hardcoded sample data until the backend feed endpoint is wired up.
 final _sampleFeed = <FoodDTO>[
@@ -113,6 +114,21 @@ class _FeedViewState extends State<FeedView> {
   int _selectedFilter = 0;
   String _searchQuery = '';
 
+  void _openRestaurant(BuildContext context, FoodDTO food) {
+    final menuItems = _sampleFeed
+        .where((f) => f.restaurantId == food.restaurantId)
+        .toList();
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => RestaurantView(
+          restaurantId: food.restaurantId,
+          restaurantName: food.restaurantName,
+          menuItems: menuItems,
+        ),
+      ),
+    );
+  }
+
   // Applies the selected chip filter to the current feed data
   List<FoodDTO> get _filteredFeed {
     final byChip = _selectedFilter == 0
@@ -161,14 +177,21 @@ class _FeedViewState extends State<FeedView> {
             // Food card
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                (context, index) => FoodCard(
-                  item: _filteredFeed[index],
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => FoodItemView(item: _filteredFeed[index]),
+                (context, index) {
+                  final food = _filteredFeed[index];
+                  return FoodCard(
+                    item: food,
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => FoodItemView(
+                          item: food,
+                          onRestaurantTap: () => _openRestaurant(context, food),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                    onRestaurantTap: () => _openRestaurant(context, food),
+                  );
+                },
                 childCount: _filteredFeed.length,
               ),
             ),
