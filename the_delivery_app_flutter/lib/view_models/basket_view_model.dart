@@ -13,4 +13,11 @@ class BasketViewModel extends ChangeNotifier {
       : _repository = repository;
 
   BasketState getState() => _state;
+
+  void addItem(Food food) {
+    final newItems = [..._state.basket.items, food];
+    _state = BasketState(basket: Basket(items: newItems));
+    notifyListeners();
+    _repository.updateBasket(_state.basket);
+  }
 }
