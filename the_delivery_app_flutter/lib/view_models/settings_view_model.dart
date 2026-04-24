@@ -20,4 +20,10 @@ class SettingsViewModel extends ChangeNotifier {
     _state = SettingsState(settings: settings);
     notifyListeners();
   }
+
+  Future<void> updateSettings(Settings settings) async {
+    _state = SettingsState(settings: settings);
+    notifyListeners();
+    await _repository.saveSettings(settings);
+  }
 }
