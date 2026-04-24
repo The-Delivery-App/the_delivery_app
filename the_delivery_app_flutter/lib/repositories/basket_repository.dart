@@ -27,4 +27,24 @@ class BasketRepository implements IBasketRepository {
     final list = basket.items.map(_foodToMap).toList();
     await _storage.save(_key, jsonEncode(list));
   }
+
+  Map<String, dynamic> _foodToMap(Food food) {
+    return {
+      'id': food.id,
+      'name': food.name,
+      'price': food.price,
+      'rating': food.rating,
+      'tags': food.tags,
+      'imageUrl': food.imageUrl,
+      'restaurantImageUrl': food.restaurantImageUrl,
+      'restaurantId': food.restaurant.id,
+      'restaurantName': food.restaurant.name,
+      'recentOrders': food.recentOrders,
+      'deliveryTimeMs': food.deliveryTime.inMilliseconds,
+      'unitType': food.unitType.name,
+      'size': food.size,
+      'calories': food.calories,
+      'isDiscounted': food.isDiscounted,
+    };
+  }
 }
