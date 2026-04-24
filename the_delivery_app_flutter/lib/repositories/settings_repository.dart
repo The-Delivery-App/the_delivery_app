@@ -22,4 +22,13 @@ class SettingsRepository implements ISettingsRepository {
       notificationsEnabled: map['notificationsEnabled'],
     );
   }
+
+  @override
+  Future<void> saveSettings(Settings settings) async {
+    final map = {
+      'language': settings.language,
+      'notificationsEnabled': settings.notificationsEnabled,
+    };
+    await _storage.save(_key, jsonEncode(map));
+  }
 }
