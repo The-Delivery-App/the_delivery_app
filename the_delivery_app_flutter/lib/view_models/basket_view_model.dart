@@ -20,4 +20,11 @@ class BasketViewModel extends ChangeNotifier {
     notifyListeners();
     _repository.updateBasket(_state.basket);
   }
+
+  void removeItem(Food food) {
+    final newItems = _state.basket.items.where((f) => f.id != food.id).toList();
+    _state = BasketState(basket: Basket(items: newItems));
+    notifyListeners();
+    _repository.updateBasket(_state.basket);
+  }
 }
