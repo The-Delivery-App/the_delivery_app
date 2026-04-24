@@ -21,4 +21,10 @@ class BasketRepository implements IBasketRepository {
     final items = list.map((e) => _foodFromMap(e as Map<String, dynamic>)).toList();
     return Basket(items: items);
   }
+
+  @override
+  Future<void> updateBasket(Basket basket) async {
+    final list = basket.items.map(_foodToMap).toList();
+    await _storage.save(_key, jsonEncode(list));
+  }
 }
