@@ -12,4 +12,6 @@ class SettingsViewModel extends ChangeNotifier {
 
   SettingsViewModel({required ISettingsRepository repository})
       : _repository = repository;
+
+  SettingsState getState() => _state;
 }
