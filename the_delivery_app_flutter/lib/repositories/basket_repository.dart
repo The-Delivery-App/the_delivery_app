@@ -47,4 +47,29 @@ class BasketRepository implements IBasketRepository {
       'isDiscounted': food.isDiscounted,
     };
   }
+
+  Food _foodFromMap(Map<String, dynamic> map) {
+    return Food(
+      id: map['id'],
+      name: map['name'],
+      price: (map['price'] as num).toDouble(),
+      rating: (map['rating'] as num).toDouble(),
+      tags: List<String>.from(map['tags']),
+      imageUrl: map['imageUrl'],
+      restaurantImageUrl: map['restaurantImageUrl'],
+      restaurant: Restaurant(
+        id: map['restaurantId'],
+        name: map['restaurantName'],
+      ),
+      recentOrders: map['recentOrders'],
+      deliveryTime: Duration(milliseconds: map['deliveryTimeMs']),
+      unitType: FoodUnitType.values.firstWhere(
+        (e) => e.name == map['unitType'],
+        orElse: () => FoodUnitType.pcs,
+      ),
+      size: map['size'],
+      calories: map['calories'],
+      isDiscounted: map['isDiscounted'],
+    );
+  }
 }
