@@ -9,4 +9,17 @@ class SettingsRepository implements ISettingsRepository {
   static const _key = 'settings';
 
   SettingsRepository({required ILocalStorage storage}) : _storage = storage;
+
+  @override
+  Future<Settings> getSettings() async {
+    final raw = await _storage.load(_key);
+    if (raw == null) {
+      return const Settings(language: 'en', notificationsEnabled: true);
+    }
+    final map = jsonDecode(raw) as Map<String, dynamic>;
+    return Settings(
+      language: map['language'],
+      notificationsEnabled: map['notificationsEnabled'],
+    );
+  }
 }
