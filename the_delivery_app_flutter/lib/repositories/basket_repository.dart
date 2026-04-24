@@ -12,4 +12,13 @@ class BasketRepository implements IBasketRepository {
   static const _key = 'basket';
 
   BasketRepository({required ILocalStorage storage}) : _storage = storage;
+
+  @override
+  Future<Basket> getBasket() async {
+    final raw = await _storage.load(_key);
+    if (raw == null) return const Basket(items: []);
+    final list = jsonDecode(raw) as List;
+    final items = list.map((e) => _foodFromMap(e as Map<String, dynamic>)).toList();
+    return Basket(items: items);
+  }
 }
