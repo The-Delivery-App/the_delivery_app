@@ -11,4 +11,6 @@ class BasketViewModel extends ChangeNotifier {
 
   BasketViewModel({required IBasketRepository repository})
       : _repository = repository;
+
+  BasketState getState() => _state;
 }
