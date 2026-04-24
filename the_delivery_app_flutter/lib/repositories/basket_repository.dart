@@ -6,3 +6,10 @@ import '../models/food_unit_type.dart';
 import '../models/restaurant.dart';
 import '../storage/i_local_storage.dart';
 import 'interfaces/i_basket_repository.dart';
+
+class BasketRepository implements IBasketRepository {
+  final ILocalStorage _storage;
+  static const _key = 'basket';
+
+  BasketRepository({required ILocalStorage storage}) : _storage = storage;
+}
