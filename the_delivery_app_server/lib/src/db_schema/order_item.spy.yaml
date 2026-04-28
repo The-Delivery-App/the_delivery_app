@@ -1,0 +1,21 @@
+class: OrderItem
+table: order_item
+fields:
+  # References
+  orderId: int, relation(parent=order)
+  foodItemId: int, relation(parent=food_item)
+  
+  # Order snapshot 
+  quantity: int
+  unitPrice: double
+  
+  # Special instructions per item
+  specialInstructions: String?
+  
+  # details at order time
+  foodItemName: String
+  foodItemDescription: String?
+
+indexes:
+  order_items_idx:
+    fields: orderId

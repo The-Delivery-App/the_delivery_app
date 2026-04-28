@@ -39,7 +39,7 @@ abstract class Address implements _i1.SerializableModel {
     return Address(
       id: jsonSerialization['id'] as int?,
       userId: jsonSerialization['userId'] as int,
-      isDefault: _i1.BoolJsonExtension.fromJson(jsonSerialization['isDefault']),
+      isDefault: jsonSerialization['isDefault'] as bool,
       country: jsonSerialization['country'] as String,
       city: jsonSerialization['city'] as String,
       postcode: jsonSerialization['postcode'] as String,

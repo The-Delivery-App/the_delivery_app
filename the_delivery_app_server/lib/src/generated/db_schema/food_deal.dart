@@ -265,8 +265,6 @@ class FoodDealRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<FoodDealTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<FoodDeal>(
       where: where?.call(FoodDeal.t),
@@ -276,8 +274,6 @@ class FoodDealRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -306,8 +302,6 @@ class FoodDealRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<FoodDealTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<FoodDeal>(
       where: where?.call(FoodDeal.t),
@@ -316,8 +310,6 @@ class FoodDealRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -326,14 +318,10 @@ class FoodDealRepository {
     _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<FoodDeal>(
       id,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -343,20 +331,14 @@ class FoodDealRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
-  ///
-  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
-  /// rows are silently skipped, and only the successfully inserted rows are
-  /// returned.
   Future<List<FoodDeal>> insert(
     _i1.Session session,
     List<FoodDeal> rows, {
     _i1.Transaction? transaction,
-    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<FoodDeal>(
       rows,
       transaction: transaction,
-      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -497,22 +479,6 @@ class FoodDealRepository {
     return session.db.count<FoodDeal>(
       where: where?.call(FoodDeal.t),
       limit: limit,
-      transaction: transaction,
-    );
-  }
-
-  /// Acquires row-level locks on [FoodDeal] rows matching the [where] expression.
-  Future<void> lockRows(
-    _i1.Session session, {
-    required _i1.WhereExpressionBuilder<FoodDealTable> where,
-    required _i1.LockMode lockMode,
-    required _i1.Transaction transaction,
-    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
-  }) async {
-    return session.db.lockRows<FoodDeal>(
-      where: where(FoodDeal.t),
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

@@ -15,30 +15,40 @@ import 'package:serverpod/serverpod.dart' as _i1;
 abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   User._({
     this.id,
-    required this.fname,
-    required this.lname,
-    required this.phone,
+    required this.authUserId,
+    required this.name,
     required this.email,
-    required this.passwordHash,
+    this.phone,
+    this.avatarUrl,
+    required this.createdAt,
+    this.updatedAt,
   });
 
   factory User({
     int? id,
-    required String fname,
-    required String lname,
-    required String phone,
+    required int authUserId,
+    required String name,
     required String email,
-    required String passwordHash,
+    String? phone,
+    String? avatarUrl,
+    required DateTime createdAt,
+    DateTime? updatedAt,
   }) = _UserImpl;
 
   factory User.fromJson(Map<String, dynamic> jsonSerialization) {
     return User(
       id: jsonSerialization['id'] as int?,
-      fname: jsonSerialization['fname'] as String,
-      lname: jsonSerialization['lname'] as String,
-      phone: jsonSerialization['phone'] as String,
+      authUserId: jsonSerialization['authUserId'] as int,
+      name: jsonSerialization['name'] as String,
       email: jsonSerialization['email'] as String,
-      passwordHash: jsonSerialization['passwordHash'] as String,
+      phone: jsonSerialization['phone'] as String?,
+      avatarUrl: jsonSerialization['avatarUrl'] as String?,
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 
@@ -49,15 +59,19 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   @override
   int? id;
 
-  String fname;
+  int authUserId;
 
-  String lname;
-
-  String phone;
+  String name;
 
   String email;
 
-  String passwordHash;
+  String? phone;
+
+  String? avatarUrl;
+
+  DateTime createdAt;
+
+  DateTime? updatedAt;
 
   @override
   _i1.Table<int?> get table => t;
@@ -67,22 +81,26 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   @_i1.useResult
   User copyWith({
     int? id,
-    String? fname,
-    String? lname,
-    String? phone,
+    int? authUserId,
+    String? name,
     String? email,
-    String? passwordHash,
+    String? phone,
+    String? avatarUrl,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'User',
       if (id != null) 'id': id,
-      'fname': fname,
-      'lname': lname,
-      'phone': phone,
+      'authUserId': authUserId,
+      'name': name,
       'email': email,
-      'passwordHash': passwordHash,
+      if (phone != null) 'phone': phone,
+      if (avatarUrl != null) 'avatarUrl': avatarUrl,
+      'createdAt': createdAt.toJson(),
+      if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
     };
   }
 
@@ -91,11 +109,13 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     return {
       '__className__': 'User',
       if (id != null) 'id': id,
-      'fname': fname,
-      'lname': lname,
-      'phone': phone,
+      'authUserId': authUserId,
+      'name': name,
       'email': email,
-      'passwordHash': passwordHash,
+      if (phone != null) 'phone': phone,
+      if (avatarUrl != null) 'avatarUrl': avatarUrl,
+      'createdAt': createdAt.toJson(),
+      if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
     };
   }
 
@@ -134,18 +154,22 @@ class _Undefined {}
 class _UserImpl extends User {
   _UserImpl({
     int? id,
-    required String fname,
-    required String lname,
-    required String phone,
+    required int authUserId,
+    required String name,
     required String email,
-    required String passwordHash,
+    String? phone,
+    String? avatarUrl,
+    required DateTime createdAt,
+    DateTime? updatedAt,
   }) : super._(
          id: id,
-         fname: fname,
-         lname: lname,
-         phone: phone,
+         authUserId: authUserId,
+         name: name,
          email: email,
-         passwordHash: passwordHash,
+         phone: phone,
+         avatarUrl: avatarUrl,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
        );
 
   /// Returns a shallow copy of this [User]
@@ -154,19 +178,23 @@ class _UserImpl extends User {
   @override
   User copyWith({
     Object? id = _Undefined,
-    String? fname,
-    String? lname,
-    String? phone,
+    int? authUserId,
+    String? name,
     String? email,
-    String? passwordHash,
+    Object? phone = _Undefined,
+    Object? avatarUrl = _Undefined,
+    DateTime? createdAt,
+    Object? updatedAt = _Undefined,
   }) {
     return User(
       id: id is int? ? id : this.id,
-      fname: fname ?? this.fname,
-      lname: lname ?? this.lname,
-      phone: phone ?? this.phone,
+      authUserId: authUserId ?? this.authUserId,
+      name: name ?? this.name,
       email: email ?? this.email,
-      passwordHash: passwordHash ?? this.passwordHash,
+      phone: phone is String? ? phone : this.phone,
+      avatarUrl: avatarUrl is String? ? avatarUrl : this.avatarUrl,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt is DateTime? ? updatedAt : this.updatedAt,
     );
   }
 }
@@ -174,18 +202,13 @@ class _UserImpl extends User {
 class UserUpdateTable extends _i1.UpdateTable<UserTable> {
   UserUpdateTable(super.table);
 
-  _i1.ColumnValue<String, String> fname(String value) => _i1.ColumnValue(
-    table.fname,
+  _i1.ColumnValue<int, int> authUserId(int value) => _i1.ColumnValue(
+    table.authUserId,
     value,
   );
 
-  _i1.ColumnValue<String, String> lname(String value) => _i1.ColumnValue(
-    table.lname,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> phone(String value) => _i1.ColumnValue(
-    table.phone,
+  _i1.ColumnValue<String, String> name(String value) => _i1.ColumnValue(
+    table.name,
     value,
   );
 
@@ -194,57 +217,88 @@ class UserUpdateTable extends _i1.UpdateTable<UserTable> {
     value,
   );
 
-  _i1.ColumnValue<String, String> passwordHash(String value) => _i1.ColumnValue(
-    table.passwordHash,
+  _i1.ColumnValue<String, String> phone(String? value) => _i1.ColumnValue(
+    table.phone,
     value,
   );
+
+  _i1.ColumnValue<String, String> avatarUrl(String? value) => _i1.ColumnValue(
+    table.avatarUrl,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
 }
 
 class UserTable extends _i1.Table<int?> {
   UserTable({super.tableRelation}) : super(tableName: 'user') {
     updateTable = UserUpdateTable(this);
-    fname = _i1.ColumnString(
-      'fname',
+    authUserId = _i1.ColumnInt(
+      'authUserId',
       this,
     );
-    lname = _i1.ColumnString(
-      'lname',
-      this,
-    );
-    phone = _i1.ColumnString(
-      'phone',
+    name = _i1.ColumnString(
+      'name',
       this,
     );
     email = _i1.ColumnString(
       'email',
       this,
     );
-    passwordHash = _i1.ColumnString(
-      'passwordHash',
+    phone = _i1.ColumnString(
+      'phone',
+      this,
+    );
+    avatarUrl = _i1.ColumnString(
+      'avatarUrl',
+      this,
+    );
+    createdAt = _i1.ColumnDateTime(
+      'createdAt',
+      this,
+    );
+    updatedAt = _i1.ColumnDateTime(
+      'updatedAt',
       this,
     );
   }
 
   late final UserUpdateTable updateTable;
 
-  late final _i1.ColumnString fname;
+  late final _i1.ColumnInt authUserId;
 
-  late final _i1.ColumnString lname;
-
-  late final _i1.ColumnString phone;
+  late final _i1.ColumnString name;
 
   late final _i1.ColumnString email;
 
-  late final _i1.ColumnString passwordHash;
+  late final _i1.ColumnString phone;
+
+  late final _i1.ColumnString avatarUrl;
+
+  late final _i1.ColumnDateTime createdAt;
+
+  late final _i1.ColumnDateTime updatedAt;
 
   @override
   List<_i1.Column> get columns => [
     id,
-    fname,
-    lname,
-    phone,
+    authUserId,
+    name,
     email,
-    passwordHash,
+    phone,
+    avatarUrl,
+    createdAt,
+    updatedAt,
   ];
 }
 
@@ -312,8 +366,6 @@ class UserRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<UserTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<User>(
       where: where?.call(User.t),
@@ -323,8 +375,6 @@ class UserRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -353,8 +403,6 @@ class UserRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<UserTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<User>(
       where: where?.call(User.t),
@@ -363,8 +411,6 @@ class UserRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -373,14 +419,10 @@ class UserRepository {
     _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<User>(
       id,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -390,20 +432,14 @@ class UserRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
-  ///
-  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
-  /// rows are silently skipped, and only the successfully inserted rows are
-  /// returned.
   Future<List<User>> insert(
     _i1.Session session,
     List<User> rows, {
     _i1.Transaction? transaction,
-    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<User>(
       rows,
       transaction: transaction,
-      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -544,22 +580,6 @@ class UserRepository {
     return session.db.count<User>(
       where: where?.call(User.t),
       limit: limit,
-      transaction: transaction,
-    );
-  }
-
-  /// Acquires row-level locks on [User] rows matching the [where] expression.
-  Future<void> lockRows(
-    _i1.Session session, {
-    required _i1.WhereExpressionBuilder<UserTable> where,
-    required _i1.LockMode lockMode,
-    required _i1.Transaction transaction,
-    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
-  }) async {
-    return session.db.lockRows<User>(
-      where: where(User.t),
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

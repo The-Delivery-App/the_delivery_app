@@ -1,0 +1,22 @@
+class: SplitPaymentParticipant
+table: split_payment_participant
+fields:
+  # References
+  orderId: int, relation(parent=order)
+  userId: int, relation(parent=user)
+  paymentId: int?, relation(parent=payment)
+  
+    # Split details
+  amountDue: double
+  hasPaid: bool, default=false
+  paidAt: DateTime?
+  
+    # Status
+  invitedAt: DateTime
+  reminderSentAt: DateTime?
+
+indexes:
+  order_participants_idx:
+    fields: orderId
+  user_splits_idx:
+    fields: userId

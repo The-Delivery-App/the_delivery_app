@@ -16,32 +16,89 @@ import '../db_schema/order_status.dart' as _i2;
 abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Order._({
     this.id,
-    this.courierId,
     required this.userId,
-    required this.time,
-    required this.isSplit,
+    required this.restaurantId,
+    required this.deliveryAddressId,
+    this.courierId,
+    required this.subtotal,
+    required this.deliveryFee,
+    required this.serviceFee,
+    required this.discount,
+    required this.totalAmount,
+    required this.idempotencyKey,
     required this.currentStatus,
+    required this.createdAt,
+    this.updatedAt,
+    this.estimatedDeliveryTime,
+    this.actualDeliveryTime,
+    required this.isSplit,
+    this.deliveryInstructions,
+    this.courierLatitude,
+    this.courierLongitude,
   });
 
   factory Order({
     int? id,
-    int? courierId,
     required int userId,
-    required DateTime time,
-    required bool isSplit,
+    required int restaurantId,
+    required int deliveryAddressId,
+    int? courierId,
+    required double subtotal,
+    required double deliveryFee,
+    required double serviceFee,
+    required double discount,
+    required double totalAmount,
+    required String idempotencyKey,
     required _i2.OrderStatus currentStatus,
+    required DateTime createdAt,
+    DateTime? updatedAt,
+    DateTime? estimatedDeliveryTime,
+    DateTime? actualDeliveryTime,
+    required bool isSplit,
+    String? deliveryInstructions,
+    double? courierLatitude,
+    double? courierLongitude,
   }) = _OrderImpl;
 
   factory Order.fromJson(Map<String, dynamic> jsonSerialization) {
     return Order(
       id: jsonSerialization['id'] as int?,
-      courierId: jsonSerialization['courierId'] as int?,
       userId: jsonSerialization['userId'] as int,
-      time: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['time']),
-      isSplit: _i1.BoolJsonExtension.fromJson(jsonSerialization['isSplit']),
+      restaurantId: jsonSerialization['restaurantId'] as int,
+      deliveryAddressId: jsonSerialization['deliveryAddressId'] as int,
+      courierId: jsonSerialization['courierId'] as int?,
+      subtotal: (jsonSerialization['subtotal'] as num).toDouble(),
+      deliveryFee: (jsonSerialization['deliveryFee'] as num).toDouble(),
+      serviceFee: (jsonSerialization['serviceFee'] as num).toDouble(),
+      discount: (jsonSerialization['discount'] as num).toDouble(),
+      totalAmount: (jsonSerialization['totalAmount'] as num).toDouble(),
+      idempotencyKey: jsonSerialization['idempotencyKey'] as String,
       currentStatus: _i2.OrderStatus.fromJson(
         (jsonSerialization['currentStatus'] as String),
       ),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      estimatedDeliveryTime: jsonSerialization['estimatedDeliveryTime'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['estimatedDeliveryTime'],
+            ),
+      actualDeliveryTime: jsonSerialization['actualDeliveryTime'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['actualDeliveryTime'],
+            ),
+      isSplit: jsonSerialization['isSplit'] as bool,
+      deliveryInstructions:
+          jsonSerialization['deliveryInstructions'] as String?,
+      courierLatitude: (jsonSerialization['courierLatitude'] as num?)
+          ?.toDouble(),
+      courierLongitude: (jsonSerialization['courierLongitude'] as num?)
+          ?.toDouble(),
     );
   }
 
@@ -52,15 +109,43 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   @override
   int? id;
 
-  int? courierId;
-
   int userId;
 
-  DateTime time;
+  int restaurantId;
+
+  int deliveryAddressId;
+
+  int? courierId;
+
+  double subtotal;
+
+  double deliveryFee;
+
+  double serviceFee;
+
+  double discount;
+
+  double totalAmount;
+
+  String idempotencyKey;
+
+  _i2.OrderStatus currentStatus;
+
+  DateTime createdAt;
+
+  DateTime? updatedAt;
+
+  DateTime? estimatedDeliveryTime;
+
+  DateTime? actualDeliveryTime;
 
   bool isSplit;
 
-  _i2.OrderStatus currentStatus;
+  String? deliveryInstructions;
+
+  double? courierLatitude;
+
+  double? courierLongitude;
 
   @override
   _i1.Table<int?> get table => t;
@@ -70,22 +155,53 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   @_i1.useResult
   Order copyWith({
     int? id,
-    int? courierId,
     int? userId,
-    DateTime? time,
-    bool? isSplit,
+    int? restaurantId,
+    int? deliveryAddressId,
+    int? courierId,
+    double? subtotal,
+    double? deliveryFee,
+    double? serviceFee,
+    double? discount,
+    double? totalAmount,
+    String? idempotencyKey,
     _i2.OrderStatus? currentStatus,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? estimatedDeliveryTime,
+    DateTime? actualDeliveryTime,
+    bool? isSplit,
+    String? deliveryInstructions,
+    double? courierLatitude,
+    double? courierLongitude,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Order',
       if (id != null) 'id': id,
-      if (courierId != null) 'courierId': courierId,
       'userId': userId,
-      'time': time.toJson(),
-      'isSplit': isSplit,
+      'restaurantId': restaurantId,
+      'deliveryAddressId': deliveryAddressId,
+      if (courierId != null) 'courierId': courierId,
+      'subtotal': subtotal,
+      'deliveryFee': deliveryFee,
+      'serviceFee': serviceFee,
+      'discount': discount,
+      'totalAmount': totalAmount,
+      'idempotencyKey': idempotencyKey,
       'currentStatus': currentStatus.toJson(),
+      'createdAt': createdAt.toJson(),
+      if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
+      if (estimatedDeliveryTime != null)
+        'estimatedDeliveryTime': estimatedDeliveryTime?.toJson(),
+      if (actualDeliveryTime != null)
+        'actualDeliveryTime': actualDeliveryTime?.toJson(),
+      'isSplit': isSplit,
+      if (deliveryInstructions != null)
+        'deliveryInstructions': deliveryInstructions,
+      if (courierLatitude != null) 'courierLatitude': courierLatitude,
+      if (courierLongitude != null) 'courierLongitude': courierLongitude,
     };
   }
 
@@ -94,11 +210,28 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     return {
       '__className__': 'Order',
       if (id != null) 'id': id,
-      if (courierId != null) 'courierId': courierId,
       'userId': userId,
-      'time': time.toJson(),
-      'isSplit': isSplit,
+      'restaurantId': restaurantId,
+      'deliveryAddressId': deliveryAddressId,
+      if (courierId != null) 'courierId': courierId,
+      'subtotal': subtotal,
+      'deliveryFee': deliveryFee,
+      'serviceFee': serviceFee,
+      'discount': discount,
+      'totalAmount': totalAmount,
+      'idempotencyKey': idempotencyKey,
       'currentStatus': currentStatus.toJson(),
+      'createdAt': createdAt.toJson(),
+      if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
+      if (estimatedDeliveryTime != null)
+        'estimatedDeliveryTime': estimatedDeliveryTime?.toJson(),
+      if (actualDeliveryTime != null)
+        'actualDeliveryTime': actualDeliveryTime?.toJson(),
+      'isSplit': isSplit,
+      if (deliveryInstructions != null)
+        'deliveryInstructions': deliveryInstructions,
+      if (courierLatitude != null) 'courierLatitude': courierLatitude,
+      if (courierLongitude != null) 'courierLongitude': courierLongitude,
     };
   }
 
@@ -137,18 +270,46 @@ class _Undefined {}
 class _OrderImpl extends Order {
   _OrderImpl({
     int? id,
-    int? courierId,
     required int userId,
-    required DateTime time,
-    required bool isSplit,
+    required int restaurantId,
+    required int deliveryAddressId,
+    int? courierId,
+    required double subtotal,
+    required double deliveryFee,
+    required double serviceFee,
+    required double discount,
+    required double totalAmount,
+    required String idempotencyKey,
     required _i2.OrderStatus currentStatus,
+    required DateTime createdAt,
+    DateTime? updatedAt,
+    DateTime? estimatedDeliveryTime,
+    DateTime? actualDeliveryTime,
+    required bool isSplit,
+    String? deliveryInstructions,
+    double? courierLatitude,
+    double? courierLongitude,
   }) : super._(
          id: id,
-         courierId: courierId,
          userId: userId,
-         time: time,
-         isSplit: isSplit,
+         restaurantId: restaurantId,
+         deliveryAddressId: deliveryAddressId,
+         courierId: courierId,
+         subtotal: subtotal,
+         deliveryFee: deliveryFee,
+         serviceFee: serviceFee,
+         discount: discount,
+         totalAmount: totalAmount,
+         idempotencyKey: idempotencyKey,
          currentStatus: currentStatus,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+         estimatedDeliveryTime: estimatedDeliveryTime,
+         actualDeliveryTime: actualDeliveryTime,
+         isSplit: isSplit,
+         deliveryInstructions: deliveryInstructions,
+         courierLatitude: courierLatitude,
+         courierLongitude: courierLongitude,
        );
 
   /// Returns a shallow copy of this [Order]
@@ -157,19 +318,57 @@ class _OrderImpl extends Order {
   @override
   Order copyWith({
     Object? id = _Undefined,
-    Object? courierId = _Undefined,
     int? userId,
-    DateTime? time,
-    bool? isSplit,
+    int? restaurantId,
+    int? deliveryAddressId,
+    Object? courierId = _Undefined,
+    double? subtotal,
+    double? deliveryFee,
+    double? serviceFee,
+    double? discount,
+    double? totalAmount,
+    String? idempotencyKey,
     _i2.OrderStatus? currentStatus,
+    DateTime? createdAt,
+    Object? updatedAt = _Undefined,
+    Object? estimatedDeliveryTime = _Undefined,
+    Object? actualDeliveryTime = _Undefined,
+    bool? isSplit,
+    Object? deliveryInstructions = _Undefined,
+    Object? courierLatitude = _Undefined,
+    Object? courierLongitude = _Undefined,
   }) {
     return Order(
       id: id is int? ? id : this.id,
-      courierId: courierId is int? ? courierId : this.courierId,
       userId: userId ?? this.userId,
-      time: time ?? this.time,
-      isSplit: isSplit ?? this.isSplit,
+      restaurantId: restaurantId ?? this.restaurantId,
+      deliveryAddressId: deliveryAddressId ?? this.deliveryAddressId,
+      courierId: courierId is int? ? courierId : this.courierId,
+      subtotal: subtotal ?? this.subtotal,
+      deliveryFee: deliveryFee ?? this.deliveryFee,
+      serviceFee: serviceFee ?? this.serviceFee,
+      discount: discount ?? this.discount,
+      totalAmount: totalAmount ?? this.totalAmount,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
       currentStatus: currentStatus ?? this.currentStatus,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt is DateTime? ? updatedAt : this.updatedAt,
+      estimatedDeliveryTime: estimatedDeliveryTime is DateTime?
+          ? estimatedDeliveryTime
+          : this.estimatedDeliveryTime,
+      actualDeliveryTime: actualDeliveryTime is DateTime?
+          ? actualDeliveryTime
+          : this.actualDeliveryTime,
+      isSplit: isSplit ?? this.isSplit,
+      deliveryInstructions: deliveryInstructions is String?
+          ? deliveryInstructions
+          : this.deliveryInstructions,
+      courierLatitude: courierLatitude is double?
+          ? courierLatitude
+          : this.courierLatitude,
+      courierLongitude: courierLongitude is double?
+          ? courierLongitude
+          : this.courierLongitude,
     );
   }
 }
@@ -177,25 +376,56 @@ class _OrderImpl extends Order {
 class OrderUpdateTable extends _i1.UpdateTable<OrderTable> {
   OrderUpdateTable(super.table);
 
-  _i1.ColumnValue<int, int> courierId(int? value) => _i1.ColumnValue(
-    table.courierId,
-    value,
-  );
-
   _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
     table.userId,
     value,
   );
 
-  _i1.ColumnValue<DateTime, DateTime> time(DateTime value) => _i1.ColumnValue(
-    table.time,
+  _i1.ColumnValue<int, int> restaurantId(int value) => _i1.ColumnValue(
+    table.restaurantId,
     value,
   );
 
-  _i1.ColumnValue<bool, bool> isSplit(bool value) => _i1.ColumnValue(
-    table.isSplit,
+  _i1.ColumnValue<int, int> deliveryAddressId(int value) => _i1.ColumnValue(
+    table.deliveryAddressId,
     value,
   );
+
+  _i1.ColumnValue<int, int> courierId(int? value) => _i1.ColumnValue(
+    table.courierId,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> subtotal(double value) => _i1.ColumnValue(
+    table.subtotal,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> deliveryFee(double value) => _i1.ColumnValue(
+    table.deliveryFee,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> serviceFee(double value) => _i1.ColumnValue(
+    table.serviceFee,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> discount(double value) => _i1.ColumnValue(
+    table.discount,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> totalAmount(double value) => _i1.ColumnValue(
+    table.totalAmount,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> idempotencyKey(String value) =>
+      _i1.ColumnValue(
+        table.idempotencyKey,
+        value,
+      );
 
   _i1.ColumnValue<_i2.OrderStatus, _i2.OrderStatus> currentStatus(
     _i2.OrderStatus value,
@@ -203,25 +433,96 @@ class OrderUpdateTable extends _i1.UpdateTable<OrderTable> {
     table.currentStatus,
     value,
   );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> estimatedDeliveryTime(DateTime? value) =>
+      _i1.ColumnValue(
+        table.estimatedDeliveryTime,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> actualDeliveryTime(DateTime? value) =>
+      _i1.ColumnValue(
+        table.actualDeliveryTime,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> isSplit(bool value) => _i1.ColumnValue(
+    table.isSplit,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> deliveryInstructions(String? value) =>
+      _i1.ColumnValue(
+        table.deliveryInstructions,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> courierLatitude(double? value) =>
+      _i1.ColumnValue(
+        table.courierLatitude,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> courierLongitude(double? value) =>
+      _i1.ColumnValue(
+        table.courierLongitude,
+        value,
+      );
 }
 
 class OrderTable extends _i1.Table<int?> {
   OrderTable({super.tableRelation}) : super(tableName: 'order') {
     updateTable = OrderUpdateTable(this);
-    courierId = _i1.ColumnInt(
-      'courierId',
-      this,
-    );
     userId = _i1.ColumnInt(
       'userId',
       this,
     );
-    time = _i1.ColumnDateTime(
-      'time',
+    restaurantId = _i1.ColumnInt(
+      'restaurantId',
       this,
     );
-    isSplit = _i1.ColumnBool(
-      'isSplit',
+    deliveryAddressId = _i1.ColumnInt(
+      'deliveryAddressId',
+      this,
+    );
+    courierId = _i1.ColumnInt(
+      'courierId',
+      this,
+    );
+    subtotal = _i1.ColumnDouble(
+      'subtotal',
+      this,
+    );
+    deliveryFee = _i1.ColumnDouble(
+      'deliveryFee',
+      this,
+    );
+    serviceFee = _i1.ColumnDouble(
+      'serviceFee',
+      this,
+    );
+    discount = _i1.ColumnDouble(
+      'discount',
+      this,
+    );
+    totalAmount = _i1.ColumnDouble(
+      'totalAmount',
+      this,
+    );
+    idempotencyKey = _i1.ColumnString(
+      'idempotencyKey',
       this,
     );
     currentStatus = _i1.ColumnEnum(
@@ -229,28 +530,102 @@ class OrderTable extends _i1.Table<int?> {
       this,
       _i1.EnumSerialization.byName,
     );
+    createdAt = _i1.ColumnDateTime(
+      'createdAt',
+      this,
+    );
+    updatedAt = _i1.ColumnDateTime(
+      'updatedAt',
+      this,
+    );
+    estimatedDeliveryTime = _i1.ColumnDateTime(
+      'estimatedDeliveryTime',
+      this,
+    );
+    actualDeliveryTime = _i1.ColumnDateTime(
+      'actualDeliveryTime',
+      this,
+    );
+    isSplit = _i1.ColumnBool(
+      'isSplit',
+      this,
+    );
+    deliveryInstructions = _i1.ColumnString(
+      'deliveryInstructions',
+      this,
+    );
+    courierLatitude = _i1.ColumnDouble(
+      'courierLatitude',
+      this,
+    );
+    courierLongitude = _i1.ColumnDouble(
+      'courierLongitude',
+      this,
+    );
   }
 
   late final OrderUpdateTable updateTable;
 
-  late final _i1.ColumnInt courierId;
-
   late final _i1.ColumnInt userId;
 
-  late final _i1.ColumnDateTime time;
+  late final _i1.ColumnInt restaurantId;
+
+  late final _i1.ColumnInt deliveryAddressId;
+
+  late final _i1.ColumnInt courierId;
+
+  late final _i1.ColumnDouble subtotal;
+
+  late final _i1.ColumnDouble deliveryFee;
+
+  late final _i1.ColumnDouble serviceFee;
+
+  late final _i1.ColumnDouble discount;
+
+  late final _i1.ColumnDouble totalAmount;
+
+  late final _i1.ColumnString idempotencyKey;
+
+  late final _i1.ColumnEnum<_i2.OrderStatus> currentStatus;
+
+  late final _i1.ColumnDateTime createdAt;
+
+  late final _i1.ColumnDateTime updatedAt;
+
+  late final _i1.ColumnDateTime estimatedDeliveryTime;
+
+  late final _i1.ColumnDateTime actualDeliveryTime;
 
   late final _i1.ColumnBool isSplit;
 
-  late final _i1.ColumnEnum<_i2.OrderStatus> currentStatus;
+  late final _i1.ColumnString deliveryInstructions;
+
+  late final _i1.ColumnDouble courierLatitude;
+
+  late final _i1.ColumnDouble courierLongitude;
 
   @override
   List<_i1.Column> get columns => [
     id,
-    courierId,
     userId,
-    time,
-    isSplit,
+    restaurantId,
+    deliveryAddressId,
+    courierId,
+    subtotal,
+    deliveryFee,
+    serviceFee,
+    discount,
+    totalAmount,
+    idempotencyKey,
     currentStatus,
+    createdAt,
+    updatedAt,
+    estimatedDeliveryTime,
+    actualDeliveryTime,
+    isSplit,
+    deliveryInstructions,
+    courierLatitude,
+    courierLongitude,
   ];
 }
 
@@ -318,8 +693,6 @@ class OrderRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<OrderTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<Order>(
       where: where?.call(Order.t),
@@ -329,8 +702,6 @@ class OrderRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -359,8 +730,6 @@ class OrderRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<OrderTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<Order>(
       where: where?.call(Order.t),
@@ -369,8 +738,6 @@ class OrderRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -379,14 +746,10 @@ class OrderRepository {
     _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<Order>(
       id,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -396,20 +759,14 @@ class OrderRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
-  ///
-  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
-  /// rows are silently skipped, and only the successfully inserted rows are
-  /// returned.
   Future<List<Order>> insert(
     _i1.Session session,
     List<Order> rows, {
     _i1.Transaction? transaction,
-    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<Order>(
       rows,
       transaction: transaction,
-      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -550,22 +907,6 @@ class OrderRepository {
     return session.db.count<Order>(
       where: where?.call(Order.t),
       limit: limit,
-      transaction: transaction,
-    );
-  }
-
-  /// Acquires row-level locks on [Order] rows matching the [where] expression.
-  Future<void> lockRows(
-    _i1.Session session, {
-    required _i1.WhereExpressionBuilder<OrderTable> where,
-    required _i1.LockMode lockMode,
-    required _i1.Transaction transaction,
-    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
-  }) async {
-    return session.db.lockRows<Order>(
-      where: where(Order.t),
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

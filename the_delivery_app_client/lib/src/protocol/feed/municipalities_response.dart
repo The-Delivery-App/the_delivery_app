@@ -30,7 +30,7 @@ abstract class MunicipalitiesResponse implements _i1.SerializableModel {
     Map<String, dynamic> jsonSerialization,
   ) {
     return MunicipalitiesResponse(
-      success: _i1.BoolJsonExtension.fromJson(jsonSerialization['success']),
+      success: jsonSerialization['success'] as bool,
       municipalities: _i2.Protocol().deserialize<List<String>>(
         jsonSerialization['municipalities'],
       ),
