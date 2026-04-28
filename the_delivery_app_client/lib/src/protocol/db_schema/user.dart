@@ -15,30 +15,40 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 abstract class User implements _i1.SerializableModel {
   User._({
     this.id,
-    required this.fname,
-    required this.lname,
-    required this.phone,
+    required this.authUserId,
+    required this.name,
     required this.email,
-    required this.passwordHash,
+    this.phone,
+    this.avatarUrl,
+    required this.createdAt,
+    this.updatedAt,
   });
 
   factory User({
     int? id,
-    required String fname,
-    required String lname,
-    required String phone,
+    required int authUserId,
+    required String name,
     required String email,
-    required String passwordHash,
+    String? phone,
+    String? avatarUrl,
+    required DateTime createdAt,
+    DateTime? updatedAt,
   }) = _UserImpl;
 
   factory User.fromJson(Map<String, dynamic> jsonSerialization) {
     return User(
       id: jsonSerialization['id'] as int?,
-      fname: jsonSerialization['fname'] as String,
-      lname: jsonSerialization['lname'] as String,
-      phone: jsonSerialization['phone'] as String,
+      authUserId: jsonSerialization['authUserId'] as int,
+      name: jsonSerialization['name'] as String,
       email: jsonSerialization['email'] as String,
-      passwordHash: jsonSerialization['passwordHash'] as String,
+      phone: jsonSerialization['phone'] as String?,
+      avatarUrl: jsonSerialization['avatarUrl'] as String?,
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 
@@ -47,37 +57,45 @@ abstract class User implements _i1.SerializableModel {
   /// the id will be null.
   int? id;
 
-  String fname;
+  int authUserId;
 
-  String lname;
-
-  String phone;
+  String name;
 
   String email;
 
-  String passwordHash;
+  String? phone;
+
+  String? avatarUrl;
+
+  DateTime createdAt;
+
+  DateTime? updatedAt;
 
   /// Returns a shallow copy of this [User]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   User copyWith({
     int? id,
-    String? fname,
-    String? lname,
-    String? phone,
+    int? authUserId,
+    String? name,
     String? email,
-    String? passwordHash,
+    String? phone,
+    String? avatarUrl,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'User',
       if (id != null) 'id': id,
-      'fname': fname,
-      'lname': lname,
-      'phone': phone,
+      'authUserId': authUserId,
+      'name': name,
       'email': email,
-      'passwordHash': passwordHash,
+      if (phone != null) 'phone': phone,
+      if (avatarUrl != null) 'avatarUrl': avatarUrl,
+      'createdAt': createdAt.toJson(),
+      if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
     };
   }
 
@@ -92,18 +110,22 @@ class _Undefined {}
 class _UserImpl extends User {
   _UserImpl({
     int? id,
-    required String fname,
-    required String lname,
-    required String phone,
+    required int authUserId,
+    required String name,
     required String email,
-    required String passwordHash,
+    String? phone,
+    String? avatarUrl,
+    required DateTime createdAt,
+    DateTime? updatedAt,
   }) : super._(
          id: id,
-         fname: fname,
-         lname: lname,
-         phone: phone,
+         authUserId: authUserId,
+         name: name,
          email: email,
-         passwordHash: passwordHash,
+         phone: phone,
+         avatarUrl: avatarUrl,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
        );
 
   /// Returns a shallow copy of this [User]
@@ -112,19 +134,23 @@ class _UserImpl extends User {
   @override
   User copyWith({
     Object? id = _Undefined,
-    String? fname,
-    String? lname,
-    String? phone,
+    int? authUserId,
+    String? name,
     String? email,
-    String? passwordHash,
+    Object? phone = _Undefined,
+    Object? avatarUrl = _Undefined,
+    DateTime? createdAt,
+    Object? updatedAt = _Undefined,
   }) {
     return User(
       id: id is int? ? id : this.id,
-      fname: fname ?? this.fname,
-      lname: lname ?? this.lname,
-      phone: phone ?? this.phone,
+      authUserId: authUserId ?? this.authUserId,
+      name: name ?? this.name,
       email: email ?? this.email,
-      passwordHash: passwordHash ?? this.passwordHash,
+      phone: phone is String? ? phone : this.phone,
+      avatarUrl: avatarUrl is String? ? avatarUrl : this.avatarUrl,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt is DateTime? ? updatedAt : this.updatedAt,
     );
   }
 }

@@ -30,7 +30,7 @@ abstract class FilteredFeedResponse
     Map<String, dynamic> jsonSerialization,
   ) {
     return FilteredFeedResponse(
-      success: _i1.BoolJsonExtension.fromJson(jsonSerialization['success']),
+      success: jsonSerialization['success'] as bool,
       itemCount: jsonSerialization['itemCount'] as int,
       message: jsonSerialization['message'] as String,
     );

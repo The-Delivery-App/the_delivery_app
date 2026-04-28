@@ -12,22 +12,28 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
-import 'package:the_delivery_app_client/src/protocol/feed/feed_chunk_response.dart'
-    as _i3;
-import 'package:the_delivery_app_client/src/protocol/feed/filtered_feed_response.dart'
-    as _i4;
-import 'package:the_delivery_app_client/src/protocol/feed/municipalities_response.dart'
-    as _i5;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i6;
+    as _i3;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
-    as _i7;
+    as _i4;
 import 'package:the_delivery_app_client/src/protocol/greetings/greeting.dart'
-    as _i8;
-import 'protocol.dart' as _i9;
+    as _i5;
+import 'protocol.dart' as _i6;
 
-/// Controller endpoint for feed operations.
-/// Handles retrieving paginated food item feeds with geo-aware infinite scroll.
+/// {@category Endpoint}
+class EndpointFavouritesController extends _i1.EndpointRef {
+  EndpointFavouritesController(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'favouritesController';
+
+  _i2.Future<String> hello() => caller.callServerEndpoint<String>(
+    'favouritesController',
+    'hello',
+    {},
+  );
+}
+
 /// {@category Endpoint}
 class EndpointFeedController extends _i1.EndpointRef {
   EndpointFeedController(_i1.EndpointCaller caller) : super(caller);
@@ -35,60 +41,96 @@ class EndpointFeedController extends _i1.EndpointRef {
   @override
   String get name => 'feedController';
 
-  /// Retrieves a chunk of food items based on user location and device parameters.
-  _i2.Future<_i3.FeedChunkResponse> getFeedChunk(
-    int screenWidth,
-    int screenHeight,
-    int dpi,
-    double dataTransferRate,
-    double userLatitude,
-    double userLongitude,
-    int chunkSize,
-    int chunkOffset,
-    Map<String, dynamic>? filters,
-  ) => caller.callServerEndpoint<_i3.FeedChunkResponse>(
+  _i2.Future<String> hello() => caller.callServerEndpoint<String>(
     'feedController',
-    'getFeedChunk',
-    {
-      'screenWidth': screenWidth,
-      'screenHeight': screenHeight,
-      'dpi': dpi,
-      'dataTransferRate': dataTransferRate,
-      'userLatitude': userLatitude,
-      'userLongitude': userLongitude,
-      'chunkSize': chunkSize,
-      'chunkOffset': chunkOffset,
-      'filters': filters,
-    },
+    'hello',
+    {},
   );
+}
 
-  /// Applies filters to a cached feed in memory without database queries.
-  _i2.Future<_i4.FilteredFeedResponse> applyFilter(
-    String cachedItemsJson,
-    Map<String, dynamic> filters,
-  ) => caller.callServerEndpoint<_i4.FilteredFeedResponse>(
-    'feedController',
-    'applyFilter',
-    {
-      'cachedItemsJson': cachedItemsJson,
-      'filters': filters,
-    },
+/// {@category Endpoint}
+class EndpointOrderController extends _i1.EndpointRef {
+  EndpointOrderController(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'orderController';
+
+  _i2.Future<String> hello() => caller.callServerEndpoint<String>(
+    'orderController',
+    'hello',
+    {},
   );
+}
 
-  /// Retrieves available municipalities for location selection.
-  _i2.Future<_i5.MunicipalitiesResponse> getMunicipalities() =>
-      caller.callServerEndpoint<_i5.MunicipalitiesResponse>(
-        'feedController',
-        'getMunicipalities',
-        {},
+/// {@category Endpoint}
+class EndpointRestaurantController extends _i1.EndpointRef {
+  EndpointRestaurantController(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'restaurantController';
+
+  _i2.Future<String> getRestaurant(int restaurantId) =>
+      caller.callServerEndpoint<String>(
+        'restaurantController',
+        'getRestaurant',
+        {'restaurantId': restaurantId},
       );
+
+  _i2.Future<String> getMenu(int restaurantId) =>
+      caller.callServerEndpoint<String>(
+        'restaurantController',
+        'getMenu',
+        {'restaurantId': restaurantId},
+      );
+
+  _i2.Future<String> getReviews(
+    int restaurantId,
+    int limit,
+    int offset,
+  ) => caller.callServerEndpoint<String>(
+    'restaurantController',
+    'getReviews',
+    {
+      'restaurantId': restaurantId,
+      'limit': limit,
+      'offset': offset,
+    },
+  );
+}
+
+/// {@category Endpoint}
+class EndpointReviewsController extends _i1.EndpointRef {
+  EndpointReviewsController(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'reviewsController';
+
+  _i2.Future<String> hello() => caller.callServerEndpoint<String>(
+    'reviewsController',
+    'hello',
+    {},
+  );
+}
+
+/// {@category Endpoint}
+class EndpointUserProfileController extends _i1.EndpointRef {
+  EndpointUserProfileController(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'userProfileController';
+
+  _i2.Future<String> hello() => caller.callServerEndpoint<String>(
+    'userProfileController',
+    'hello',
+    {},
+  );
 }
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
 /// are made available on the server and enable the corresponding sign-in widget
 /// on the client.
 /// {@category Endpoint}
-class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
+class EndpointEmailIdp extends _i3.EndpointEmailIdpBase {
   EndpointEmailIdp(_i1.EndpointCaller caller) : super(caller);
 
   @override
@@ -104,10 +146,10 @@ class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
   ///
   /// Throws an [AuthUserBlockedException] if the auth user is blocked.
   @override
-  _i2.Future<_i7.AuthSuccess> login({
+  _i2.Future<_i4.AuthSuccess> login({
     required String email,
     required String password,
-  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i4.AuthSuccess>(
     'emailIdp',
     'login',
     {
@@ -172,10 +214,10 @@ class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
   ///
   /// Returns a session for the newly created user.
   @override
-  _i2.Future<_i7.AuthSuccess> finishRegistration({
+  _i2.Future<_i4.AuthSuccess> finishRegistration({
     required String registrationToken,
     required String password,
-  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i4.AuthSuccess>(
     'emailIdp',
     'finishRegistration',
     {
@@ -270,7 +312,7 @@ class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
 /// By extending [RefreshJwtTokensEndpoint], the JWT token refresh endpoint
 /// is made available on the server and enables automatic token refresh on the client.
 /// {@category Endpoint}
-class EndpointJwtRefresh extends _i7.EndpointRefreshJwtTokens {
+class EndpointJwtRefresh extends _i4.EndpointRefreshJwtTokens {
   EndpointJwtRefresh(_i1.EndpointCaller caller) : super(caller);
 
   @override
@@ -295,9 +337,9 @@ class EndpointJwtRefresh extends _i7.EndpointRefreshJwtTokens {
   /// This endpoint is unauthenticated, meaning the client won't include any
   /// authentication information with the call.
   @override
-  _i2.Future<_i7.AuthSuccess> refreshAccessToken({
+  _i2.Future<_i4.AuthSuccess> refreshAccessToken({
     required String refreshToken,
-  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i4.AuthSuccess>(
     'jwtRefresh',
     'refreshAccessToken',
     {'refreshToken': refreshToken},
@@ -315,8 +357,8 @@ class EndpointGreeting extends _i1.EndpointRef {
   String get name => 'greeting';
 
   /// Returns a personalized greeting message: "Hello {name}".
-  _i2.Future<_i8.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i8.Greeting>(
+  _i2.Future<_i5.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_i5.Greeting>(
         'greeting',
         'hello',
         {'name': name},
@@ -325,13 +367,13 @@ class EndpointGreeting extends _i1.EndpointRef {
 
 class Modules {
   Modules(Client client) {
-    serverpod_auth_idp = _i6.Caller(client);
-    serverpod_auth_core = _i7.Caller(client);
+    serverpod_auth_idp = _i3.Caller(client);
+    serverpod_auth_core = _i4.Caller(client);
   }
 
-  late final _i6.Caller serverpod_auth_idp;
+  late final _i3.Caller serverpod_auth_idp;
 
-  late final _i7.Caller serverpod_auth_core;
+  late final _i4.Caller serverpod_auth_core;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -354,7 +396,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i9.Protocol(),
+         _i6.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -363,14 +405,29 @@ class Client extends _i1.ServerpodClientShared {
          disconnectStreamsOnLostInternetConnection:
              disconnectStreamsOnLostInternetConnection,
        ) {
+    favouritesController = EndpointFavouritesController(this);
     feedController = EndpointFeedController(this);
+    orderController = EndpointOrderController(this);
+    restaurantController = EndpointRestaurantController(this);
+    reviewsController = EndpointReviewsController(this);
+    userProfileController = EndpointUserProfileController(this);
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
     greeting = EndpointGreeting(this);
     modules = Modules(this);
   }
 
+  late final EndpointFavouritesController favouritesController;
+
   late final EndpointFeedController feedController;
+
+  late final EndpointOrderController orderController;
+
+  late final EndpointRestaurantController restaurantController;
+
+  late final EndpointReviewsController reviewsController;
+
+  late final EndpointUserProfileController userProfileController;
 
   late final EndpointEmailIdp emailIdp;
 
@@ -382,7 +439,12 @@ class Client extends _i1.ServerpodClientShared {
 
   @override
   Map<String, _i1.EndpointRef> get endpointRefLookup => {
+    'favouritesController': favouritesController,
     'feedController': feedController,
+    'orderController': orderController,
+    'restaurantController': restaurantController,
+    'reviewsController': reviewsController,
+    'userProfileController': userProfileController,
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
     'greeting': greeting,

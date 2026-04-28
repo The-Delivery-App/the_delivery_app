@@ -1,8 +1,32 @@
 class: Payment
 table: payment
 fields:
-  userId: int, relation(parent=user)
+  # References
   orderId: int, relation(parent=order)
+  userId: int, relation(parent=user)
+  
+  # Payment details
   amount: double
+  currency: String, default='GBP'
+  paymentMethod: String  # card, cash, paypal, apple_pay, google_pay
+  
+  # Provider tracking
+  transactionId: String?
+  providerName: String  # stripe, paypal, etc
+  providerMetadata: String?  # JSON string for extra provider data
+  
+  # Status tracking
+  status: String  # pending, succeeded, failed, refunded
   createdAt: DateTime
-  transactionTime: DateTime
+  processedAt: DateTime?
+  
+  # Refunds
+  refundedAmount: double?
+  refundedAt: DateTime?
+  refundReason: String?
+
+indexes:
+  transaction_idx:
+    fields: transactionId
+  order_payment_idx:
+    fields: orderId

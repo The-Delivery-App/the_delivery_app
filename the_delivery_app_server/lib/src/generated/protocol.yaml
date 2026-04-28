@@ -1,7 +1,17 @@
+favouritesController:
+  - hello:
 feedController:
-  - getFeedChunk:
-  - applyFilter:
-  - getMunicipalities:
+  - hello:
+orderController:
+  - hello:
+restaurantController:
+  - getRestaurant:
+  - getMenu:
+  - getReviews:
+reviewsController:
+  - hello:
+userProfileController:
+  - hello:
 emailIdp:
   - login:
   - startRegistration:

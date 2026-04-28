@@ -25,20 +25,23 @@ import 'db_schema/food_item.dart' as _i10;
 import 'db_schema/food_review.dart' as _i11;
 import 'db_schema/food_tag.dart' as _i12;
 import 'db_schema/order.dart' as _i13;
-import 'db_schema/order_status.dart' as _i14;
-import 'db_schema/order_status_history.dart' as _i15;
-import 'db_schema/payment.dart' as _i16;
-import 'db_schema/restaurant.dart' as _i17;
-import 'db_schema/restaurant_place.dart' as _i18;
-import 'db_schema/special_deals.dart' as _i19;
-import 'db_schema/tag.dart' as _i20;
-import 'db_schema/user.dart' as _i21;
-import 'feed/feed_chunk_response.dart' as _i22;
-import 'feed/filtered_feed_response.dart' as _i23;
-import 'feed/food_item_response.dart' as _i24;
-import 'feed/municipalities_response.dart' as _i25;
-import 'feed/restaurant_response.dart' as _i26;
-import 'greetings/greeting.dart' as _i27;
+import 'db_schema/order_item.dart' as _i14;
+import 'db_schema/order_status.dart' as _i15;
+import 'db_schema/order_status_history.dart' as _i16;
+import 'db_schema/payment.dart' as _i17;
+import 'db_schema/restaurant.dart' as _i18;
+import 'db_schema/restaurant_place.dart' as _i19;
+import 'db_schema/special_deals.dart' as _i20;
+import 'db_schema/split_payment_participant.dart' as _i21;
+import 'db_schema/tag.dart' as _i22;
+import 'db_schema/user.dart' as _i23;
+import 'db_schema/user_favourite.dart' as _i24;
+import 'feed/feed_chunk_response.dart' as _i25;
+import 'feed/filtered_feed_response.dart' as _i26;
+import 'feed/food_item_response.dart' as _i27;
+import 'feed/municipalities_response.dart' as _i28;
+import 'feed/restaurant_response.dart' as _i29;
+import 'greetings/greeting.dart' as _i30;
 export 'db_schema/address.dart';
 export 'db_schema/basket.dart';
 export 'db_schema/basket_food.dart';
@@ -48,14 +51,17 @@ export 'db_schema/food_item.dart';
 export 'db_schema/food_review.dart';
 export 'db_schema/food_tag.dart';
 export 'db_schema/order.dart';
+export 'db_schema/order_item.dart';
 export 'db_schema/order_status.dart';
 export 'db_schema/order_status_history.dart';
 export 'db_schema/payment.dart';
 export 'db_schema/restaurant.dart';
 export 'db_schema/restaurant_place.dart';
 export 'db_schema/special_deals.dart';
+export 'db_schema/split_payment_participant.dart';
 export 'db_schema/tag.dart';
 export 'db_schema/user.dart';
+export 'db_schema/user_favourite.dart';
 export 'feed/feed_chunk_response.dart';
 export 'feed/filtered_feed_response.dart';
 export 'feed/food_item_response.dart';
@@ -669,22 +675,94 @@ class Protocol extends _i1.SerializationManagerServer {
           columnDefault: 'nextval(\'order_id_seq\'::regclass)',
         ),
         _i2.ColumnDefinition(
-          name: 'courierId',
-          columnType: _i2.ColumnType.bigint,
-          isNullable: true,
-          dartType: 'int?',
-        ),
-        _i2.ColumnDefinition(
           name: 'userId',
           columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
         _i2.ColumnDefinition(
-          name: 'time',
+          name: 'restaurantId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'deliveryAddressId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'courierId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'subtotal',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'deliveryFee',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'serviceFee',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'discount',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'totalAmount',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'idempotencyKey',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'currentStatus',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:OrderStatus',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
           columnType: _i2.ColumnType.timestampWithoutTimeZone,
           isNullable: false,
           dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'estimatedDeliveryTime',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'actualDeliveryTime',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
         ),
         _i2.ColumnDefinition(
           name: 'isSplit',
@@ -693,17 +771,29 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'bool',
         ),
         _i2.ColumnDefinition(
-          name: 'currentStatus',
+          name: 'deliveryInstructions',
           columnType: _i2.ColumnType.text,
-          isNullable: false,
-          dartType: 'protocol:OrderStatus',
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'courierLatitude',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'courierLongitude',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
         ),
       ],
       foreignKeys: [
         _i2.ForeignKeyDefinition(
           constraintName: 'order_fk_0',
-          columns: ['courierId'],
-          referenceTable: 'courier',
+          columns: ['userId'],
+          referenceTable: 'user',
           referenceTableSchema: 'public',
           referenceColumns: ['id'],
           onUpdate: _i2.ForeignKeyAction.noAction,
@@ -712,8 +802,28 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ForeignKeyDefinition(
           constraintName: 'order_fk_1',
-          columns: ['userId'],
-          referenceTable: 'user',
+          columns: ['restaurantId'],
+          referenceTable: 'restaurant',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'order_fk_2',
+          columns: ['deliveryAddressId'],
+          referenceTable: 'address',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'order_fk_3',
+          columns: ['courierId'],
+          referenceTable: 'courier',
           referenceTableSchema: 'public',
           referenceColumns: ['id'],
           onUpdate: _i2.ForeignKeyAction.noAction,
@@ -734,6 +844,153 @@ class Protocol extends _i1.SerializationManagerServer {
           type: 'btree',
           isUnique: true,
           isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'idempotency_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'idempotencyKey',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'user_orders_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'status_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'currentStatus',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'order_item',
+      dartName: 'OrderItem',
+      schema: 'public',
+      module: 'the_delivery_app',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'order_item_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'orderId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'foodItemId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'quantity',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'unitPrice',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'specialInstructions',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'foodItemName',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'foodItemDescription',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'order_item_fk_0',
+          columns: ['orderId'],
+          referenceTable: 'order',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'order_item_fk_1',
+          columns: ['foodItemId'],
+          referenceTable: 'food_item',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'order_item_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'order_items_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'orderId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
         ),
       ],
       managed: true,
@@ -813,13 +1070,13 @@ class Protocol extends _i1.SerializationManagerServer {
           columnDefault: 'nextval(\'payment_id_seq\'::regclass)',
         ),
         _i2.ColumnDefinition(
-          name: 'userId',
+          name: 'orderId',
           columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
         _i2.ColumnDefinition(
-          name: 'orderId',
+          name: 'userId',
           columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
@@ -831,23 +1088,78 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'double',
         ),
         _i2.ColumnDefinition(
+          name: 'currency',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+          columnDefault: '\'GBP\'::text',
+        ),
+        _i2.ColumnDefinition(
+          name: 'paymentMethod',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'transactionId',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'providerName',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'providerMetadata',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'status',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
           name: 'createdAt',
           columnType: _i2.ColumnType.timestampWithoutTimeZone,
           isNullable: false,
           dartType: 'DateTime',
         ),
         _i2.ColumnDefinition(
-          name: 'transactionTime',
+          name: 'processedAt',
           columnType: _i2.ColumnType.timestampWithoutTimeZone,
-          isNullable: false,
-          dartType: 'DateTime',
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'refundedAmount',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'refundedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'refundReason',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
         ),
       ],
       foreignKeys: [
         _i2.ForeignKeyDefinition(
           constraintName: 'payment_fk_0',
-          columns: ['userId'],
-          referenceTable: 'user',
+          columns: ['orderId'],
+          referenceTable: 'order',
           referenceTableSchema: 'public',
           referenceColumns: ['id'],
           onUpdate: _i2.ForeignKeyAction.noAction,
@@ -856,8 +1168,8 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ForeignKeyDefinition(
           constraintName: 'payment_fk_1',
-          columns: ['orderId'],
-          referenceTable: 'order',
+          columns: ['userId'],
+          referenceTable: 'user',
           referenceTableSchema: 'public',
           referenceColumns: ['id'],
           onUpdate: _i2.ForeignKeyAction.noAction,
@@ -878,6 +1190,32 @@ class Protocol extends _i1.SerializationManagerServer {
           type: 'btree',
           isUnique: true,
           isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'transaction_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'transactionId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'order_payment_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'orderId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
         ),
       ],
       managed: true,
@@ -1104,6 +1442,145 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'split_payment_participant',
+      dartName: 'SplitPaymentParticipant',
+      schema: 'public',
+      module: 'the_delivery_app',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault:
+              'nextval(\'split_payment_participant_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'orderId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'paymentId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'amountDue',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'hasPaid',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'paidAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'invitedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'reminderSentAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'split_payment_participant_fk_0',
+          columns: ['orderId'],
+          referenceTable: 'order',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'split_payment_participant_fk_1',
+          columns: ['userId'],
+          referenceTable: 'user',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'split_payment_participant_fk_2',
+          columns: ['paymentId'],
+          referenceTable: 'payment',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'split_payment_participant_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'order_participants_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'orderId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'user_splits_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'tag',
       dartName: 'Tag',
       schema: 'public',
@@ -1155,19 +1632,13 @@ class Protocol extends _i1.SerializationManagerServer {
           columnDefault: 'nextval(\'user_id_seq\'::regclass)',
         ),
         _i2.ColumnDefinition(
-          name: 'fname',
-          columnType: _i2.ColumnType.text,
+          name: 'authUserId',
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
-          dartType: 'String',
+          dartType: 'int',
         ),
         _i2.ColumnDefinition(
-          name: 'lname',
-          columnType: _i2.ColumnType.text,
-          isNullable: false,
-          dartType: 'String',
-        ),
-        _i2.ColumnDefinition(
-          name: 'phone',
+          name: 'name',
           columnType: _i2.ColumnType.text,
           isNullable: false,
           dartType: 'String',
@@ -1179,10 +1650,28 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'String',
         ),
         _i2.ColumnDefinition(
-          name: 'passwordHash',
+          name: 'phone',
           columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'avatarUrl',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
           isNullable: false,
-          dartType: 'String',
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
         ),
       ],
       foreignKeys: [],
@@ -1199,6 +1688,140 @@ class Protocol extends _i1.SerializationManagerServer {
           type: 'btree',
           isUnique: true,
           isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'auth_user_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'authUserId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'user_favourite',
+      dartName: 'UserFavourite',
+      schema: 'public',
+      module: 'the_delivery_app',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'user_favourite_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'restaurantId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'foodItemId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'user_favourite_fk_0',
+          columns: ['userId'],
+          referenceTable: 'user',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'user_favourite_fk_1',
+          columns: ['restaurantId'],
+          referenceTable: 'restaurant',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'user_favourite_fk_2',
+          columns: ['foodItemId'],
+          referenceTable: 'food_item',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'user_favourite_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'user_restaurant_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'restaurantId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'user_food_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'foodItemId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
         ),
       ],
       managed: true,
@@ -1262,47 +1885,56 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i13.Order) {
       return _i13.Order.fromJson(data) as T;
     }
-    if (t == _i14.OrderStatus) {
-      return _i14.OrderStatus.fromJson(data) as T;
+    if (t == _i14.OrderItem) {
+      return _i14.OrderItem.fromJson(data) as T;
     }
-    if (t == _i15.OrderStatusHistory) {
-      return _i15.OrderStatusHistory.fromJson(data) as T;
+    if (t == _i15.OrderStatus) {
+      return _i15.OrderStatus.fromJson(data) as T;
     }
-    if (t == _i16.Payment) {
-      return _i16.Payment.fromJson(data) as T;
+    if (t == _i16.OrderStatusHistory) {
+      return _i16.OrderStatusHistory.fromJson(data) as T;
     }
-    if (t == _i17.Restaurant) {
-      return _i17.Restaurant.fromJson(data) as T;
+    if (t == _i17.Payment) {
+      return _i17.Payment.fromJson(data) as T;
     }
-    if (t == _i18.RestaurantPlace) {
-      return _i18.RestaurantPlace.fromJson(data) as T;
+    if (t == _i18.Restaurant) {
+      return _i18.Restaurant.fromJson(data) as T;
     }
-    if (t == _i19.SpecialDeals) {
-      return _i19.SpecialDeals.fromJson(data) as T;
+    if (t == _i19.RestaurantPlace) {
+      return _i19.RestaurantPlace.fromJson(data) as T;
     }
-    if (t == _i20.Tag) {
-      return _i20.Tag.fromJson(data) as T;
+    if (t == _i20.SpecialDeals) {
+      return _i20.SpecialDeals.fromJson(data) as T;
     }
-    if (t == _i21.User) {
-      return _i21.User.fromJson(data) as T;
+    if (t == _i21.SplitPaymentParticipant) {
+      return _i21.SplitPaymentParticipant.fromJson(data) as T;
     }
-    if (t == _i22.FeedChunkResponse) {
-      return _i22.FeedChunkResponse.fromJson(data) as T;
+    if (t == _i22.Tag) {
+      return _i22.Tag.fromJson(data) as T;
     }
-    if (t == _i23.FilteredFeedResponse) {
-      return _i23.FilteredFeedResponse.fromJson(data) as T;
+    if (t == _i23.User) {
+      return _i23.User.fromJson(data) as T;
     }
-    if (t == _i24.FoodItemResponse) {
-      return _i24.FoodItemResponse.fromJson(data) as T;
+    if (t == _i24.UserFavourite) {
+      return _i24.UserFavourite.fromJson(data) as T;
     }
-    if (t == _i25.MunicipalitiesResponse) {
-      return _i25.MunicipalitiesResponse.fromJson(data) as T;
+    if (t == _i25.FeedChunkResponse) {
+      return _i25.FeedChunkResponse.fromJson(data) as T;
     }
-    if (t == _i26.RestaurantResponse) {
-      return _i26.RestaurantResponse.fromJson(data) as T;
+    if (t == _i26.FilteredFeedResponse) {
+      return _i26.FilteredFeedResponse.fromJson(data) as T;
     }
-    if (t == _i27.Greeting) {
-      return _i27.Greeting.fromJson(data) as T;
+    if (t == _i27.FoodItemResponse) {
+      return _i27.FoodItemResponse.fromJson(data) as T;
+    }
+    if (t == _i28.MunicipalitiesResponse) {
+      return _i28.MunicipalitiesResponse.fromJson(data) as T;
+    }
+    if (t == _i29.RestaurantResponse) {
+      return _i29.RestaurantResponse.fromJson(data) as T;
+    }
+    if (t == _i30.Greeting) {
+      return _i30.Greeting.fromJson(data) as T;
     }
     if (t == _i1.getType<_i5.Address?>()) {
       return (data != null ? _i5.Address.fromJson(data) : null) as T;
@@ -1331,61 +1963,71 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i13.Order?>()) {
       return (data != null ? _i13.Order.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i14.OrderStatus?>()) {
-      return (data != null ? _i14.OrderStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i14.OrderItem?>()) {
+      return (data != null ? _i14.OrderItem.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i15.OrderStatusHistory?>()) {
-      return (data != null ? _i15.OrderStatusHistory.fromJson(data) : null)
+    if (t == _i1.getType<_i15.OrderStatus?>()) {
+      return (data != null ? _i15.OrderStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i16.OrderStatusHistory?>()) {
+      return (data != null ? _i16.OrderStatusHistory.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i16.Payment?>()) {
-      return (data != null ? _i16.Payment.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i17.Payment?>()) {
+      return (data != null ? _i17.Payment.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i17.Restaurant?>()) {
-      return (data != null ? _i17.Restaurant.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i18.Restaurant?>()) {
+      return (data != null ? _i18.Restaurant.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i18.RestaurantPlace?>()) {
-      return (data != null ? _i18.RestaurantPlace.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i19.RestaurantPlace?>()) {
+      return (data != null ? _i19.RestaurantPlace.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i19.SpecialDeals?>()) {
-      return (data != null ? _i19.SpecialDeals.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i20.SpecialDeals?>()) {
+      return (data != null ? _i20.SpecialDeals.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i20.Tag?>()) {
-      return (data != null ? _i20.Tag.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i21.User?>()) {
-      return (data != null ? _i21.User.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i22.FeedChunkResponse?>()) {
-      return (data != null ? _i22.FeedChunkResponse.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i23.FilteredFeedResponse?>()) {
-      return (data != null ? _i23.FilteredFeedResponse.fromJson(data) : null)
+    if (t == _i1.getType<_i21.SplitPaymentParticipant?>()) {
+      return (data != null ? _i21.SplitPaymentParticipant.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i24.FoodItemResponse?>()) {
-      return (data != null ? _i24.FoodItemResponse.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i22.Tag?>()) {
+      return (data != null ? _i22.Tag.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i25.MunicipalitiesResponse?>()) {
-      return (data != null ? _i25.MunicipalitiesResponse.fromJson(data) : null)
+    if (t == _i1.getType<_i23.User?>()) {
+      return (data != null ? _i23.User.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i24.UserFavourite?>()) {
+      return (data != null ? _i24.UserFavourite.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i25.FeedChunkResponse?>()) {
+      return (data != null ? _i25.FeedChunkResponse.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i26.FilteredFeedResponse?>()) {
+      return (data != null ? _i26.FilteredFeedResponse.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i26.RestaurantResponse?>()) {
-      return (data != null ? _i26.RestaurantResponse.fromJson(data) : null)
+    if (t == _i1.getType<_i27.FoodItemResponse?>()) {
+      return (data != null ? _i27.FoodItemResponse.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i28.MunicipalitiesResponse?>()) {
+      return (data != null ? _i28.MunicipalitiesResponse.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i27.Greeting?>()) {
-      return (data != null ? _i27.Greeting.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i29.RestaurantResponse?>()) {
+      return (data != null ? _i29.RestaurantResponse.fromJson(data) : null)
+          as T;
     }
-    if (t == List<_i24.FoodItemResponse>) {
+    if (t == _i1.getType<_i30.Greeting?>()) {
+      return (data != null ? _i30.Greeting.fromJson(data) : null) as T;
+    }
+    if (t == List<_i27.FoodItemResponse>) {
       return (data as List)
-              .map((e) => deserialize<_i24.FoodItemResponse>(e))
+              .map((e) => deserialize<_i27.FoodItemResponse>(e))
               .toList()
           as T;
     }
-    if (t == List<_i26.RestaurantResponse>) {
+    if (t == List<_i29.RestaurantResponse>) {
       return (data as List)
-              .map((e) => deserialize<_i26.RestaurantResponse>(e))
+              .map((e) => deserialize<_i29.RestaurantResponse>(e))
               .toList()
           as T;
     }
@@ -1395,21 +2037,6 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<List<String>?>()) {
       return (data != null
               ? (data as List).map((e) => deserialize<String>(e)).toList()
-              : null)
-          as T;
-    }
-    if (t == Map<String, dynamic>) {
-      return (data as Map).map(
-            (k, v) => MapEntry(deserialize<String>(k), deserialize<dynamic>(v)),
-          )
-          as T;
-    }
-    if (t == _i1.getType<Map<String, dynamic>?>()) {
-      return (data != null
-              ? (data as Map).map(
-                  (k, v) =>
-                      MapEntry(deserialize<String>(k), deserialize<dynamic>(v)),
-                )
               : null)
           as T;
     }
@@ -1436,20 +2063,23 @@ class Protocol extends _i1.SerializationManagerServer {
       _i11.FoodReview => 'FoodReview',
       _i12.FoodTag => 'FoodTag',
       _i13.Order => 'Order',
-      _i14.OrderStatus => 'OrderStatus',
-      _i15.OrderStatusHistory => 'OrderStatusHistory',
-      _i16.Payment => 'Payment',
-      _i17.Restaurant => 'Restaurant',
-      _i18.RestaurantPlace => 'RestaurantPlace',
-      _i19.SpecialDeals => 'SpecialDeals',
-      _i20.Tag => 'Tag',
-      _i21.User => 'User',
-      _i22.FeedChunkResponse => 'FeedChunkResponse',
-      _i23.FilteredFeedResponse => 'FilteredFeedResponse',
-      _i24.FoodItemResponse => 'FoodItemResponse',
-      _i25.MunicipalitiesResponse => 'MunicipalitiesResponse',
-      _i26.RestaurantResponse => 'RestaurantResponse',
-      _i27.Greeting => 'Greeting',
+      _i14.OrderItem => 'OrderItem',
+      _i15.OrderStatus => 'OrderStatus',
+      _i16.OrderStatusHistory => 'OrderStatusHistory',
+      _i17.Payment => 'Payment',
+      _i18.Restaurant => 'Restaurant',
+      _i19.RestaurantPlace => 'RestaurantPlace',
+      _i20.SpecialDeals => 'SpecialDeals',
+      _i21.SplitPaymentParticipant => 'SplitPaymentParticipant',
+      _i22.Tag => 'Tag',
+      _i23.User => 'User',
+      _i24.UserFavourite => 'UserFavourite',
+      _i25.FeedChunkResponse => 'FeedChunkResponse',
+      _i26.FilteredFeedResponse => 'FilteredFeedResponse',
+      _i27.FoodItemResponse => 'FoodItemResponse',
+      _i28.MunicipalitiesResponse => 'MunicipalitiesResponse',
+      _i29.RestaurantResponse => 'RestaurantResponse',
+      _i30.Greeting => 'Greeting',
       _ => null,
     };
   }
@@ -1485,33 +2115,39 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'FoodTag';
       case _i13.Order():
         return 'Order';
-      case _i14.OrderStatus():
+      case _i14.OrderItem():
+        return 'OrderItem';
+      case _i15.OrderStatus():
         return 'OrderStatus';
-      case _i15.OrderStatusHistory():
+      case _i16.OrderStatusHistory():
         return 'OrderStatusHistory';
-      case _i16.Payment():
+      case _i17.Payment():
         return 'Payment';
-      case _i17.Restaurant():
+      case _i18.Restaurant():
         return 'Restaurant';
-      case _i18.RestaurantPlace():
+      case _i19.RestaurantPlace():
         return 'RestaurantPlace';
-      case _i19.SpecialDeals():
+      case _i20.SpecialDeals():
         return 'SpecialDeals';
-      case _i20.Tag():
+      case _i21.SplitPaymentParticipant():
+        return 'SplitPaymentParticipant';
+      case _i22.Tag():
         return 'Tag';
-      case _i21.User():
+      case _i23.User():
         return 'User';
-      case _i22.FeedChunkResponse():
+      case _i24.UserFavourite():
+        return 'UserFavourite';
+      case _i25.FeedChunkResponse():
         return 'FeedChunkResponse';
-      case _i23.FilteredFeedResponse():
+      case _i26.FilteredFeedResponse():
         return 'FilteredFeedResponse';
-      case _i24.FoodItemResponse():
+      case _i27.FoodItemResponse():
         return 'FoodItemResponse';
-      case _i25.MunicipalitiesResponse():
+      case _i28.MunicipalitiesResponse():
         return 'MunicipalitiesResponse';
-      case _i26.RestaurantResponse():
+      case _i29.RestaurantResponse():
         return 'RestaurantResponse';
-      case _i27.Greeting():
+      case _i30.Greeting():
         return 'Greeting';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -1562,47 +2198,56 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'Order') {
       return deserialize<_i13.Order>(data['data']);
     }
+    if (dataClassName == 'OrderItem') {
+      return deserialize<_i14.OrderItem>(data['data']);
+    }
     if (dataClassName == 'OrderStatus') {
-      return deserialize<_i14.OrderStatus>(data['data']);
+      return deserialize<_i15.OrderStatus>(data['data']);
     }
     if (dataClassName == 'OrderStatusHistory') {
-      return deserialize<_i15.OrderStatusHistory>(data['data']);
+      return deserialize<_i16.OrderStatusHistory>(data['data']);
     }
     if (dataClassName == 'Payment') {
-      return deserialize<_i16.Payment>(data['data']);
+      return deserialize<_i17.Payment>(data['data']);
     }
     if (dataClassName == 'Restaurant') {
-      return deserialize<_i17.Restaurant>(data['data']);
+      return deserialize<_i18.Restaurant>(data['data']);
     }
     if (dataClassName == 'RestaurantPlace') {
-      return deserialize<_i18.RestaurantPlace>(data['data']);
+      return deserialize<_i19.RestaurantPlace>(data['data']);
     }
     if (dataClassName == 'SpecialDeals') {
-      return deserialize<_i19.SpecialDeals>(data['data']);
+      return deserialize<_i20.SpecialDeals>(data['data']);
+    }
+    if (dataClassName == 'SplitPaymentParticipant') {
+      return deserialize<_i21.SplitPaymentParticipant>(data['data']);
     }
     if (dataClassName == 'Tag') {
-      return deserialize<_i20.Tag>(data['data']);
+      return deserialize<_i22.Tag>(data['data']);
     }
     if (dataClassName == 'User') {
-      return deserialize<_i21.User>(data['data']);
+      return deserialize<_i23.User>(data['data']);
+    }
+    if (dataClassName == 'UserFavourite') {
+      return deserialize<_i24.UserFavourite>(data['data']);
     }
     if (dataClassName == 'FeedChunkResponse') {
-      return deserialize<_i22.FeedChunkResponse>(data['data']);
+      return deserialize<_i25.FeedChunkResponse>(data['data']);
     }
     if (dataClassName == 'FilteredFeedResponse') {
-      return deserialize<_i23.FilteredFeedResponse>(data['data']);
+      return deserialize<_i26.FilteredFeedResponse>(data['data']);
     }
     if (dataClassName == 'FoodItemResponse') {
-      return deserialize<_i24.FoodItemResponse>(data['data']);
+      return deserialize<_i27.FoodItemResponse>(data['data']);
     }
     if (dataClassName == 'MunicipalitiesResponse') {
-      return deserialize<_i25.MunicipalitiesResponse>(data['data']);
+      return deserialize<_i28.MunicipalitiesResponse>(data['data']);
     }
     if (dataClassName == 'RestaurantResponse') {
-      return deserialize<_i26.RestaurantResponse>(data['data']);
+      return deserialize<_i29.RestaurantResponse>(data['data']);
     }
     if (dataClassName == 'Greeting') {
-      return deserialize<_i27.Greeting>(data['data']);
+      return deserialize<_i30.Greeting>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -1658,20 +2303,26 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i12.FoodTag.t;
       case _i13.Order:
         return _i13.Order.t;
-      case _i15.OrderStatusHistory:
-        return _i15.OrderStatusHistory.t;
-      case _i16.Payment:
-        return _i16.Payment.t;
-      case _i17.Restaurant:
-        return _i17.Restaurant.t;
-      case _i18.RestaurantPlace:
-        return _i18.RestaurantPlace.t;
-      case _i19.SpecialDeals:
-        return _i19.SpecialDeals.t;
-      case _i20.Tag:
-        return _i20.Tag.t;
-      case _i21.User:
-        return _i21.User.t;
+      case _i14.OrderItem:
+        return _i14.OrderItem.t;
+      case _i16.OrderStatusHistory:
+        return _i16.OrderStatusHistory.t;
+      case _i17.Payment:
+        return _i17.Payment.t;
+      case _i18.Restaurant:
+        return _i18.Restaurant.t;
+      case _i19.RestaurantPlace:
+        return _i19.RestaurantPlace.t;
+      case _i20.SpecialDeals:
+        return _i20.SpecialDeals.t;
+      case _i21.SplitPaymentParticipant:
+        return _i21.SplitPaymentParticipant.t;
+      case _i22.Tag:
+        return _i22.Tag.t;
+      case _i23.User:
+        return _i23.User.t;
+      case _i24.UserFavourite:
+        return _i24.UserFavourite.t;
     }
     return null;
   }

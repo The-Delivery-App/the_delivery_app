@@ -1,8 +1,18 @@
 class: User
 table: user
 fields:
-  fname: String
-  lname: String
-  phone: String
+  # Links to serverpod auth system
+  authUserId: int
+  
+  name: String
   email: String
-  passwordHash: String
+  phone: String?
+  avatarUrl: String?
+  
+  createdAt: DateTime
+  updatedAt: DateTime?
+
+indexes:
+  auth_user_idx:
+    fields: authUserId
+    unique: true

@@ -290,8 +290,6 @@ class SpecialDealsRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<SpecialDealsTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<SpecialDeals>(
       where: where?.call(SpecialDeals.t),
@@ -301,8 +299,6 @@ class SpecialDealsRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -331,8 +327,6 @@ class SpecialDealsRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<SpecialDealsTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<SpecialDeals>(
       where: where?.call(SpecialDeals.t),
@@ -341,8 +335,6 @@ class SpecialDealsRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -351,14 +343,10 @@ class SpecialDealsRepository {
     _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<SpecialDeals>(
       id,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -368,20 +356,14 @@ class SpecialDealsRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
-  ///
-  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
-  /// rows are silently skipped, and only the successfully inserted rows are
-  /// returned.
   Future<List<SpecialDeals>> insert(
     _i1.Session session,
     List<SpecialDeals> rows, {
     _i1.Transaction? transaction,
-    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<SpecialDeals>(
       rows,
       transaction: transaction,
-      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -522,22 +504,6 @@ class SpecialDealsRepository {
     return session.db.count<SpecialDeals>(
       where: where?.call(SpecialDeals.t),
       limit: limit,
-      transaction: transaction,
-    );
-  }
-
-  /// Acquires row-level locks on [SpecialDeals] rows matching the [where] expression.
-  Future<void> lockRows(
-    _i1.Session session, {
-    required _i1.WhereExpressionBuilder<SpecialDealsTable> where,
-    required _i1.LockMode lockMode,
-    required _i1.Transaction transaction,
-    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
-  }) async {
-    return session.db.lockRows<SpecialDeals>(
-      where: where(SpecialDeals.t),
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

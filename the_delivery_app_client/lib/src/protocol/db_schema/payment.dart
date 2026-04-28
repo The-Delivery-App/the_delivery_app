@@ -15,34 +15,65 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 abstract class Payment implements _i1.SerializableModel {
   Payment._({
     this.id,
-    required this.userId,
     required this.orderId,
+    required this.userId,
     required this.amount,
+    String? currency,
+    required this.paymentMethod,
+    this.transactionId,
+    required this.providerName,
+    this.providerMetadata,
+    required this.status,
     required this.createdAt,
-    required this.transactionTime,
-  });
+    this.processedAt,
+    this.refundedAmount,
+    this.refundedAt,
+    this.refundReason,
+  }) : currency = currency ?? 'GBP';
 
   factory Payment({
     int? id,
-    required int userId,
     required int orderId,
+    required int userId,
     required double amount,
+    String? currency,
+    required String paymentMethod,
+    String? transactionId,
+    required String providerName,
+    String? providerMetadata,
+    required String status,
     required DateTime createdAt,
-    required DateTime transactionTime,
+    DateTime? processedAt,
+    double? refundedAmount,
+    DateTime? refundedAt,
+    String? refundReason,
   }) = _PaymentImpl;
 
   factory Payment.fromJson(Map<String, dynamic> jsonSerialization) {
     return Payment(
       id: jsonSerialization['id'] as int?,
-      userId: jsonSerialization['userId'] as int,
       orderId: jsonSerialization['orderId'] as int,
+      userId: jsonSerialization['userId'] as int,
       amount: (jsonSerialization['amount'] as num).toDouble(),
+      currency: jsonSerialization['currency'] as String?,
+      paymentMethod: jsonSerialization['paymentMethod'] as String,
+      transactionId: jsonSerialization['transactionId'] as String?,
+      providerName: jsonSerialization['providerName'] as String,
+      providerMetadata: jsonSerialization['providerMetadata'] as String?,
+      status: jsonSerialization['status'] as String,
       createdAt: _i1.DateTimeJsonExtension.fromJson(
         jsonSerialization['createdAt'],
       ),
-      transactionTime: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['transactionTime'],
-      ),
+      processedAt: jsonSerialization['processedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['processedAt'],
+            ),
+      refundedAmount: (jsonSerialization['refundedAmount'] as num?)?.toDouble(),
+      refundedAt: jsonSerialization['refundedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['refundedAt']),
+      refundReason: jsonSerialization['refundReason'] as String?,
     );
   }
 
@@ -51,37 +82,73 @@ abstract class Payment implements _i1.SerializableModel {
   /// the id will be null.
   int? id;
 
-  int userId;
-
   int orderId;
+
+  int userId;
 
   double amount;
 
+  String currency;
+
+  String paymentMethod;
+
+  String? transactionId;
+
+  String providerName;
+
+  String? providerMetadata;
+
+  String status;
+
   DateTime createdAt;
 
-  DateTime transactionTime;
+  DateTime? processedAt;
+
+  double? refundedAmount;
+
+  DateTime? refundedAt;
+
+  String? refundReason;
 
   /// Returns a shallow copy of this [Payment]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Payment copyWith({
     int? id,
-    int? userId,
     int? orderId,
+    int? userId,
     double? amount,
+    String? currency,
+    String? paymentMethod,
+    String? transactionId,
+    String? providerName,
+    String? providerMetadata,
+    String? status,
     DateTime? createdAt,
-    DateTime? transactionTime,
+    DateTime? processedAt,
+    double? refundedAmount,
+    DateTime? refundedAt,
+    String? refundReason,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Payment',
       if (id != null) 'id': id,
-      'userId': userId,
       'orderId': orderId,
+      'userId': userId,
       'amount': amount,
+      'currency': currency,
+      'paymentMethod': paymentMethod,
+      if (transactionId != null) 'transactionId': transactionId,
+      'providerName': providerName,
+      if (providerMetadata != null) 'providerMetadata': providerMetadata,
+      'status': status,
       'createdAt': createdAt.toJson(),
-      'transactionTime': transactionTime.toJson(),
+      if (processedAt != null) 'processedAt': processedAt?.toJson(),
+      if (refundedAmount != null) 'refundedAmount': refundedAmount,
+      if (refundedAt != null) 'refundedAt': refundedAt?.toJson(),
+      if (refundReason != null) 'refundReason': refundReason,
     };
   }
 
@@ -96,18 +163,36 @@ class _Undefined {}
 class _PaymentImpl extends Payment {
   _PaymentImpl({
     int? id,
-    required int userId,
     required int orderId,
+    required int userId,
     required double amount,
+    String? currency,
+    required String paymentMethod,
+    String? transactionId,
+    required String providerName,
+    String? providerMetadata,
+    required String status,
     required DateTime createdAt,
-    required DateTime transactionTime,
+    DateTime? processedAt,
+    double? refundedAmount,
+    DateTime? refundedAt,
+    String? refundReason,
   }) : super._(
          id: id,
-         userId: userId,
          orderId: orderId,
+         userId: userId,
          amount: amount,
+         currency: currency,
+         paymentMethod: paymentMethod,
+         transactionId: transactionId,
+         providerName: providerName,
+         providerMetadata: providerMetadata,
+         status: status,
          createdAt: createdAt,
-         transactionTime: transactionTime,
+         processedAt: processedAt,
+         refundedAmount: refundedAmount,
+         refundedAt: refundedAt,
+         refundReason: refundReason,
        );
 
   /// Returns a shallow copy of this [Payment]
@@ -116,19 +201,43 @@ class _PaymentImpl extends Payment {
   @override
   Payment copyWith({
     Object? id = _Undefined,
-    int? userId,
     int? orderId,
+    int? userId,
     double? amount,
+    String? currency,
+    String? paymentMethod,
+    Object? transactionId = _Undefined,
+    String? providerName,
+    Object? providerMetadata = _Undefined,
+    String? status,
     DateTime? createdAt,
-    DateTime? transactionTime,
+    Object? processedAt = _Undefined,
+    Object? refundedAmount = _Undefined,
+    Object? refundedAt = _Undefined,
+    Object? refundReason = _Undefined,
   }) {
     return Payment(
       id: id is int? ? id : this.id,
-      userId: userId ?? this.userId,
       orderId: orderId ?? this.orderId,
+      userId: userId ?? this.userId,
       amount: amount ?? this.amount,
+      currency: currency ?? this.currency,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      transactionId: transactionId is String?
+          ? transactionId
+          : this.transactionId,
+      providerName: providerName ?? this.providerName,
+      providerMetadata: providerMetadata is String?
+          ? providerMetadata
+          : this.providerMetadata,
+      status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
-      transactionTime: transactionTime ?? this.transactionTime,
+      processedAt: processedAt is DateTime? ? processedAt : this.processedAt,
+      refundedAmount: refundedAmount is double?
+          ? refundedAmount
+          : this.refundedAmount,
+      refundedAt: refundedAt is DateTime? ? refundedAt : this.refundedAt,
+      refundReason: refundReason is String? ? refundReason : this.refundReason,
     );
   }
 }

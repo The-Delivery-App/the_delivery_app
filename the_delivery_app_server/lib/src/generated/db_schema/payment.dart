@@ -16,34 +16,65 @@ abstract class Payment
     implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Payment._({
     this.id,
-    required this.userId,
     required this.orderId,
+    required this.userId,
     required this.amount,
+    String? currency,
+    required this.paymentMethod,
+    this.transactionId,
+    required this.providerName,
+    this.providerMetadata,
+    required this.status,
     required this.createdAt,
-    required this.transactionTime,
-  });
+    this.processedAt,
+    this.refundedAmount,
+    this.refundedAt,
+    this.refundReason,
+  }) : currency = currency ?? 'GBP';
 
   factory Payment({
     int? id,
-    required int userId,
     required int orderId,
+    required int userId,
     required double amount,
+    String? currency,
+    required String paymentMethod,
+    String? transactionId,
+    required String providerName,
+    String? providerMetadata,
+    required String status,
     required DateTime createdAt,
-    required DateTime transactionTime,
+    DateTime? processedAt,
+    double? refundedAmount,
+    DateTime? refundedAt,
+    String? refundReason,
   }) = _PaymentImpl;
 
   factory Payment.fromJson(Map<String, dynamic> jsonSerialization) {
     return Payment(
       id: jsonSerialization['id'] as int?,
-      userId: jsonSerialization['userId'] as int,
       orderId: jsonSerialization['orderId'] as int,
+      userId: jsonSerialization['userId'] as int,
       amount: (jsonSerialization['amount'] as num).toDouble(),
+      currency: jsonSerialization['currency'] as String?,
+      paymentMethod: jsonSerialization['paymentMethod'] as String,
+      transactionId: jsonSerialization['transactionId'] as String?,
+      providerName: jsonSerialization['providerName'] as String,
+      providerMetadata: jsonSerialization['providerMetadata'] as String?,
+      status: jsonSerialization['status'] as String,
       createdAt: _i1.DateTimeJsonExtension.fromJson(
         jsonSerialization['createdAt'],
       ),
-      transactionTime: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['transactionTime'],
-      ),
+      processedAt: jsonSerialization['processedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['processedAt'],
+            ),
+      refundedAmount: (jsonSerialization['refundedAmount'] as num?)?.toDouble(),
+      refundedAt: jsonSerialization['refundedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['refundedAt']),
+      refundReason: jsonSerialization['refundReason'] as String?,
     );
   }
 
@@ -54,15 +85,33 @@ abstract class Payment
   @override
   int? id;
 
-  int userId;
-
   int orderId;
+
+  int userId;
 
   double amount;
 
+  String currency;
+
+  String paymentMethod;
+
+  String? transactionId;
+
+  String providerName;
+
+  String? providerMetadata;
+
+  String status;
+
   DateTime createdAt;
 
-  DateTime transactionTime;
+  DateTime? processedAt;
+
+  double? refundedAmount;
+
+  DateTime? refundedAt;
+
+  String? refundReason;
 
   @override
   _i1.Table<int?> get table => t;
@@ -72,22 +121,40 @@ abstract class Payment
   @_i1.useResult
   Payment copyWith({
     int? id,
-    int? userId,
     int? orderId,
+    int? userId,
     double? amount,
+    String? currency,
+    String? paymentMethod,
+    String? transactionId,
+    String? providerName,
+    String? providerMetadata,
+    String? status,
     DateTime? createdAt,
-    DateTime? transactionTime,
+    DateTime? processedAt,
+    double? refundedAmount,
+    DateTime? refundedAt,
+    String? refundReason,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Payment',
       if (id != null) 'id': id,
-      'userId': userId,
       'orderId': orderId,
+      'userId': userId,
       'amount': amount,
+      'currency': currency,
+      'paymentMethod': paymentMethod,
+      if (transactionId != null) 'transactionId': transactionId,
+      'providerName': providerName,
+      if (providerMetadata != null) 'providerMetadata': providerMetadata,
+      'status': status,
       'createdAt': createdAt.toJson(),
-      'transactionTime': transactionTime.toJson(),
+      if (processedAt != null) 'processedAt': processedAt?.toJson(),
+      if (refundedAmount != null) 'refundedAmount': refundedAmount,
+      if (refundedAt != null) 'refundedAt': refundedAt?.toJson(),
+      if (refundReason != null) 'refundReason': refundReason,
     };
   }
 
@@ -96,11 +163,20 @@ abstract class Payment
     return {
       '__className__': 'Payment',
       if (id != null) 'id': id,
-      'userId': userId,
       'orderId': orderId,
+      'userId': userId,
       'amount': amount,
+      'currency': currency,
+      'paymentMethod': paymentMethod,
+      if (transactionId != null) 'transactionId': transactionId,
+      'providerName': providerName,
+      if (providerMetadata != null) 'providerMetadata': providerMetadata,
+      'status': status,
       'createdAt': createdAt.toJson(),
-      'transactionTime': transactionTime.toJson(),
+      if (processedAt != null) 'processedAt': processedAt?.toJson(),
+      if (refundedAmount != null) 'refundedAmount': refundedAmount,
+      if (refundedAt != null) 'refundedAt': refundedAt?.toJson(),
+      if (refundReason != null) 'refundReason': refundReason,
     };
   }
 
@@ -139,18 +215,36 @@ class _Undefined {}
 class _PaymentImpl extends Payment {
   _PaymentImpl({
     int? id,
-    required int userId,
     required int orderId,
+    required int userId,
     required double amount,
+    String? currency,
+    required String paymentMethod,
+    String? transactionId,
+    required String providerName,
+    String? providerMetadata,
+    required String status,
     required DateTime createdAt,
-    required DateTime transactionTime,
+    DateTime? processedAt,
+    double? refundedAmount,
+    DateTime? refundedAt,
+    String? refundReason,
   }) : super._(
          id: id,
-         userId: userId,
          orderId: orderId,
+         userId: userId,
          amount: amount,
+         currency: currency,
+         paymentMethod: paymentMethod,
+         transactionId: transactionId,
+         providerName: providerName,
+         providerMetadata: providerMetadata,
+         status: status,
          createdAt: createdAt,
-         transactionTime: transactionTime,
+         processedAt: processedAt,
+         refundedAmount: refundedAmount,
+         refundedAt: refundedAt,
+         refundReason: refundReason,
        );
 
   /// Returns a shallow copy of this [Payment]
@@ -159,19 +253,43 @@ class _PaymentImpl extends Payment {
   @override
   Payment copyWith({
     Object? id = _Undefined,
-    int? userId,
     int? orderId,
+    int? userId,
     double? amount,
+    String? currency,
+    String? paymentMethod,
+    Object? transactionId = _Undefined,
+    String? providerName,
+    Object? providerMetadata = _Undefined,
+    String? status,
     DateTime? createdAt,
-    DateTime? transactionTime,
+    Object? processedAt = _Undefined,
+    Object? refundedAmount = _Undefined,
+    Object? refundedAt = _Undefined,
+    Object? refundReason = _Undefined,
   }) {
     return Payment(
       id: id is int? ? id : this.id,
-      userId: userId ?? this.userId,
       orderId: orderId ?? this.orderId,
+      userId: userId ?? this.userId,
       amount: amount ?? this.amount,
+      currency: currency ?? this.currency,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      transactionId: transactionId is String?
+          ? transactionId
+          : this.transactionId,
+      providerName: providerName ?? this.providerName,
+      providerMetadata: providerMetadata is String?
+          ? providerMetadata
+          : this.providerMetadata,
+      status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
-      transactionTime: transactionTime ?? this.transactionTime,
+      processedAt: processedAt is DateTime? ? processedAt : this.processedAt,
+      refundedAmount: refundedAmount is double?
+          ? refundedAmount
+          : this.refundedAmount,
+      refundedAt: refundedAt is DateTime? ? refundedAt : this.refundedAt,
+      refundReason: refundReason is String? ? refundReason : this.refundReason,
     );
   }
 }
@@ -179,18 +297,51 @@ class _PaymentImpl extends Payment {
 class PaymentUpdateTable extends _i1.UpdateTable<PaymentTable> {
   PaymentUpdateTable(super.table);
 
-  _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
-
   _i1.ColumnValue<int, int> orderId(int value) => _i1.ColumnValue(
     table.orderId,
     value,
   );
 
+  _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
+    table.userId,
+    value,
+  );
+
   _i1.ColumnValue<double, double> amount(double value) => _i1.ColumnValue(
     table.amount,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> currency(String value) => _i1.ColumnValue(
+    table.currency,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> paymentMethod(String value) =>
+      _i1.ColumnValue(
+        table.paymentMethod,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> transactionId(String? value) =>
+      _i1.ColumnValue(
+        table.transactionId,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> providerName(String value) => _i1.ColumnValue(
+    table.providerName,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> providerMetadata(String? value) =>
+      _i1.ColumnValue(
+        table.providerMetadata,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> status(String value) => _i1.ColumnValue(
+    table.status,
     value,
   );
 
@@ -200,9 +351,27 @@ class PaymentUpdateTable extends _i1.UpdateTable<PaymentTable> {
         value,
       );
 
-  _i1.ColumnValue<DateTime, DateTime> transactionTime(DateTime value) =>
+  _i1.ColumnValue<DateTime, DateTime> processedAt(DateTime? value) =>
       _i1.ColumnValue(
-        table.transactionTime,
+        table.processedAt,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> refundedAmount(double? value) =>
+      _i1.ColumnValue(
+        table.refundedAmount,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> refundedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.refundedAt,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> refundReason(String? value) =>
+      _i1.ColumnValue(
+        table.refundReason,
         value,
       );
 }
@@ -210,48 +379,112 @@ class PaymentUpdateTable extends _i1.UpdateTable<PaymentTable> {
 class PaymentTable extends _i1.Table<int?> {
   PaymentTable({super.tableRelation}) : super(tableName: 'payment') {
     updateTable = PaymentUpdateTable(this);
-    userId = _i1.ColumnInt(
-      'userId',
-      this,
-    );
     orderId = _i1.ColumnInt(
       'orderId',
+      this,
+    );
+    userId = _i1.ColumnInt(
+      'userId',
       this,
     );
     amount = _i1.ColumnDouble(
       'amount',
       this,
     );
+    currency = _i1.ColumnString(
+      'currency',
+      this,
+      hasDefault: true,
+    );
+    paymentMethod = _i1.ColumnString(
+      'paymentMethod',
+      this,
+    );
+    transactionId = _i1.ColumnString(
+      'transactionId',
+      this,
+    );
+    providerName = _i1.ColumnString(
+      'providerName',
+      this,
+    );
+    providerMetadata = _i1.ColumnString(
+      'providerMetadata',
+      this,
+    );
+    status = _i1.ColumnString(
+      'status',
+      this,
+    );
     createdAt = _i1.ColumnDateTime(
       'createdAt',
       this,
     );
-    transactionTime = _i1.ColumnDateTime(
-      'transactionTime',
+    processedAt = _i1.ColumnDateTime(
+      'processedAt',
+      this,
+    );
+    refundedAmount = _i1.ColumnDouble(
+      'refundedAmount',
+      this,
+    );
+    refundedAt = _i1.ColumnDateTime(
+      'refundedAt',
+      this,
+    );
+    refundReason = _i1.ColumnString(
+      'refundReason',
       this,
     );
   }
 
   late final PaymentUpdateTable updateTable;
 
-  late final _i1.ColumnInt userId;
-
   late final _i1.ColumnInt orderId;
+
+  late final _i1.ColumnInt userId;
 
   late final _i1.ColumnDouble amount;
 
+  late final _i1.ColumnString currency;
+
+  late final _i1.ColumnString paymentMethod;
+
+  late final _i1.ColumnString transactionId;
+
+  late final _i1.ColumnString providerName;
+
+  late final _i1.ColumnString providerMetadata;
+
+  late final _i1.ColumnString status;
+
   late final _i1.ColumnDateTime createdAt;
 
-  late final _i1.ColumnDateTime transactionTime;
+  late final _i1.ColumnDateTime processedAt;
+
+  late final _i1.ColumnDouble refundedAmount;
+
+  late final _i1.ColumnDateTime refundedAt;
+
+  late final _i1.ColumnString refundReason;
 
   @override
   List<_i1.Column> get columns => [
     id,
-    userId,
     orderId,
+    userId,
     amount,
+    currency,
+    paymentMethod,
+    transactionId,
+    providerName,
+    providerMetadata,
+    status,
     createdAt,
-    transactionTime,
+    processedAt,
+    refundedAmount,
+    refundedAt,
+    refundReason,
   ];
 }
 
@@ -319,8 +552,6 @@ class PaymentRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<PaymentTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<Payment>(
       where: where?.call(Payment.t),
@@ -330,8 +561,6 @@ class PaymentRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -360,8 +589,6 @@ class PaymentRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<PaymentTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<Payment>(
       where: where?.call(Payment.t),
@@ -370,8 +597,6 @@ class PaymentRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -380,14 +605,10 @@ class PaymentRepository {
     _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<Payment>(
       id,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -397,20 +618,14 @@ class PaymentRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
-  ///
-  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
-  /// rows are silently skipped, and only the successfully inserted rows are
-  /// returned.
   Future<List<Payment>> insert(
     _i1.Session session,
     List<Payment> rows, {
     _i1.Transaction? transaction,
-    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<Payment>(
       rows,
       transaction: transaction,
-      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -551,22 +766,6 @@ class PaymentRepository {
     return session.db.count<Payment>(
       where: where?.call(Payment.t),
       limit: limit,
-      transaction: transaction,
-    );
-  }
-
-  /// Acquires row-level locks on [Payment] rows matching the [where] expression.
-  Future<void> lockRows(
-    _i1.Session session, {
-    required _i1.WhereExpressionBuilder<PaymentTable> where,
-    required _i1.LockMode lockMode,
-    required _i1.Transaction transaction,
-    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
-  }) async {
-    return session.db.lockRows<Payment>(
-      where: where(Payment.t),
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

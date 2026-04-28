@@ -39,7 +39,7 @@ abstract class FeedChunkResponse
 
   factory FeedChunkResponse.fromJson(Map<String, dynamic> jsonSerialization) {
     return FeedChunkResponse(
-      success: _i1.BoolJsonExtension.fromJson(jsonSerialization['success']),
+      success: jsonSerialization['success'] as bool,
       foodItems: _i4.Protocol().deserialize<List<_i2.FoodItemResponse>>(
         jsonSerialization['foodItems'],
       ),

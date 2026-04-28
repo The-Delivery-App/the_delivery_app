@@ -40,7 +40,7 @@ abstract class Address
     return Address(
       id: jsonSerialization['id'] as int?,
       userId: jsonSerialization['userId'] as int,
-      isDefault: _i1.BoolJsonExtension.fromJson(jsonSerialization['isDefault']),
+      isDefault: jsonSerialization['isDefault'] as bool,
       country: jsonSerialization['country'] as String,
       city: jsonSerialization['city'] as String,
       postcode: jsonSerialization['postcode'] as String,
@@ -362,8 +362,6 @@ class AddressRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<AddressTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<Address>(
       where: where?.call(Address.t),
@@ -373,8 +371,6 @@ class AddressRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -403,8 +399,6 @@ class AddressRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<AddressTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<Address>(
       where: where?.call(Address.t),
@@ -413,8 +407,6 @@ class AddressRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -423,14 +415,10 @@ class AddressRepository {
     _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<Address>(
       id,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -440,20 +428,14 @@ class AddressRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
-  ///
-  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
-  /// rows are silently skipped, and only the successfully inserted rows are
-  /// returned.
   Future<List<Address>> insert(
     _i1.Session session,
     List<Address> rows, {
     _i1.Transaction? transaction,
-    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<Address>(
       rows,
       transaction: transaction,
-      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -594,22 +576,6 @@ class AddressRepository {
     return session.db.count<Address>(
       where: where?.call(Address.t),
       limit: limit,
-      transaction: transaction,
-    );
-  }
-
-  /// Acquires row-level locks on [Address] rows matching the [where] expression.
-  Future<void> lockRows(
-    _i1.Session session, {
-    required _i1.WhereExpressionBuilder<AddressTable> where,
-    required _i1.LockMode lockMode,
-    required _i1.Transaction transaction,
-    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
-  }) async {
-    return session.db.lockRows<Address>(
-      where: where(Address.t),
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

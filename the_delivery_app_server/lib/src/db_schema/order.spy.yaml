@@ -1,8 +1,44 @@
 class: Order
 table: order
 fields:
-  courierId: int?, relation(parent=courier)
+  # References
   userId: int, relation(parent=user)
-  time: DateTime
-  isSplit: bool
+  restaurantId: int, relation(parent=restaurant)
+  deliveryAddressId: int, relation(parent=address)
+  courierId: int?, relation(parent=courier)
+  
+  # Financial breakdown
+  subtotal: double
+  deliveryFee: double
+  serviceFee: double
+  discount: double
+  totalAmount: double
+  
+  # Order metadata
+  idempotencyKey: String
   currentStatus: OrderStatus
+  createdAt: DateTime
+  updatedAt: DateTime?
+  
+  # Delivery timing
+  estimatedDeliveryTime: DateTime?
+  actualDeliveryTime: DateTime?
+  
+  # Split payment 
+  isSplit: bool
+  
+  # Special instructions
+  deliveryInstructions: String?
+  
+  # Courier tracking 
+  courierLatitude: double?
+  courierLongitude: double?
+
+indexes:
+  idempotency_idx:
+    fields: idempotencyKey
+    unique: true
+  user_orders_idx:
+    fields: userId
+  status_idx:
+    fields: currentStatus

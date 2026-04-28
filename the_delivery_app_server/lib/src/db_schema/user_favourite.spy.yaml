@@ -1,0 +1,13 @@
+class: UserFavourite
+table: user_favourite
+fields:
+  userId: int, relation(parent=user)
+  restaurantId: int?, relation(parent=restaurant)
+  foodItemId: int?, relation(parent=food_item)
+  createdAt: DateTime
+
+indexes:
+  user_restaurant_idx:
+    fields: userId, restaurantId
+  user_food_idx:
+    fields: userId, foodItemId
