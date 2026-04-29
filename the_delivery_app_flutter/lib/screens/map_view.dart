@@ -8,6 +8,33 @@ class MapView extends StatelessWidget {
 
   const MapView({super.key, required this.state});
 
+  Widget _buildMapPlaceholder() {
+    final location = state.currentLocation;
+    final locationText = location == null
+        ? 'Location not available'
+        : 'Lat: ${location.latitude.toStringAsFixed(4)}, '
+            'Lng: ${location.longitude.toStringAsFixed(4)}';
+
+    return Container(
+      height: 260,
+      color: Colors.grey[200],
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.map, size: 60, color: Colors.grey),
+            const SizedBox(height: 8),
+            const Text('Map placeholder',
+                style: TextStyle(color: Colors.grey)),
+            const SizedBox(height: 4),
+            Text(locationText,
+                style: const TextStyle(fontSize: 12, color: Colors.grey)),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return const Scaffold();
