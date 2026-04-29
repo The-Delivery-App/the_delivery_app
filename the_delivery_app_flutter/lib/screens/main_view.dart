@@ -62,7 +62,7 @@ class _MainViewState extends State<MainView> {
       case 2:
         return const MapView(state: MapState(restaurants: []));
       case 3:
-        return const Center(child: Text('Basket'));
+        return BasketView(viewModel: _basketViewModel);
       case 4:
         return const Center(child: Text('Account'));
       default:
