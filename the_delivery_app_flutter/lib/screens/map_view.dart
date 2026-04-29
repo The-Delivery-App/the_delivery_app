@@ -45,6 +45,23 @@ class MapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      appBar: AppBar(title: const Text('Map')),
+      body: Column(
+        children: [
+          _buildMapPlaceholder(),
+          const Divider(),
+          Expanded(
+            child: state.restaurants.isEmpty
+                ? const Center(child: Text('No restaurants nearby.'))
+                : ListView.builder(
+                    itemCount: state.restaurants.length,
+                    itemBuilder: (context, index) =>
+                        _buildRestaurantTile(state.restaurants[index]),
+                  ),
+          ),
+        ],
+      ),
+    );
   }
 }
