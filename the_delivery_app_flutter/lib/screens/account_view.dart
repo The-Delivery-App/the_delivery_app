@@ -32,6 +32,26 @@ class _AccountViewState extends State<AccountView> {
     });
   }
 
+  Widget _buildSignedIn() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.account_circle, size: 80, color: Colors.deepOrange),
+          const SizedBox(height: 16),
+          const Text('You are signed in.', style: TextStyle(fontSize: 18)),
+          const SizedBox(height: 24),
+          ElevatedButton(
+            onPressed: () async {
+              await client.auth.signOutDevice();
+            },
+            child: const Text('Sign Out'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return const Scaffold();
