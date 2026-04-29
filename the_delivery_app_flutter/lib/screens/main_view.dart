@@ -64,7 +64,7 @@ class _MainViewState extends State<MainView> {
       case 3:
         return BasketView(viewModel: _basketViewModel);
       case 4:
-        return const Center(child: Text('Account'));
+        return const AccountView();
       default:
         return const Center(child: Text('Feed'));
     }
