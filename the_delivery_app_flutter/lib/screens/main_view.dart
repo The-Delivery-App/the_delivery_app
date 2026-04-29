@@ -25,6 +25,9 @@ class MainView extends StatefulWidget {
 class _MainViewState extends State<MainView> {
   int _selectedIndex = 0;
 
+  late final BasketViewModel _basketViewModel;
+  late final SettingsViewModel _settingsViewModel;
+
   void _onTabTapped(int index) {
     setState(() {
       _selectedIndex = index;
