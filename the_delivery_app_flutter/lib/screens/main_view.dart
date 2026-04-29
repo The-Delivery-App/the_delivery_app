@@ -60,7 +60,7 @@ class _MainViewState extends State<MainView> {
       case 1:
         return const Center(child: Text('Search'));
       case 2:
-        return const Center(child: Text('Map'));
+        return const MapView(state: MapState(restaurants: []));
       case 3:
         return const Center(child: Text('Basket'));
       case 4:
