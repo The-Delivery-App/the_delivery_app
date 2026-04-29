@@ -14,6 +14,12 @@ class SettingsView extends StatefulWidget {
 
 class _SettingsViewState extends State<SettingsView> {
   @override
+  void initState() {
+    super.initState();
+    widget.viewModel.loadSettings();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return const Scaffold();
   }
