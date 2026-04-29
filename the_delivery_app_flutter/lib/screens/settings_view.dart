@@ -19,6 +19,25 @@ class _SettingsViewState extends State<SettingsView> {
     widget.viewModel.loadSettings();
   }
 
+  Widget _buildLanguageRow(Settings settings) {
+    const languages = ['en', 'tr', 'de', 'fr'];
+    return ListTile(
+      title: const Text('Language'),
+      trailing: DropdownButton<String>(
+        value: settings.language,
+        items: languages
+            .map((l) => DropdownMenuItem(value: l, child: Text(l)))
+            .toList(),
+        onChanged: (value) {
+          if (value == null) return;
+          widget.viewModel.updateSettings(
+            Settings(language: value, notificationsEnabled: settings.notificationsEnabled),
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildNotificationsRow(Settings settings) {
     return SwitchListTile(
       title: const Text('Notifications'),
