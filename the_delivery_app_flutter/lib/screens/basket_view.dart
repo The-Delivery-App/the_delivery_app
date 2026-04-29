@@ -33,6 +33,22 @@ class BasketView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return ListenableBuilder(
+      listenable: viewModel,
+      builder: (context, _) {
+        final state = viewModel.getState();
+        final items = state.basket.items;
+
+        return Scaffold(
+          appBar: AppBar(title: const Text('Basket')),
+          body: items.isEmpty
+              ? _buildEmptyState()
+              : ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) => _buildItem(items[index]),
+                ),
+        );
+      },
+    );
   }
 }
