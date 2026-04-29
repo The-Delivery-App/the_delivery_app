@@ -8,6 +8,12 @@ class OrderStatusView extends StatelessWidget {
 
   const OrderStatusView({super.key, required this.state});
 
+  Widget _buildNoOrder() {
+    return const Center(
+      child: Text('No active order.'),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return const Scaffold();
