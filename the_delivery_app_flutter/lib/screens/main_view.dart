@@ -1,5 +1,20 @@
 import 'package:flutter/material.dart';
 
+import '../models/restaurant.dart';
+import '../repositories/basket_repository.dart';
+import '../repositories/settings_repository.dart';
+import '../state/map_state.dart';
+import '../state/order_status_state.dart';
+import '../storage/local_storage.dart';
+import '../view_models/basket_view_model.dart';
+import '../view_models/settings_view_model.dart';
+import 'account_view.dart';
+import 'basket_view.dart';
+import 'map_view.dart';
+import 'order_status_view.dart';
+import 'restaurant_view.dart';
+import 'settings_view.dart';
+
 class MainView extends StatefulWidget {
   const MainView({super.key});
 
