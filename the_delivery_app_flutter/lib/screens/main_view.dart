@@ -28,6 +28,25 @@ class _MainViewState extends State<MainView> {
   late final BasketViewModel _basketViewModel;
   late final SettingsViewModel _settingsViewModel;
 
+  @override
+  void initState() {
+    super.initState();
+    final storage = LocalStorage();
+    _basketViewModel = BasketViewModel(
+      repository: BasketRepository(storage: storage),
+    );
+    _settingsViewModel = SettingsViewModel(
+      repository: SettingsRepository(storage: storage),
+    );
+  }
+
+  @override
+  void dispose() {
+    _basketViewModel.dispose();
+    _settingsViewModel.dispose();
+    super.dispose();
+  }
+
   void _onTabTapped(int index) {
     setState(() {
       _selectedIndex = index;
