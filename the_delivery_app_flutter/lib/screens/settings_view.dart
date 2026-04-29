@@ -19,6 +19,18 @@ class _SettingsViewState extends State<SettingsView> {
     widget.viewModel.loadSettings();
   }
 
+  Widget _buildNotificationsRow(Settings settings) {
+    return SwitchListTile(
+      title: const Text('Notifications'),
+      value: settings.notificationsEnabled,
+      onChanged: (value) {
+        widget.viewModel.updateSettings(
+          Settings(language: settings.language, notificationsEnabled: value),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return const Scaffold();
