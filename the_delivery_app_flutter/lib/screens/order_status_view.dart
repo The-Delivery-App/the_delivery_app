@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/order.dart';
 import '../models/order_status.dart';
 import '../state/order_status_state.dart';
 
@@ -27,6 +28,26 @@ class OrderStatusView extends StatelessWidget {
           ),
         );
       }).toList(),
+    );
+  }
+
+  Widget _buildOrderDetails(Order order) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Order: ${order.orderId}',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 4),
+          Text('Placed: ${order.placedAt.toLocal()}',
+              style: const TextStyle(color: Colors.grey)),
+          const SizedBox(height: 4),
+          Text('Items: ${order.basket.items.length}'),
+          const SizedBox(height: 16),
+          _buildStatusSteps(order.status),
+        ],
+      ),
     );
   }
 
