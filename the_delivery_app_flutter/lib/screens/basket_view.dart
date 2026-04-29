@@ -8,6 +8,23 @@ class BasketView extends StatelessWidget {
 
   const BasketView({super.key, required this.viewModel});
 
+  Widget _buildItem(Food food) {
+    return ListTile(
+      title: Text(food.name),
+      subtitle: Text(food.restaurant.name),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('£${food.price.toStringAsFixed(2)}'),
+          IconButton(
+            icon: const Icon(Icons.remove_circle_outline),
+            onPressed: () => viewModel.removeItem(food),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildEmptyState() {
     return const Center(
       child: Text('Your basket is empty.'),
