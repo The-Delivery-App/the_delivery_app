@@ -112,7 +112,7 @@ class _MainViewState extends State<MainView> {
       case 4:
         return const AccountView();
       default:
-        return const Center(child: Text('Feed'));
+        return _buildFeedPlaceholder();
     }
   }
 
