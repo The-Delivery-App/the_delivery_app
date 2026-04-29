@@ -59,6 +59,11 @@ class OrderStatusView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      appBar: AppBar(title: const Text('Order Status')),
+      body: state.order == null
+          ? _buildNoOrder()
+          : _buildOrderDetails(state.order!),
+    );
   }
 }
