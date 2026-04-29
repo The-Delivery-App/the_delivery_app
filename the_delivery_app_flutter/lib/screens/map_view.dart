@@ -35,6 +35,14 @@ class MapView extends StatelessWidget {
     );
   }
 
+  Widget _buildRestaurantTile(Restaurant restaurant) {
+    return ListTile(
+      leading: const Icon(Icons.restaurant, color: Colors.deepOrange),
+      title: Text(restaurant.name),
+      subtitle: Text('ID: ${restaurant.id}'),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return const Scaffold();
