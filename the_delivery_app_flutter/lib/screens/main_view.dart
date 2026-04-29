@@ -16,8 +16,27 @@ class _MainViewState extends State<MainView> {
     });
   }
 
+  Widget _buildBody() {
+    switch (_selectedIndex) {
+      case 0:
+        return const Center(child: Text('Feed'));
+      case 1:
+        return const Center(child: Text('Search'));
+      case 2:
+        return const Center(child: Text('Map'));
+      case 3:
+        return const Center(child: Text('Basket'));
+      case 4:
+        return const Center(child: Text('Account'));
+      default:
+        return const Center(child: Text('Feed'));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      body: _buildBody(),
+    );
   }
 }
