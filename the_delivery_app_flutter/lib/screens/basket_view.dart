@@ -8,6 +8,12 @@ class BasketView extends StatelessWidget {
 
   const BasketView({super.key, required this.viewModel});
 
+  Widget _buildEmptyState() {
+    return const Center(
+      child: Text('Your basket is empty.'),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return const Scaffold();
