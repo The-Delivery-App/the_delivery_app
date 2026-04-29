@@ -10,4 +10,6 @@ class SearchViewModel extends ChangeNotifier {
   );
 
   SearchViewModel();
+
+  SearchState getState() => _state;
 }
