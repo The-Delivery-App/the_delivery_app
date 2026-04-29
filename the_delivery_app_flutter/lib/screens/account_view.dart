@@ -54,6 +54,16 @@ class _AccountViewState extends State<AccountView> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      appBar: AppBar(title: const Text('Account')),
+      body: _isSignedIn
+          ? _buildSignedIn()
+          : Center(
+              child: SignInWidget(
+                client: client,
+                onAuthenticated: () {},
+              ),
+            ),
+    );
   }
 }
