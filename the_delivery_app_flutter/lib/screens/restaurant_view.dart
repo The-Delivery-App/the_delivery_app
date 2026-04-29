@@ -13,6 +13,17 @@ class RestaurantView extends StatelessWidget {
     required this.menuItems,
   });
 
+  Widget _buildMenuItem(Food food) {
+    return ListTile(
+      title: Text(food.name),
+      subtitle: Text('${food.calories} kcal · ⭐ ${food.rating.toStringAsFixed(1)}'),
+      trailing: Text(
+        '£${food.price.toStringAsFixed(2)}',
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
   Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.all(16),
