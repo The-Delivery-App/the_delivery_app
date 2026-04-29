@@ -56,7 +56,49 @@ class _MainViewState extends State<MainView> {
   Widget _buildBody() {
     switch (_selectedIndex) {
       case 0:
-        return const Center(child: Text('Feed'));
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Feed coming soon.'),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => SettingsView(viewModel: _settingsViewModel),
+                  ),
+                ),
+                child: const Text('Open Settings'),
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => RestaurantView(
+                      restaurant: const Restaurant(id: 'demo-1', name: 'Demo Restaurant'),
+                      menuItems: const [],
+                    ),
+                  ),
+                ),
+                child: const Text('View Restaurant'),
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const OrderStatusView(
+                      state: OrderStatusState(),
+                    ),
+                  ),
+                ),
+                child: const Text('Track Order'),
+              ),
+            ],
+          ),
+        );
       case 1:
         return const Center(child: Text('Search'));
       case 2:
