@@ -8,6 +8,14 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
+  int _selectedIndex = 0;
+
+  void _onTabTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return const Scaffold();
