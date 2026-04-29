@@ -52,6 +52,20 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return ListenableBuilder(
+      listenable: widget.viewModel,
+      builder: (context, _) {
+        final settings = widget.viewModel.getState().settings;
+        return Scaffold(
+          appBar: AppBar(title: const Text('Settings')),
+          body: ListView(
+            children: [
+              _buildLanguageRow(settings),
+              _buildNotificationsRow(settings),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
