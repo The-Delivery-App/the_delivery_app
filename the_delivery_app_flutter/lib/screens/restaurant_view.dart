@@ -42,6 +42,17 @@ class RestaurantView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      appBar: AppBar(title: Text(restaurant.name)),
+      body: menuItems.isEmpty
+          ? const Center(child: Text('No menu items available.'))
+          : ListView.builder(
+              itemCount: menuItems.length + 1,
+              itemBuilder: (context, index) {
+                if (index == 0) return _buildHeader();
+                return _buildMenuItem(menuItems[index - 1]);
+              },
+            ),
+    );
   }
 }
