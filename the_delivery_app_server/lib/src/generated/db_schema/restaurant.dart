@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -36,7 +35,7 @@ abstract class Restaurant
       restName: jsonSerialization['restName'] as String,
       logoThumb: jsonSerialization['logoThumb'] as String?,
       estimatedDeliveryTime:
-          (jsonSerialization['estimatedDeliveryTime'] as num?)?.toDouble(),
+          (jsonSerialization['estimatedDeliveryTime'] as num).toDouble(),
       cuisine: jsonSerialization['cuisine'] as String?,
     );
   }
@@ -72,7 +71,6 @@ abstract class Restaurant
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'Restaurant',
       if (id != null) 'id': id,
       'restName': restName,
       if (logoThumb != null) 'logoThumb': logoThumb,
@@ -84,7 +82,6 @@ abstract class Restaurant
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'Restaurant',
       if (id != null) 'id': id,
       'restName': restName,
       if (logoThumb != null) 'logoThumb': logoThumb,
@@ -133,12 +130,12 @@ class _RestaurantImpl extends Restaurant {
     double? estimatedDeliveryTime,
     String? cuisine,
   }) : super._(
-         id: id,
-         restName: restName,
-         logoThumb: logoThumb,
-         estimatedDeliveryTime: estimatedDeliveryTime,
-         cuisine: cuisine,
-       );
+          id: id,
+          restName: restName,
+          logoThumb: logoThumb,
+          estimatedDeliveryTime: estimatedDeliveryTime,
+          cuisine: cuisine,
+        );
 
   /// Returns a shallow copy of this [Restaurant]
   /// with some or all fields replaced by the given arguments.
@@ -162,34 +159,8 @@ class _RestaurantImpl extends Restaurant {
   }
 }
 
-class RestaurantUpdateTable extends _i1.UpdateTable<RestaurantTable> {
-  RestaurantUpdateTable(super.table);
-
-  _i1.ColumnValue<String, String> restName(String value) => _i1.ColumnValue(
-    table.restName,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> logoThumb(String? value) => _i1.ColumnValue(
-    table.logoThumb,
-    value,
-  );
-
-  _i1.ColumnValue<double, double> estimatedDeliveryTime(double value) =>
-      _i1.ColumnValue(
-        table.estimatedDeliveryTime,
-        value,
-      );
-
-  _i1.ColumnValue<String, String> cuisine(String? value) => _i1.ColumnValue(
-    table.cuisine,
-    value,
-  );
-}
-
 class RestaurantTable extends _i1.Table<int?> {
   RestaurantTable({super.tableRelation}) : super(tableName: 'restaurant') {
-    updateTable = RestaurantUpdateTable(this);
     restName = _i1.ColumnString(
       'restName',
       this,
@@ -209,8 +180,6 @@ class RestaurantTable extends _i1.Table<int?> {
     );
   }
 
-  late final RestaurantUpdateTable updateTable;
-
   late final _i1.ColumnString restName;
 
   late final _i1.ColumnString logoThumb;
@@ -221,12 +190,12 @@ class RestaurantTable extends _i1.Table<int?> {
 
   @override
   List<_i1.Column> get columns => [
-    id,
-    restName,
-    logoThumb,
-    estimatedDeliveryTime,
-    cuisine,
-  ];
+        id,
+        restName,
+        logoThumb,
+        estimatedDeliveryTime,
+        cuisine,
+      ];
 }
 
 class RestaurantInclude extends _i1.IncludeObject {
@@ -414,46 +383,6 @@ class RestaurantRepository {
     return session.db.updateRow<Restaurant>(
       row,
       columns: columns?.call(Restaurant.t),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates a single [Restaurant] by its [id] with the specified [columnValues].
-  /// Returns the updated row or null if no row with the given id exists.
-  Future<Restaurant?> updateById(
-    _i1.Session session,
-    int id, {
-    required _i1.ColumnValueListBuilder<RestaurantUpdateTable> columnValues,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateById<Restaurant>(
-      id,
-      columnValues: columnValues(Restaurant.t.updateTable),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates all [Restaurant]s matching the [where] expression with the specified [columnValues].
-  /// Returns the list of updated rows.
-  Future<List<Restaurant>> updateWhere(
-    _i1.Session session, {
-    required _i1.ColumnValueListBuilder<RestaurantUpdateTable> columnValues,
-    required _i1.WhereExpressionBuilder<RestaurantTable> where,
-    int? limit,
-    int? offset,
-    _i1.OrderByBuilder<RestaurantTable>? orderBy,
-    _i1.OrderByListBuilder<RestaurantTable>? orderByList,
-    bool orderDescending = false,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateWhere<Restaurant>(
-      columnValues: columnValues(Restaurant.t.updateTable),
-      where: where(Restaurant.t),
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy?.call(Restaurant.t),
-      orderByList: orderByList?.call(Restaurant.t),
-      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

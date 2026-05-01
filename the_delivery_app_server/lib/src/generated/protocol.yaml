@@ -1,17 +1,28 @@
 favouritesController:
-  - hello:
+  - getFavourites:
+  - addFavourite:
+  - removeFavourite:
 feedController:
-  - hello:
+  - getFeedChunk:
 orderController:
   - hello:
+  - getOrder:
+  - createOrder:
+  - getHistory:
 restaurantController:
   - getRestaurant:
   - getMenu:
   - getReviews:
+  - getFeatured:
 reviewsController:
-  - hello:
+  - createReview:
+  - getReviews:
+  - deleteReview:
 userProfileController:
-  - hello:
+  - getProfile:
+  - updateProfile:
+  - addAddress:
+  - deleteAddress:
 emailIdp:
   - login:
   - startRegistration:

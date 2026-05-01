@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -77,7 +76,6 @@ abstract class Courier
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'Courier',
       if (id != null) 'id': id,
       'fname': fname,
       'lname': lname,
@@ -90,7 +88,6 @@ abstract class Courier
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'Courier',
       if (id != null) 'id': id,
       'fname': fname,
       'lname': lname,
@@ -141,13 +138,13 @@ class _CourierImpl extends Courier {
     required String carName,
     required String plateNum,
   }) : super._(
-         id: id,
-         fname: fname,
-         lname: lname,
-         phone: phone,
-         carName: carName,
-         plateNum: plateNum,
-       );
+          id: id,
+          fname: fname,
+          lname: lname,
+          phone: phone,
+          carName: carName,
+          plateNum: plateNum,
+        );
 
   /// Returns a shallow copy of this [Courier]
   /// with some or all fields replaced by the given arguments.
@@ -172,38 +169,8 @@ class _CourierImpl extends Courier {
   }
 }
 
-class CourierUpdateTable extends _i1.UpdateTable<CourierTable> {
-  CourierUpdateTable(super.table);
-
-  _i1.ColumnValue<String, String> fname(String value) => _i1.ColumnValue(
-    table.fname,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> lname(String value) => _i1.ColumnValue(
-    table.lname,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> phone(String value) => _i1.ColumnValue(
-    table.phone,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> carName(String value) => _i1.ColumnValue(
-    table.carName,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> plateNum(String value) => _i1.ColumnValue(
-    table.plateNum,
-    value,
-  );
-}
-
 class CourierTable extends _i1.Table<int?> {
   CourierTable({super.tableRelation}) : super(tableName: 'courier') {
-    updateTable = CourierUpdateTable(this);
     fname = _i1.ColumnString(
       'fname',
       this,
@@ -226,8 +193,6 @@ class CourierTable extends _i1.Table<int?> {
     );
   }
 
-  late final CourierUpdateTable updateTable;
-
   late final _i1.ColumnString fname;
 
   late final _i1.ColumnString lname;
@@ -240,13 +205,13 @@ class CourierTable extends _i1.Table<int?> {
 
   @override
   List<_i1.Column> get columns => [
-    id,
-    fname,
-    lname,
-    phone,
-    carName,
-    plateNum,
-  ];
+        id,
+        fname,
+        lname,
+        phone,
+        carName,
+        plateNum,
+      ];
 }
 
 class CourierInclude extends _i1.IncludeObject {
@@ -434,46 +399,6 @@ class CourierRepository {
     return session.db.updateRow<Courier>(
       row,
       columns: columns?.call(Courier.t),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates a single [Courier] by its [id] with the specified [columnValues].
-  /// Returns the updated row or null if no row with the given id exists.
-  Future<Courier?> updateById(
-    _i1.Session session,
-    int id, {
-    required _i1.ColumnValueListBuilder<CourierUpdateTable> columnValues,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateById<Courier>(
-      id,
-      columnValues: columnValues(Courier.t.updateTable),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates all [Courier]s matching the [where] expression with the specified [columnValues].
-  /// Returns the list of updated rows.
-  Future<List<Courier>> updateWhere(
-    _i1.Session session, {
-    required _i1.ColumnValueListBuilder<CourierUpdateTable> columnValues,
-    required _i1.WhereExpressionBuilder<CourierTable> where,
-    int? limit,
-    int? offset,
-    _i1.OrderByBuilder<CourierTable>? orderBy,
-    _i1.OrderByListBuilder<CourierTable>? orderByList,
-    bool orderDescending = false,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateWhere<Courier>(
-      columnValues: columnValues(Courier.t.updateTable),
-      where: where(Courier.t),
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy?.call(Courier.t),
-      orderByList: orderByList?.call(Courier.t),
-      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

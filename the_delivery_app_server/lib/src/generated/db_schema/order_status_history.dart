@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -66,7 +65,6 @@ abstract class OrderStatusHistory
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'OrderStatusHistory',
       if (id != null) 'id': id,
       'orderId': orderId,
       'status': status.toJson(),
@@ -77,7 +75,6 @@ abstract class OrderStatusHistory
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'OrderStatusHistory',
       if (id != null) 'id': id,
       'orderId': orderId,
       'status': status.toJson(),
@@ -124,11 +121,11 @@ class _OrderStatusHistoryImpl extends OrderStatusHistory {
     required _i2.OrderStatus status,
     required DateTime time,
   }) : super._(
-         id: id,
-         orderId: orderId,
-         status: status,
-         time: time,
-       );
+          id: id,
+          orderId: orderId,
+          status: status,
+          time: time,
+        );
 
   /// Returns a shallow copy of this [OrderStatusHistory]
   /// with some or all fields replaced by the given arguments.
@@ -149,32 +146,9 @@ class _OrderStatusHistoryImpl extends OrderStatusHistory {
   }
 }
 
-class OrderStatusHistoryUpdateTable
-    extends _i1.UpdateTable<OrderStatusHistoryTable> {
-  OrderStatusHistoryUpdateTable(super.table);
-
-  _i1.ColumnValue<int, int> orderId(int value) => _i1.ColumnValue(
-    table.orderId,
-    value,
-  );
-
-  _i1.ColumnValue<_i2.OrderStatus, _i2.OrderStatus> status(
-    _i2.OrderStatus value,
-  ) => _i1.ColumnValue(
-    table.status,
-    value,
-  );
-
-  _i1.ColumnValue<DateTime, DateTime> time(DateTime value) => _i1.ColumnValue(
-    table.time,
-    value,
-  );
-}
-
 class OrderStatusHistoryTable extends _i1.Table<int?> {
   OrderStatusHistoryTable({super.tableRelation})
-    : super(tableName: 'order_status_history') {
-    updateTable = OrderStatusHistoryUpdateTable(this);
+      : super(tableName: 'order_status_history') {
     orderId = _i1.ColumnInt(
       'orderId',
       this,
@@ -190,8 +164,6 @@ class OrderStatusHistoryTable extends _i1.Table<int?> {
     );
   }
 
-  late final OrderStatusHistoryUpdateTable updateTable;
-
   late final _i1.ColumnInt orderId;
 
   late final _i1.ColumnEnum<_i2.OrderStatus> status;
@@ -200,11 +172,11 @@ class OrderStatusHistoryTable extends _i1.Table<int?> {
 
   @override
   List<_i1.Column> get columns => [
-    id,
-    orderId,
-    status,
-    time,
-  ];
+        id,
+        orderId,
+        status,
+        time,
+      ];
 }
 
 class OrderStatusHistoryInclude extends _i1.IncludeObject {
@@ -392,48 +364,6 @@ class OrderStatusHistoryRepository {
     return session.db.updateRow<OrderStatusHistory>(
       row,
       columns: columns?.call(OrderStatusHistory.t),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates a single [OrderStatusHistory] by its [id] with the specified [columnValues].
-  /// Returns the updated row or null if no row with the given id exists.
-  Future<OrderStatusHistory?> updateById(
-    _i1.Session session,
-    int id, {
-    required _i1.ColumnValueListBuilder<OrderStatusHistoryUpdateTable>
-    columnValues,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateById<OrderStatusHistory>(
-      id,
-      columnValues: columnValues(OrderStatusHistory.t.updateTable),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates all [OrderStatusHistory]s matching the [where] expression with the specified [columnValues].
-  /// Returns the list of updated rows.
-  Future<List<OrderStatusHistory>> updateWhere(
-    _i1.Session session, {
-    required _i1.ColumnValueListBuilder<OrderStatusHistoryUpdateTable>
-    columnValues,
-    required _i1.WhereExpressionBuilder<OrderStatusHistoryTable> where,
-    int? limit,
-    int? offset,
-    _i1.OrderByBuilder<OrderStatusHistoryTable>? orderBy,
-    _i1.OrderByListBuilder<OrderStatusHistoryTable>? orderByList,
-    bool orderDescending = false,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateWhere<OrderStatusHistory>(
-      columnValues: columnValues(OrderStatusHistory.t.updateTable),
-      where: where(OrderStatusHistory.t),
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy?.call(OrderStatusHistory.t),
-      orderByList: orderByList?.call(OrderStatusHistory.t),
-      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

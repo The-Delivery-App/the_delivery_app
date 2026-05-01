@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -89,7 +88,6 @@ abstract class OrderItem
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'OrderItem',
       if (id != null) 'id': id,
       'orderId': orderId,
       'foodItemId': foodItemId,
@@ -106,7 +104,6 @@ abstract class OrderItem
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'OrderItem',
       if (id != null) 'id': id,
       'orderId': orderId,
       'foodItemId': foodItemId,
@@ -163,15 +160,15 @@ class _OrderItemImpl extends OrderItem {
     required String foodItemName,
     String? foodItemDescription,
   }) : super._(
-         id: id,
-         orderId: orderId,
-         foodItemId: foodItemId,
-         quantity: quantity,
-         unitPrice: unitPrice,
-         specialInstructions: specialInstructions,
-         foodItemName: foodItemName,
-         foodItemDescription: foodItemDescription,
-       );
+          id: id,
+          orderId: orderId,
+          foodItemId: foodItemId,
+          quantity: quantity,
+          unitPrice: unitPrice,
+          specialInstructions: specialInstructions,
+          foodItemName: foodItemName,
+          foodItemDescription: foodItemDescription,
+        );
 
   /// Returns a shallow copy of this [OrderItem]
   /// with some or all fields replaced by the given arguments.
@@ -204,50 +201,8 @@ class _OrderItemImpl extends OrderItem {
   }
 }
 
-class OrderItemUpdateTable extends _i1.UpdateTable<OrderItemTable> {
-  OrderItemUpdateTable(super.table);
-
-  _i1.ColumnValue<int, int> orderId(int value) => _i1.ColumnValue(
-    table.orderId,
-    value,
-  );
-
-  _i1.ColumnValue<int, int> foodItemId(int value) => _i1.ColumnValue(
-    table.foodItemId,
-    value,
-  );
-
-  _i1.ColumnValue<int, int> quantity(int value) => _i1.ColumnValue(
-    table.quantity,
-    value,
-  );
-
-  _i1.ColumnValue<double, double> unitPrice(double value) => _i1.ColumnValue(
-    table.unitPrice,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> specialInstructions(String? value) =>
-      _i1.ColumnValue(
-        table.specialInstructions,
-        value,
-      );
-
-  _i1.ColumnValue<String, String> foodItemName(String value) => _i1.ColumnValue(
-    table.foodItemName,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> foodItemDescription(String? value) =>
-      _i1.ColumnValue(
-        table.foodItemDescription,
-        value,
-      );
-}
-
 class OrderItemTable extends _i1.Table<int?> {
   OrderItemTable({super.tableRelation}) : super(tableName: 'order_item') {
-    updateTable = OrderItemUpdateTable(this);
     orderId = _i1.ColumnInt(
       'orderId',
       this,
@@ -278,8 +233,6 @@ class OrderItemTable extends _i1.Table<int?> {
     );
   }
 
-  late final OrderItemUpdateTable updateTable;
-
   late final _i1.ColumnInt orderId;
 
   late final _i1.ColumnInt foodItemId;
@@ -296,15 +249,15 @@ class OrderItemTable extends _i1.Table<int?> {
 
   @override
   List<_i1.Column> get columns => [
-    id,
-    orderId,
-    foodItemId,
-    quantity,
-    unitPrice,
-    specialInstructions,
-    foodItemName,
-    foodItemDescription,
-  ];
+        id,
+        orderId,
+        foodItemId,
+        quantity,
+        unitPrice,
+        specialInstructions,
+        foodItemName,
+        foodItemDescription,
+      ];
 }
 
 class OrderItemInclude extends _i1.IncludeObject {
@@ -492,46 +445,6 @@ class OrderItemRepository {
     return session.db.updateRow<OrderItem>(
       row,
       columns: columns?.call(OrderItem.t),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates a single [OrderItem] by its [id] with the specified [columnValues].
-  /// Returns the updated row or null if no row with the given id exists.
-  Future<OrderItem?> updateById(
-    _i1.Session session,
-    int id, {
-    required _i1.ColumnValueListBuilder<OrderItemUpdateTable> columnValues,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateById<OrderItem>(
-      id,
-      columnValues: columnValues(OrderItem.t.updateTable),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates all [OrderItem]s matching the [where] expression with the specified [columnValues].
-  /// Returns the list of updated rows.
-  Future<List<OrderItem>> updateWhere(
-    _i1.Session session, {
-    required _i1.ColumnValueListBuilder<OrderItemUpdateTable> columnValues,
-    required _i1.WhereExpressionBuilder<OrderItemTable> where,
-    int? limit,
-    int? offset,
-    _i1.OrderByBuilder<OrderItemTable>? orderBy,
-    _i1.OrderByListBuilder<OrderItemTable>? orderByList,
-    bool orderDescending = false,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateWhere<OrderItem>(
-      columnValues: columnValues(OrderItem.t.updateTable),
-      where: where(OrderItem.t),
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy?.call(OrderItem.t),
-      orderByList: orderByList?.call(OrderItem.t),
-      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -29,9 +28,8 @@ abstract class Basket implements _i1.SerializableModel {
     return Basket(
       id: jsonSerialization['id'] as int?,
       userId: jsonSerialization['userId'] as int,
-      lastUpdated: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['lastUpdated'],
-      ),
+      lastUpdated:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['lastUpdated']),
     );
   }
 
@@ -55,7 +53,6 @@ abstract class Basket implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'Basket',
       if (id != null) 'id': id,
       'userId': userId,
       'lastUpdated': lastUpdated.toJson(),
@@ -76,10 +73,10 @@ class _BasketImpl extends Basket {
     required int userId,
     required DateTime lastUpdated,
   }) : super._(
-         id: id,
-         userId: userId,
-         lastUpdated: lastUpdated,
-       );
+          id: id,
+          userId: userId,
+          lastUpdated: lastUpdated,
+        );
 
   /// Returns a shallow copy of this [Basket]
   /// with some or all fields replaced by the given arguments.

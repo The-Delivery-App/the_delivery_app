@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -56,20 +55,18 @@ abstract class Payment
       orderId: jsonSerialization['orderId'] as int,
       userId: jsonSerialization['userId'] as int,
       amount: (jsonSerialization['amount'] as num).toDouble(),
-      currency: jsonSerialization['currency'] as String?,
+      currency: jsonSerialization['currency'] as String,
       paymentMethod: jsonSerialization['paymentMethod'] as String,
       transactionId: jsonSerialization['transactionId'] as String?,
       providerName: jsonSerialization['providerName'] as String,
       providerMetadata: jsonSerialization['providerMetadata'] as String?,
       status: jsonSerialization['status'] as String,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      createdAt:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       processedAt: jsonSerialization['processedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['processedAt'],
-            ),
+              jsonSerialization['processedAt']),
       refundedAmount: (jsonSerialization['refundedAmount'] as num?)?.toDouble(),
       refundedAt: jsonSerialization['refundedAt'] == null
           ? null
@@ -139,7 +136,6 @@ abstract class Payment
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'Payment',
       if (id != null) 'id': id,
       'orderId': orderId,
       'userId': userId,
@@ -161,7 +157,6 @@ abstract class Payment
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'Payment',
       if (id != null) 'id': id,
       'orderId': orderId,
       'userId': userId,
@@ -230,22 +225,22 @@ class _PaymentImpl extends Payment {
     DateTime? refundedAt,
     String? refundReason,
   }) : super._(
-         id: id,
-         orderId: orderId,
-         userId: userId,
-         amount: amount,
-         currency: currency,
-         paymentMethod: paymentMethod,
-         transactionId: transactionId,
-         providerName: providerName,
-         providerMetadata: providerMetadata,
-         status: status,
-         createdAt: createdAt,
-         processedAt: processedAt,
-         refundedAmount: refundedAmount,
-         refundedAt: refundedAt,
-         refundReason: refundReason,
-       );
+          id: id,
+          orderId: orderId,
+          userId: userId,
+          amount: amount,
+          currency: currency,
+          paymentMethod: paymentMethod,
+          transactionId: transactionId,
+          providerName: providerName,
+          providerMetadata: providerMetadata,
+          status: status,
+          createdAt: createdAt,
+          processedAt: processedAt,
+          refundedAmount: refundedAmount,
+          refundedAt: refundedAt,
+          refundReason: refundReason,
+        );
 
   /// Returns a shallow copy of this [Payment]
   /// with some or all fields replaced by the given arguments.
@@ -275,9 +270,8 @@ class _PaymentImpl extends Payment {
       amount: amount ?? this.amount,
       currency: currency ?? this.currency,
       paymentMethod: paymentMethod ?? this.paymentMethod,
-      transactionId: transactionId is String?
-          ? transactionId
-          : this.transactionId,
+      transactionId:
+          transactionId is String? ? transactionId : this.transactionId,
       providerName: providerName ?? this.providerName,
       providerMetadata: providerMetadata is String?
           ? providerMetadata
@@ -285,100 +279,16 @@ class _PaymentImpl extends Payment {
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       processedAt: processedAt is DateTime? ? processedAt : this.processedAt,
-      refundedAmount: refundedAmount is double?
-          ? refundedAmount
-          : this.refundedAmount,
+      refundedAmount:
+          refundedAmount is double? ? refundedAmount : this.refundedAmount,
       refundedAt: refundedAt is DateTime? ? refundedAt : this.refundedAt,
       refundReason: refundReason is String? ? refundReason : this.refundReason,
     );
   }
 }
 
-class PaymentUpdateTable extends _i1.UpdateTable<PaymentTable> {
-  PaymentUpdateTable(super.table);
-
-  _i1.ColumnValue<int, int> orderId(int value) => _i1.ColumnValue(
-    table.orderId,
-    value,
-  );
-
-  _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
-
-  _i1.ColumnValue<double, double> amount(double value) => _i1.ColumnValue(
-    table.amount,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> currency(String value) => _i1.ColumnValue(
-    table.currency,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> paymentMethod(String value) =>
-      _i1.ColumnValue(
-        table.paymentMethod,
-        value,
-      );
-
-  _i1.ColumnValue<String, String> transactionId(String? value) =>
-      _i1.ColumnValue(
-        table.transactionId,
-        value,
-      );
-
-  _i1.ColumnValue<String, String> providerName(String value) => _i1.ColumnValue(
-    table.providerName,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> providerMetadata(String? value) =>
-      _i1.ColumnValue(
-        table.providerMetadata,
-        value,
-      );
-
-  _i1.ColumnValue<String, String> status(String value) => _i1.ColumnValue(
-    table.status,
-    value,
-  );
-
-  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
-      _i1.ColumnValue(
-        table.createdAt,
-        value,
-      );
-
-  _i1.ColumnValue<DateTime, DateTime> processedAt(DateTime? value) =>
-      _i1.ColumnValue(
-        table.processedAt,
-        value,
-      );
-
-  _i1.ColumnValue<double, double> refundedAmount(double? value) =>
-      _i1.ColumnValue(
-        table.refundedAmount,
-        value,
-      );
-
-  _i1.ColumnValue<DateTime, DateTime> refundedAt(DateTime? value) =>
-      _i1.ColumnValue(
-        table.refundedAt,
-        value,
-      );
-
-  _i1.ColumnValue<String, String> refundReason(String? value) =>
-      _i1.ColumnValue(
-        table.refundReason,
-        value,
-      );
-}
-
 class PaymentTable extends _i1.Table<int?> {
   PaymentTable({super.tableRelation}) : super(tableName: 'payment') {
-    updateTable = PaymentUpdateTable(this);
     orderId = _i1.ColumnInt(
       'orderId',
       this,
@@ -438,8 +348,6 @@ class PaymentTable extends _i1.Table<int?> {
     );
   }
 
-  late final PaymentUpdateTable updateTable;
-
   late final _i1.ColumnInt orderId;
 
   late final _i1.ColumnInt userId;
@@ -470,22 +378,22 @@ class PaymentTable extends _i1.Table<int?> {
 
   @override
   List<_i1.Column> get columns => [
-    id,
-    orderId,
-    userId,
-    amount,
-    currency,
-    paymentMethod,
-    transactionId,
-    providerName,
-    providerMetadata,
-    status,
-    createdAt,
-    processedAt,
-    refundedAmount,
-    refundedAt,
-    refundReason,
-  ];
+        id,
+        orderId,
+        userId,
+        amount,
+        currency,
+        paymentMethod,
+        transactionId,
+        providerName,
+        providerMetadata,
+        status,
+        createdAt,
+        processedAt,
+        refundedAmount,
+        refundedAt,
+        refundReason,
+      ];
 }
 
 class PaymentInclude extends _i1.IncludeObject {
@@ -673,46 +581,6 @@ class PaymentRepository {
     return session.db.updateRow<Payment>(
       row,
       columns: columns?.call(Payment.t),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates a single [Payment] by its [id] with the specified [columnValues].
-  /// Returns the updated row or null if no row with the given id exists.
-  Future<Payment?> updateById(
-    _i1.Session session,
-    int id, {
-    required _i1.ColumnValueListBuilder<PaymentUpdateTable> columnValues,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateById<Payment>(
-      id,
-      columnValues: columnValues(Payment.t.updateTable),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates all [Payment]s matching the [where] expression with the specified [columnValues].
-  /// Returns the list of updated rows.
-  Future<List<Payment>> updateWhere(
-    _i1.Session session, {
-    required _i1.ColumnValueListBuilder<PaymentUpdateTable> columnValues,
-    required _i1.WhereExpressionBuilder<PaymentTable> where,
-    int? limit,
-    int? offset,
-    _i1.OrderByBuilder<PaymentTable>? orderBy,
-    _i1.OrderByListBuilder<PaymentTable>? orderByList,
-    bool orderDescending = false,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateWhere<Payment>(
-      columnValues: columnValues(Payment.t.updateTable),
-      where: where(Payment.t),
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy?.call(Payment.t),
-      orderByList: orderByList?.call(Payment.t),
-      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -83,7 +82,6 @@ abstract class OrderItem implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'OrderItem',
       if (id != null) 'id': id,
       'orderId': orderId,
       'foodItemId': foodItemId,
@@ -116,15 +114,15 @@ class _OrderItemImpl extends OrderItem {
     required String foodItemName,
     String? foodItemDescription,
   }) : super._(
-         id: id,
-         orderId: orderId,
-         foodItemId: foodItemId,
-         quantity: quantity,
-         unitPrice: unitPrice,
-         specialInstructions: specialInstructions,
-         foodItemName: foodItemName,
-         foodItemDescription: foodItemDescription,
-       );
+          id: id,
+          orderId: orderId,
+          foodItemId: foodItemId,
+          quantity: quantity,
+          unitPrice: unitPrice,
+          specialInstructions: specialInstructions,
+          foodItemName: foodItemName,
+          foodItemDescription: foodItemDescription,
+        );
 
   /// Returns a shallow copy of this [OrderItem]
   /// with some or all fields replaced by the given arguments.

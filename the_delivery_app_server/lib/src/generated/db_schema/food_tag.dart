@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -59,7 +58,6 @@ abstract class FoodTag
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'FoodTag',
       if (id != null) 'id': id,
       'tagId': tagId,
       'foodId': foodId,
@@ -69,7 +67,6 @@ abstract class FoodTag
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'FoodTag',
       if (id != null) 'id': id,
       'tagId': tagId,
       'foodId': foodId,
@@ -114,10 +111,10 @@ class _FoodTagImpl extends FoodTag {
     required int tagId,
     required int foodId,
   }) : super._(
-         id: id,
-         tagId: tagId,
-         foodId: foodId,
-       );
+          id: id,
+          tagId: tagId,
+          foodId: foodId,
+        );
 
   /// Returns a shallow copy of this [FoodTag]
   /// with some or all fields replaced by the given arguments.
@@ -136,23 +133,8 @@ class _FoodTagImpl extends FoodTag {
   }
 }
 
-class FoodTagUpdateTable extends _i1.UpdateTable<FoodTagTable> {
-  FoodTagUpdateTable(super.table);
-
-  _i1.ColumnValue<int, int> tagId(int value) => _i1.ColumnValue(
-    table.tagId,
-    value,
-  );
-
-  _i1.ColumnValue<int, int> foodId(int value) => _i1.ColumnValue(
-    table.foodId,
-    value,
-  );
-}
-
 class FoodTagTable extends _i1.Table<int?> {
   FoodTagTable({super.tableRelation}) : super(tableName: 'food_tag') {
-    updateTable = FoodTagUpdateTable(this);
     tagId = _i1.ColumnInt(
       'tagId',
       this,
@@ -163,18 +145,16 @@ class FoodTagTable extends _i1.Table<int?> {
     );
   }
 
-  late final FoodTagUpdateTable updateTable;
-
   late final _i1.ColumnInt tagId;
 
   late final _i1.ColumnInt foodId;
 
   @override
   List<_i1.Column> get columns => [
-    id,
-    tagId,
-    foodId,
-  ];
+        id,
+        tagId,
+        foodId,
+      ];
 }
 
 class FoodTagInclude extends _i1.IncludeObject {
@@ -362,46 +342,6 @@ class FoodTagRepository {
     return session.db.updateRow<FoodTag>(
       row,
       columns: columns?.call(FoodTag.t),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates a single [FoodTag] by its [id] with the specified [columnValues].
-  /// Returns the updated row or null if no row with the given id exists.
-  Future<FoodTag?> updateById(
-    _i1.Session session,
-    int id, {
-    required _i1.ColumnValueListBuilder<FoodTagUpdateTable> columnValues,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateById<FoodTag>(
-      id,
-      columnValues: columnValues(FoodTag.t.updateTable),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates all [FoodTag]s matching the [where] expression with the specified [columnValues].
-  /// Returns the list of updated rows.
-  Future<List<FoodTag>> updateWhere(
-    _i1.Session session, {
-    required _i1.ColumnValueListBuilder<FoodTagUpdateTable> columnValues,
-    required _i1.WhereExpressionBuilder<FoodTagTable> where,
-    int? limit,
-    int? offset,
-    _i1.OrderByBuilder<FoodTagTable>? orderBy,
-    _i1.OrderByListBuilder<FoodTagTable>? orderByList,
-    bool orderDescending = false,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateWhere<FoodTag>(
-      columnValues: columnValues(FoodTag.t.updateTable),
-      where: where(FoodTag.t),
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy?.call(FoodTag.t),
-      orderByList: orderByList?.call(FoodTag.t),
-      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

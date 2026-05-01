@@ -1,14 +1,9 @@
-cat > lib/src/data_access/daos/food_dao.dart << 'EOF'
 import 'package:serverpod/serverpod.dart';
 import '../../business/models/food.dart';
 import '../../business/models/location.dart';
 import '../../business/models/restaurant.dart';
-
-// ignore: uri_does_not_exist
 import 'package:the_delivery_app_server/src/generated/food_item.dart' as gen_food;
-// ignore: uri_does_not_exist
 import 'package:the_delivery_app_server/src/generated/restaurant.dart' as gen_rest;
-// ignore: uri_does_not_exist
 import 'package:the_delivery_app_server/src/generated/restaurant_place.dart' as gen_place;
 
 class FoodDAO {
@@ -70,14 +65,45 @@ class FoodDAO {
     );
 
     return RestaurantInfo(
-      id: restaurant.id!,
-      name: restaurant.name,
-      cuisine: restaurant.cuisine,
-      logoUrl: restaurant.logoUrl,
-      rating: restaurant.rating,
-      latitude: place?.latitude ?? 0.0,
-      longitude: place?.longitude ?? 0.0,
+      restaurantId: restaurant.id!,
+      name: restaurant.restName,
+      iconUrl: restaurant.logoThumb,
+      location: Location(
+        latitude: place?.latitude ?? 0.0,
+        longitude: place?.longitude ?? 0.0,
+      ),
+      estimatedDeliverytime: restaurant.estimatedDeliveryTime,
     );
+  }
+
+  Future<List<RestaurantInfo>> getRestaurantsByMunicipality(
+    String municipality,
+  ) async {
+    final places = await gen_place.RestaurantPlace.db.find(
+      _session,
+      where: (t) => t.city.equals(municipality),
+    );
+
+    final restaurantInfos = <RestaurantInfo>[];
+    for (final place in places) {
+      final rest = await gen_rest.Restaurant.db.findById(_session, place.restId);
+      if (rest != null) {
+        restaurantInfos.add(
+          RestaurantInfo(
+            restaurantId: rest.id!,
+            name: rest.restName,
+            iconUrl: rest.logoThumb,
+            location: Location(
+              latitude: place.latitude,
+              longitude: place.longitude,
+            ),
+            estimatedDeliverytime: rest.estimatedDeliveryTime,
+          ),
+        );
+      }
+    }
+
+    return restaurantInfos;
   }
 
   Food _mapModelToFood(gen_food.FoodItem item) {
@@ -94,4 +120,3 @@ class FoodDAO {
     );
   }
 }
-EOF

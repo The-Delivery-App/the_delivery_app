@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -47,7 +46,6 @@ abstract class Tag implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'Tag',
       if (id != null) 'id': id,
       'tagName': tagName,
     };
@@ -66,9 +64,9 @@ class _TagImpl extends Tag {
     int? id,
     required String tagName,
   }) : super._(
-         id: id,
-         tagName: tagName,
-       );
+          id: id,
+          tagName: tagName,
+        );
 
   /// Returns a shallow copy of this [Tag]
   /// with some or all fields replaced by the given arguments.

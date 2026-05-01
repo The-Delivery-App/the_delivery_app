@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -35,7 +34,7 @@ abstract class Restaurant implements _i1.SerializableModel {
       restName: jsonSerialization['restName'] as String,
       logoThumb: jsonSerialization['logoThumb'] as String?,
       estimatedDeliveryTime:
-          (jsonSerialization['estimatedDeliveryTime'] as num?)?.toDouble(),
+          (jsonSerialization['estimatedDeliveryTime'] as num).toDouble(),
       cuisine: jsonSerialization['cuisine'] as String?,
     );
   }
@@ -66,7 +65,6 @@ abstract class Restaurant implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'Restaurant',
       if (id != null) 'id': id,
       'restName': restName,
       if (logoThumb != null) 'logoThumb': logoThumb,
@@ -91,12 +89,12 @@ class _RestaurantImpl extends Restaurant {
     double? estimatedDeliveryTime,
     String? cuisine,
   }) : super._(
-         id: id,
-         restName: restName,
-         logoThumb: logoThumb,
-         estimatedDeliveryTime: estimatedDeliveryTime,
-         cuisine: cuisine,
-       );
+          id: id,
+          restName: restName,
+          logoThumb: logoThumb,
+          estimatedDeliveryTime: estimatedDeliveryTime,
+          cuisine: cuisine,
+        );
 
   /// Returns a shallow copy of this [Restaurant]
   /// with some or all fields replaced by the given arguments.

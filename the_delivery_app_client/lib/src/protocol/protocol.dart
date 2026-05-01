@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -76,33 +75,12 @@ class Protocol extends _i1.SerializationManager {
 
   static final Protocol _instance = Protocol._();
 
-  static String? getClassNameFromObjectJson(dynamic data) {
-    if (data is! Map) return null;
-    final className = data['__className__'] as String?;
-    return className;
-  }
-
   @override
   T deserialize<T>(
     dynamic data, [
     Type? t,
   ]) {
     t ??= T;
-
-    final dataClassName = getClassNameFromObjectJson(data);
-    if (dataClassName != null && dataClassName != getClassNameForType(t)) {
-      try {
-        return deserializeByClassName({
-          'className': dataClassName,
-          'data': data,
-        });
-      } on FormatException catch (_) {
-        // If the className is not recognized (e.g., older client receiving
-        // data with a new subtype), fall back to deserializing without the
-        // className, using the expected type T.
-      }
-    }
-
     if (t == _i2.Address) {
       return _i2.Address.fromJson(data) as T;
     }
@@ -266,24 +244,27 @@ class Protocol extends _i1.SerializationManager {
     }
     if (t == List<_i24.FoodItemResponse>) {
       return (data as List)
-              .map((e) => deserialize<_i24.FoodItemResponse>(e))
-              .toList()
-          as T;
+          .map((e) => deserialize<_i24.FoodItemResponse>(e))
+          .toList() as T;
     }
     if (t == List<_i26.RestaurantResponse>) {
       return (data as List)
-              .map((e) => deserialize<_i26.RestaurantResponse>(e))
-              .toList()
-          as T;
+          .map((e) => deserialize<_i26.RestaurantResponse>(e))
+          .toList() as T;
     }
     if (t == List<String>) {
       return (data as List).map((e) => deserialize<String>(e)).toList() as T;
     }
     if (t == _i1.getType<List<String>?>()) {
       return (data != null
-              ? (data as List).map((e) => deserialize<String>(e)).toList()
-              : null)
-          as T;
+          ? (data as List).map((e) => deserialize<String>(e)).toList()
+          : null) as T;
+    }
+    if (t == _i1.getType<Map<String, dynamic>?>()) {
+      return (data != null
+          ? (data as Map).map((k, v) =>
+              MapEntry(deserialize<String>(k), deserialize<dynamic>(v)))
+          : null) as T;
     }
     try {
       return _i28.Protocol().deserialize<T>(data, t);
@@ -294,103 +275,87 @@ class Protocol extends _i1.SerializationManager {
     return super.deserialize<T>(data, t);
   }
 
-  static String? getClassNameForType(Type type) {
-    return switch (type) {
-      _i2.Address => 'Address',
-      _i3.Basket => 'Basket',
-      _i4.BasketFood => 'BasketFood',
-      _i5.Courier => 'Courier',
-      _i6.FoodDeal => 'FoodDeal',
-      _i7.FoodItem => 'FoodItem',
-      _i8.FoodReview => 'FoodReview',
-      _i9.FoodTag => 'FoodTag',
-      _i10.Order => 'Order',
-      _i11.OrderItem => 'OrderItem',
-      _i12.OrderStatus => 'OrderStatus',
-      _i13.OrderStatusHistory => 'OrderStatusHistory',
-      _i14.Payment => 'Payment',
-      _i15.Restaurant => 'Restaurant',
-      _i16.RestaurantPlace => 'RestaurantPlace',
-      _i17.SpecialDeals => 'SpecialDeals',
-      _i18.SplitPaymentParticipant => 'SplitPaymentParticipant',
-      _i19.Tag => 'Tag',
-      _i20.User => 'User',
-      _i21.UserFavourite => 'UserFavourite',
-      _i22.FeedChunkResponse => 'FeedChunkResponse',
-      _i23.FilteredFeedResponse => 'FilteredFeedResponse',
-      _i24.FoodItemResponse => 'FoodItemResponse',
-      _i25.MunicipalitiesResponse => 'MunicipalitiesResponse',
-      _i26.RestaurantResponse => 'RestaurantResponse',
-      _i27.Greeting => 'Greeting',
-      _ => null,
-    };
-  }
-
   @override
   String? getClassNameForObject(Object? data) {
     String? className = super.getClassNameForObject(data);
     if (className != null) return className;
-
-    if (data is Map<String, dynamic> && data['__className__'] is String) {
-      return (data['__className__'] as String).replaceFirst(
-        'the_delivery_app.',
-        '',
-      );
+    if (data is _i2.Address) {
+      return 'Address';
     }
-
-    switch (data) {
-      case _i2.Address():
-        return 'Address';
-      case _i3.Basket():
-        return 'Basket';
-      case _i4.BasketFood():
-        return 'BasketFood';
-      case _i5.Courier():
-        return 'Courier';
-      case _i6.FoodDeal():
-        return 'FoodDeal';
-      case _i7.FoodItem():
-        return 'FoodItem';
-      case _i8.FoodReview():
-        return 'FoodReview';
-      case _i9.FoodTag():
-        return 'FoodTag';
-      case _i10.Order():
-        return 'Order';
-      case _i11.OrderItem():
-        return 'OrderItem';
-      case _i12.OrderStatus():
-        return 'OrderStatus';
-      case _i13.OrderStatusHistory():
-        return 'OrderStatusHistory';
-      case _i14.Payment():
-        return 'Payment';
-      case _i15.Restaurant():
-        return 'Restaurant';
-      case _i16.RestaurantPlace():
-        return 'RestaurantPlace';
-      case _i17.SpecialDeals():
-        return 'SpecialDeals';
-      case _i18.SplitPaymentParticipant():
-        return 'SplitPaymentParticipant';
-      case _i19.Tag():
-        return 'Tag';
-      case _i20.User():
-        return 'User';
-      case _i21.UserFavourite():
-        return 'UserFavourite';
-      case _i22.FeedChunkResponse():
-        return 'FeedChunkResponse';
-      case _i23.FilteredFeedResponse():
-        return 'FilteredFeedResponse';
-      case _i24.FoodItemResponse():
-        return 'FoodItemResponse';
-      case _i25.MunicipalitiesResponse():
-        return 'MunicipalitiesResponse';
-      case _i26.RestaurantResponse():
-        return 'RestaurantResponse';
-      case _i27.Greeting():
-        return 'Greeting';
+    if (data is _i3.Basket) {
+      return 'Basket';
+    }
+    if (data is _i4.BasketFood) {
+      return 'BasketFood';
+    }
+    if (data is _i5.Courier) {
+      return 'Courier';
+    }
+    if (data is _i6.FoodDeal) {
+      return 'FoodDeal';
+    }
+    if (data is _i7.FoodItem) {
+      return 'FoodItem';
+    }
+    if (data is _i8.FoodReview) {
+      return 'FoodReview';
+    }
+    if (data is _i9.FoodTag) {
+      return 'FoodTag';
+    }
+    if (data is _i10.Order) {
+      return 'Order';
+    }
+    if (data is _i11.OrderItem) {
+      return 'OrderItem';
+    }
+    if (data is _i12.OrderStatus) {
+      return 'OrderStatus';
+    }
+    if (data is _i13.OrderStatusHistory) {
+      return 'OrderStatusHistory';
+    }
+    if (data is _i14.Payment) {
+      return 'Payment';
+    }
+    if (data is _i15.Restaurant) {
+      return 'Restaurant';
+    }
+    if (data is _i16.RestaurantPlace) {
+      return 'RestaurantPlace';
+    }
+    if (data is _i17.SpecialDeals) {
+      return 'SpecialDeals';
+    }
+    if (data is _i18.SplitPaymentParticipant) {
+      return 'SplitPaymentParticipant';
+    }
+    if (data is _i19.Tag) {
+      return 'Tag';
+    }
+    if (data is _i20.User) {
+      return 'User';
+    }
+    if (data is _i21.UserFavourite) {
+      return 'UserFavourite';
+    }
+    if (data is _i22.FeedChunkResponse) {
+      return 'FeedChunkResponse';
+    }
+    if (data is _i23.FilteredFeedResponse) {
+      return 'FilteredFeedResponse';
+    }
+    if (data is _i24.FoodItemResponse) {
+      return 'FoodItemResponse';
+    }
+    if (data is _i25.MunicipalitiesResponse) {
+      return 'MunicipalitiesResponse';
+    }
+    if (data is _i26.RestaurantResponse) {
+      return 'RestaurantResponse';
+    }
+    if (data is _i27.Greeting) {
+      return 'Greeting';
     }
     className = _i28.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -496,23 +461,5 @@ class Protocol extends _i1.SerializationManager {
       return _i29.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
-  }
-
-  /// Maps any `Record`s known to this [Protocol] to their JSON representation
-  ///
-  /// Throws in case the record type is not known.
-  ///
-  /// This method will return `null` (only) for `null` inputs.
-  Map<String, dynamic>? mapRecordToJson(Record? record) {
-    if (record == null) {
-      return null;
-    }
-    try {
-      return _i28.Protocol().mapRecordToJson(record);
-    } catch (_) {}
-    try {
-      return _i29.Protocol().mapRecordToJson(record);
-    } catch (_) {}
-    throw Exception('Unsupported record type ${record.runtimeType}');
   }
 }

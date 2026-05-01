@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -101,7 +100,6 @@ abstract class RestaurantPlace
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'RestaurantPlace',
       if (id != null) 'id': id,
       'restId': restId,
       if (name != null) 'name': name,
@@ -118,7 +116,6 @@ abstract class RestaurantPlace
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'RestaurantPlace',
       if (id != null) 'id': id,
       'restId': restId,
       if (name != null) 'name': name,
@@ -177,17 +174,17 @@ class _RestaurantPlaceImpl extends RestaurantPlace {
     required double latitude,
     required double longitude,
   }) : super._(
-         id: id,
-         restId: restId,
-         name: name,
-         city: city,
-         country: country,
-         postcode: postcode,
-         addressLine1: addressLine1,
-         addressLine2: addressLine2,
-         latitude: latitude,
-         longitude: longitude,
-       );
+          id: id,
+          restId: restId,
+          name: name,
+          city: city,
+          country: country,
+          postcode: postcode,
+          addressLine1: addressLine1,
+          addressLine2: addressLine2,
+          latitude: latitude,
+          longitude: longitude,
+        );
 
   /// Returns a shallow copy of this [RestaurantPlace]
   /// with some or all fields replaced by the given arguments.
@@ -220,60 +217,9 @@ class _RestaurantPlaceImpl extends RestaurantPlace {
   }
 }
 
-class RestaurantPlaceUpdateTable extends _i1.UpdateTable<RestaurantPlaceTable> {
-  RestaurantPlaceUpdateTable(super.table);
-
-  _i1.ColumnValue<int, int> restId(int value) => _i1.ColumnValue(
-    table.restId,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> name(String? value) => _i1.ColumnValue(
-    table.name,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> city(String value) => _i1.ColumnValue(
-    table.city,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> country(String value) => _i1.ColumnValue(
-    table.country,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> postcode(String value) => _i1.ColumnValue(
-    table.postcode,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> addressLine1(String value) => _i1.ColumnValue(
-    table.addressLine1,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> addressLine2(String? value) =>
-      _i1.ColumnValue(
-        table.addressLine2,
-        value,
-      );
-
-  _i1.ColumnValue<double, double> latitude(double value) => _i1.ColumnValue(
-    table.latitude,
-    value,
-  );
-
-  _i1.ColumnValue<double, double> longitude(double value) => _i1.ColumnValue(
-    table.longitude,
-    value,
-  );
-}
-
 class RestaurantPlaceTable extends _i1.Table<int?> {
   RestaurantPlaceTable({super.tableRelation})
-    : super(tableName: 'restaurant_place') {
-    updateTable = RestaurantPlaceUpdateTable(this);
+      : super(tableName: 'restaurant_place') {
     restId = _i1.ColumnInt(
       'restId',
       this,
@@ -312,8 +258,6 @@ class RestaurantPlaceTable extends _i1.Table<int?> {
     );
   }
 
-  late final RestaurantPlaceUpdateTable updateTable;
-
   late final _i1.ColumnInt restId;
 
   late final _i1.ColumnString name;
@@ -334,17 +278,17 @@ class RestaurantPlaceTable extends _i1.Table<int?> {
 
   @override
   List<_i1.Column> get columns => [
-    id,
-    restId,
-    name,
-    city,
-    country,
-    postcode,
-    addressLine1,
-    addressLine2,
-    latitude,
-    longitude,
-  ];
+        id,
+        restId,
+        name,
+        city,
+        country,
+        postcode,
+        addressLine1,
+        addressLine2,
+        latitude,
+        longitude,
+      ];
 }
 
 class RestaurantPlaceInclude extends _i1.IncludeObject {
@@ -532,48 +476,6 @@ class RestaurantPlaceRepository {
     return session.db.updateRow<RestaurantPlace>(
       row,
       columns: columns?.call(RestaurantPlace.t),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates a single [RestaurantPlace] by its [id] with the specified [columnValues].
-  /// Returns the updated row or null if no row with the given id exists.
-  Future<RestaurantPlace?> updateById(
-    _i1.Session session,
-    int id, {
-    required _i1.ColumnValueListBuilder<RestaurantPlaceUpdateTable>
-    columnValues,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateById<RestaurantPlace>(
-      id,
-      columnValues: columnValues(RestaurantPlace.t.updateTable),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates all [RestaurantPlace]s matching the [where] expression with the specified [columnValues].
-  /// Returns the list of updated rows.
-  Future<List<RestaurantPlace>> updateWhere(
-    _i1.Session session, {
-    required _i1.ColumnValueListBuilder<RestaurantPlaceUpdateTable>
-    columnValues,
-    required _i1.WhereExpressionBuilder<RestaurantPlaceTable> where,
-    int? limit,
-    int? offset,
-    _i1.OrderByBuilder<RestaurantPlaceTable>? orderBy,
-    _i1.OrderByListBuilder<RestaurantPlaceTable>? orderByList,
-    bool orderDescending = false,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateWhere<RestaurantPlace>(
-      columnValues: columnValues(RestaurantPlace.t.updateTable),
-      where: where(RestaurantPlace.t),
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy?.call(RestaurantPlace.t),
-      orderByList: orderByList?.call(RestaurantPlace.t),
-      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

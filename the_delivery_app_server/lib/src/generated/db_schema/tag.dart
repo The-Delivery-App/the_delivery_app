@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -52,7 +51,6 @@ abstract class Tag implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'Tag',
       if (id != null) 'id': id,
       'tagName': tagName,
     };
@@ -61,7 +59,6 @@ abstract class Tag implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'Tag',
       if (id != null) 'id': id,
       'tagName': tagName,
     };
@@ -104,9 +101,9 @@ class _TagImpl extends Tag {
     int? id,
     required String tagName,
   }) : super._(
-         id: id,
-         tagName: tagName,
-       );
+          id: id,
+          tagName: tagName,
+        );
 
   /// Returns a shallow copy of this [Tag]
   /// with some or all fields replaced by the given arguments.
@@ -123,33 +120,21 @@ class _TagImpl extends Tag {
   }
 }
 
-class TagUpdateTable extends _i1.UpdateTable<TagTable> {
-  TagUpdateTable(super.table);
-
-  _i1.ColumnValue<String, String> tagName(String value) => _i1.ColumnValue(
-    table.tagName,
-    value,
-  );
-}
-
 class TagTable extends _i1.Table<int?> {
   TagTable({super.tableRelation}) : super(tableName: 'tag') {
-    updateTable = TagUpdateTable(this);
     tagName = _i1.ColumnString(
       'tagName',
       this,
     );
   }
 
-  late final TagUpdateTable updateTable;
-
   late final _i1.ColumnString tagName;
 
   @override
   List<_i1.Column> get columns => [
-    id,
-    tagName,
-  ];
+        id,
+        tagName,
+      ];
 }
 
 class TagInclude extends _i1.IncludeObject {
@@ -337,46 +322,6 @@ class TagRepository {
     return session.db.updateRow<Tag>(
       row,
       columns: columns?.call(Tag.t),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates a single [Tag] by its [id] with the specified [columnValues].
-  /// Returns the updated row or null if no row with the given id exists.
-  Future<Tag?> updateById(
-    _i1.Session session,
-    int id, {
-    required _i1.ColumnValueListBuilder<TagUpdateTable> columnValues,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateById<Tag>(
-      id,
-      columnValues: columnValues(Tag.t.updateTable),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates all [Tag]s matching the [where] expression with the specified [columnValues].
-  /// Returns the list of updated rows.
-  Future<List<Tag>> updateWhere(
-    _i1.Session session, {
-    required _i1.ColumnValueListBuilder<TagUpdateTable> columnValues,
-    required _i1.WhereExpressionBuilder<TagTable> where,
-    int? limit,
-    int? offset,
-    _i1.OrderByBuilder<TagTable>? orderBy,
-    _i1.OrderByListBuilder<TagTable>? orderByList,
-    bool orderDescending = false,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateWhere<Tag>(
-      columnValues: columnValues(Tag.t.updateTable),
-      where: where(Tag.t),
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy?.call(Tag.t),
-      orderByList: orderByList?.call(Tag.t),
-      orderDescending: orderDescending,
       transaction: transaction,
     );
   }
