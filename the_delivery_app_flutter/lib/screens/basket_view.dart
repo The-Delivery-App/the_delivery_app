@@ -76,10 +76,40 @@ class BasketView extends StatelessWidget {
                       children: [
                         Text('${items.length} ${items.length == 1 ? 'item' : 'items'}',
                             style: const TextStyle(color: Colors.grey)),
-                        Text(
-                          'Total: £${total.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'Total: £${total.toStringAsFixed(2)}',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            const SizedBox(height: 8),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.deepOrange,
+                                foregroundColor: Colors.white,
+                              ),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                    title: const Text('Place Order'),
+                                    content: const Text(
+                                      'To place an order, please sign in and add a delivery address in your account.',
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              child: const Text('Place Order'),
+                            ),
+                          ],
                         ),
                       ],
                     ),
