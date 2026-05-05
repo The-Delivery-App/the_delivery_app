@@ -34,7 +34,14 @@ class BasketView extends StatelessWidget {
 
   Widget _buildEmptyState() {
     return const Center(
-      child: Text('Your basket is empty.'),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.shopping_basket_outlined, size: 48, color: Colors.grey),
+          SizedBox(height: 12),
+          Text('Your basket is empty.', style: TextStyle(color: Colors.grey)),
+        ],
+      ),
     );
   }
 
@@ -52,8 +59,10 @@ class BasketView extends StatelessWidget {
           appBar: AppBar(title: const Text('Basket')),
           body: items.isEmpty
               ? _buildEmptyState()
-              : ListView.builder(
+              : ListView.separated(
                   itemCount: items.length,
+                  separatorBuilder: (_, _) =>
+                      const Divider(height: 1, indent: 16, endIndent: 16),
                   itemBuilder: (context, index) => _buildItem(items[index]),
                 ),
           bottomNavigationBar: items.isEmpty
