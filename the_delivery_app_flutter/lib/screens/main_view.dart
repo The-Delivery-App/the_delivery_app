@@ -80,6 +80,7 @@ class _MainViewState extends State<MainView> {
             state: _feedViewModel.getState(),
             onAddToBasket: _basketViewModel.addItem,
             onRetry: _feedViewModel.loadFeed,
+            onLoadMore: _feedViewModel.loadMore,
           ),
         );
       case 1:
@@ -101,6 +102,7 @@ class _MainViewState extends State<MainView> {
           state: _feedViewModel.getState(),
           onAddToBasket: _basketViewModel.addItem,
           onRetry: _feedViewModel.loadFeed,
+          onLoadMore: _feedViewModel.loadMore,
         );
     }
   }
