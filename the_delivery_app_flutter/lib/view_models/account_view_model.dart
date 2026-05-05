@@ -25,4 +25,17 @@ class AccountViewModel extends ChangeNotifier {
     // No backend connected yet — behaves same as login locally.
     login();
   }
+
+  void logout() {
+    _state = const AccountState(isLoggedIn: false);
+    notifyListeners();
+  }
+
+  void getGuestSession() {
+    _state = AccountState(
+      isLoggedIn: false,
+      session: const Session(sessionId: 'guest-1', userId: 'guest', isGuest: true),
+    );
+    notifyListeners();
+  }
 }
