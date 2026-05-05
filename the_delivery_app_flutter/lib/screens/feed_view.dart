@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/food.dart';
 import '../state/feed_state.dart';
+import 'restaurant_view.dart';
 
 class FeedView extends StatelessWidget {
   final FeedState state;
@@ -10,9 +11,24 @@ class FeedView extends StatelessWidget {
 
   const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry});
 
-  Widget _buildFoodCard(Food food) {
+  Widget _buildFoodCard(BuildContext context, Food food) {
     final minutes = food.deliveryTime.inMinutes;
-    return Card(
+    return GestureDetector(
+      onTap: () {
+        final menuItems = state.feedItems
+            .where((f) => f.restaurant.id == food.restaurant.id)
+            .toList();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => RestaurantView(
+              restaurant: food.restaurant,
+              menuItems: menuItems,
+            ),
+          ),
+        );
+      },
+      child: Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -72,6 +88,7 @@ class FeedView extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 
@@ -121,7 +138,7 @@ class FeedView extends StatelessWidget {
           : ListView.builder(
               itemCount: state.feedItems.length,
               itemBuilder: (context, index) =>
-                  _buildFoodCard(state.feedItems[index]),
+                  _buildFoodCard(context, state.feedItems[index]),
             ),
     );
   }
