@@ -46,28 +46,41 @@ class _AccountViewState extends State<AccountView> {
   }
 
   Widget _buildSignedIn(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.account_circle, size: 80, color: Colors.deepOrange),
-          const SizedBox(height: 16),
-          const Text('You are signed in.', style: TextStyle(fontSize: 18)),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () async {
-              await client.auth.signOutDevice();
-            },
-            child: const Text('Sign Out'),
-          ),
-          const SizedBox(height: 12),
-          TextButton.icon(
-            onPressed: () => _openSettings(context),
-            icon: const Icon(Icons.settings),
-            label: const Text('Settings'),
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: 40),
+        const Icon(Icons.account_circle, size: 80, color: Colors.deepOrange),
+        const SizedBox(height: 12),
+        const Text(
+          'My Account',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 4),
+        const Text(
+          'Signed in',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.grey, fontSize: 13),
+        ),
+        const SizedBox(height: 32),
+        const Divider(height: 1),
+        ListTile(
+          leading: const Icon(Icons.settings, color: Colors.deepOrange),
+          title: const Text('Settings'),
+          trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+          onTap: () => _openSettings(context),
+        ),
+        const Divider(height: 1, indent: 16, endIndent: 16),
+        ListTile(
+          leading: const Icon(Icons.logout, color: Colors.grey),
+          title: const Text('Sign Out'),
+          onTap: () async {
+            await client.auth.signOutDevice();
+          },
+        ),
+        const Divider(height: 1),
+      ],
     );
   }
 
@@ -77,12 +90,7 @@ class _AccountViewState extends State<AccountView> {
       appBar: AppBar(title: const Text('Account')),
       body: _isSignedIn
           ? _buildSignedIn(context)
-          : Center(
-              child: SignInWidget(
-                client: client,
-                onAuthenticated: () {},
-              ),
-            ),
+          : Center(child: SignInWidget(client: client, onAuthenticated: () {})),
     );
   }
 }
