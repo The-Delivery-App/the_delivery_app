@@ -49,6 +49,7 @@ class _MainViewState extends State<MainView> {
       ),
     );
     _searchViewModel = SearchViewModel();
+    _basketViewModel.loadBasket();
     _feedViewModel.addListener(() {
       _searchViewModel.loadItems(_feedViewModel.getState().feedItems);
     });
