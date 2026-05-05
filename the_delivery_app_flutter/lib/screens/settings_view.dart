@@ -66,6 +66,7 @@ class _SettingsViewState extends State<SettingsView> {
           body: ListView(
             children: [
               _buildLanguageRow(settings),
+              const Divider(height: 1),
               _buildNotificationsRow(settings),
             ],
           ),
