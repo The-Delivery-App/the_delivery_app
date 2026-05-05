@@ -14,18 +14,21 @@ class FeedView extends StatelessWidget {
 
   Widget _buildFoodCard(BuildContext context, Food food) {
     final minutes = food.deliveryTime.inMinutes;
+    final hasValidId = int.tryParse(food.restaurant.id) != null;
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => RestaurantView(
-              restaurant: food.restaurant,
-              onAddToBasket: onAddToBasket,
-            ),
-          ),
-        );
-      },
+      onTap: hasValidId
+          ? () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => RestaurantView(
+                    restaurant: food.restaurant,
+                    onAddToBasket: onAddToBasket,
+                  ),
+                ),
+              );
+            }
+          : null,
       child: Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: Padding(
