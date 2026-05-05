@@ -131,6 +131,7 @@ class _MainViewState extends State<MainView> {
           builder: (_, _) => SearchView(
             state: _searchViewModel.getState(),
             onSearch: _searchViewModel.search,
+            onAddToBasket: _basketViewModel.addItem,
           ),
         );
       case 2:
