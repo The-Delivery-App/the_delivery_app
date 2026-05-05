@@ -56,7 +56,12 @@ class _MainViewState extends State<MainView> {
         sessionId: '',
       ),
     );
-    _searchViewModel = SearchViewModel();
+    _searchViewModel = SearchViewModel(
+      repository: FoodRepository(
+        apiService: FeedAPIService(client: client),
+        sessionId: '',
+      ),
+    );
     _specialDealViewModel = SpecialDealViewModel(
       repository: SpecialDealRepository(client: client),
     );
