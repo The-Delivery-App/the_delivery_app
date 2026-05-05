@@ -1,3 +1,5 @@
+import '../../generated/protocol.dart';
+
 class BasketItemInput {
   final int foodItemId;
   final int quantity;
@@ -120,25 +122,4 @@ class OrderDetails {
     this.payment,
     this.splitParticipants,
   });
-}
-
-// Note: Order is from generated protocol
-class Order {
-  // Placeholder
-  }
-
-class OrderItem {
-  // Placeholder
-}
-
-class OrderStatusHistory {
-  // Placeholder  
-}
-
-class Payment {
-  // Placeholder
-}
-
-class SplitPaymentParticipant {
-  // Placeholder
 }
