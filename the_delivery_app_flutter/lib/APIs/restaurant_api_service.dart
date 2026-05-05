@@ -55,6 +55,15 @@ class RestaurantAPIService implements IRestaurantAPIService {
 
   @override
   Future<List<app.Restaurant>> getRestaurantList() async {
-    return [];
+    final raw = await _client.restaurantController.getFeatured(10);
+    final decoded = jsonDecode(raw) as Map<String, dynamic>;
+    if (decoded['success'] != true) return [];
+    final list = decoded['restaurants'] as List<dynamic>? ?? [];
+    return list.whereType<Map<String, dynamic>>().map((r) {
+      return app.Restaurant(
+        id: (r['id'] as int?)?.toString() ?? '',
+        name: (r['name'] as String?) ?? '',
+      );
+    }).toList();
   }
 }
