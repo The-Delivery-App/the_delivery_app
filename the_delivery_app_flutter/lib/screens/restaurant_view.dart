@@ -32,9 +32,6 @@ class RestaurantView extends StatelessWidget {
         children: [
           Text(restaurant.name,
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 4),
-          Text('ID: ${restaurant.id}',
-              style: const TextStyle(fontSize: 12, color: Colors.grey)),
         ],
       ),
     );
