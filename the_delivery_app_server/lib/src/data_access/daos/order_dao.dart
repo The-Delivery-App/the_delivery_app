@@ -50,7 +50,7 @@ class OrderDAO {
           discount: discount,
           totalAmount: totalAmount,
           idempotencyKey: idempotencyKey,
-          currentStatus: OrderStatus.pending,
+          currentStatus: OrderStatus.placed,
           createdAt: DateTime.now(),
           isSplit: isSplit,
           deliveryInstructions: deliveryInstructions,
@@ -102,7 +102,7 @@ class OrderDAO {
       final statusHistory = await OrderStatusHistory.db.find(
         session,
         where: (t) => t.orderId.equals(orderId),
-        orderBy: (t) => t.timestamp,
+        orderBy: (t) => t.time,
       );
 
       // Load payment if exists
@@ -153,19 +153,13 @@ class OrderDAO {
   Future<void> addStatusHistory({
     required int orderId,
     required OrderStatus status,
-    DateTime? timestamp,
-    String? note,
+    DateTime? time,
   }) async {
-    try {
-      await OrderStatusHistory.db.insertRow(
-        session,
         OrderStatusHistory(
           orderId: orderId,
           status: status,
-          timestamp: timestamp ?? DateTime.now(),
-          note: note,
+          timestamp: time ?? DateTime.now(),
         ),
-      );
     } catch (e) {
       session.log('Error adding status history: $e');
       rethrow;
@@ -263,7 +257,6 @@ class OrderDAO {
       await addStatusHistory(
         orderId: orderId,
         status: OrderStatus.delivered,
-        note: 'Order successfully delivered',
       );
 
       return true;
