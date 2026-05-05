@@ -33,10 +33,17 @@ class MapView extends StatelessWidget {
     );
   }
 
-  Widget _buildRestaurantTile(Restaurant restaurant) {
+  Widget _buildRestaurantTile(BuildContext context, Restaurant restaurant) {
     return ListTile(
       leading: const Icon(Icons.restaurant, color: Colors.deepOrange),
       title: Text(restaurant.name),
+      trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => RestaurantView(restaurant: restaurant),
+        ),
+      ),
     );
   }
 
@@ -54,7 +61,7 @@ class MapView extends StatelessWidget {
                 : ListView.builder(
                     itemCount: state.restaurants.length,
                     itemBuilder: (context, index) =>
-                        _buildRestaurantTile(state.restaurants[index]),
+                        _buildRestaurantTile(context, state.restaurants[index]),
                   ),
           ),
         ],
