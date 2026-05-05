@@ -11,14 +11,45 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
-import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+import 'package:the_delivery_app_client/src/protocol/feed/feed_chunk_response.dart'
     as _i3;
-import 'package:uuid/uuid_value.dart' as _i4;
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+    as _i4;
+import 'package:uuid/uuid_value.dart' as _i5;
 import 'package:the_delivery_app_client/src/protocol/greetings/greeting.dart'
-    as _i5;
-import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _i6;
-import 'protocol.dart' as _i7;
+import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
+    as _i7;
+import 'protocol.dart' as _i8;
+
+/// {@category Endpoint}
+class EndpointCourierController extends _i1.EndpointRef {
+  EndpointCourierController(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'courierController';
+
+  _i2.Future<String> assignCourier(String requestJson) =>
+      caller.callServerEndpoint<String>(
+        'courierController',
+        'assignCourier',
+        {'requestJson': requestJson},
+      );
+
+  _i2.Future<String> updateDeliveryStatus(String requestJson) =>
+      caller.callServerEndpoint<String>(
+        'courierController',
+        'updateDeliveryStatus',
+        {'requestJson': requestJson},
+      );
+
+  _i2.Future<String> getAvailableCouriers() =>
+      caller.callServerEndpoint<String>(
+        'courierController',
+        'getAvailableCouriers',
+        {},
+      );
+}
 
 /// {@category Endpoint}
 class EndpointFavouritesController extends _i1.EndpointRef {
@@ -46,6 +77,139 @@ class EndpointFavouritesController extends _i1.EndpointRef {
         'favouritesController',
         'removeFavourite',
         {'favouriteId': favouriteId},
+      );
+}
+
+/// {@category Endpoint}
+class EndpointFeedController extends _i1.EndpointRef {
+  EndpointFeedController(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'feedController';
+
+  _i2.Future<_i3.FeedChunkResponse> getFeedChunk(
+    int screenWidth,
+    int screenHeight,
+    int dpi,
+    double dataTransferRate,
+    double userLatitude,
+    double userLongitude,
+    int chunkSize,
+    int chunkOffset,
+    Map<String, dynamic>? filters,
+  ) =>
+      caller.callServerEndpoint<_i3.FeedChunkResponse>(
+        'feedController',
+        'getFeedChunk',
+        {
+          'screenWidth': screenWidth,
+          'screenHeight': screenHeight,
+          'dpi': dpi,
+          'dataTransferRate': dataTransferRate,
+          'userLatitude': userLatitude,
+          'userLongitude': userLongitude,
+          'chunkSize': chunkSize,
+          'chunkOffset': chunkOffset,
+          'filters': filters,
+        },
+      );
+
+  _i2.Future<String> getSpecialDeals(
+    int limit,
+    String? city,
+  ) =>
+      caller.callServerEndpoint<String>(
+        'feedController',
+        'getSpecialDeals',
+        {
+          'limit': limit,
+          'city': city,
+        },
+      );
+
+  _i2.Future<String> search(
+    String query,
+    int limit,
+    String? city,
+  ) =>
+      caller.callServerEndpoint<String>(
+        'feedController',
+        'search',
+        {
+          'query': query,
+          'limit': limit,
+          'city': city,
+        },
+      );
+}
+
+/// {@category Endpoint}
+class EndpointOrderController extends _i1.EndpointRef {
+  EndpointOrderController(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'orderController';
+
+  _i2.Future<String> hello() => caller.callServerEndpoint<String>(
+        'orderController',
+        'hello',
+        {},
+      );
+
+  _i2.Future<String> getOrder(int orderId) => caller.callServerEndpoint<String>(
+        'orderController',
+        'getOrder',
+        {'orderId': orderId},
+      );
+
+  _i2.Future<String> getOrderDetails(String requestJson) =>
+      caller.callServerEndpoint<String>(
+        'orderController',
+        'getOrderDetails',
+        {'requestJson': requestJson},
+      );
+
+  _i2.Future<String> createOrder(String requestJson) =>
+      caller.callServerEndpoint<String>(
+        'orderController',
+        'createOrder',
+        {'requestJson': requestJson},
+      );
+
+  _i2.Future<String> processPayment(String requestJson) =>
+      caller.callServerEndpoint<String>(
+        'orderController',
+        'processPayment',
+        {'requestJson': requestJson},
+      );
+
+  _i2.Future<String> getHistory(
+    int userId,
+    int limit,
+    int offset,
+  ) =>
+      caller.callServerEndpoint<String>(
+        'orderController',
+        'getHistory',
+        {
+          'userId': userId,
+          'limit': limit,
+          'offset': offset,
+        },
+      );
+
+  _i2.Future<String> getTrackingInfo(String requestJson) =>
+      caller.callServerEndpoint<String>(
+        'orderController',
+        'getTrackingInfo',
+        {'requestJson': requestJson},
+      );
+
+  _i2.Future<String> updateCourierLocation(String requestJson) =>
+      caller.callServerEndpoint<String>(
+        'orderController',
+        'updateCourierLocation',
+        {'requestJson': requestJson},
       );
 }
 
@@ -187,11 +351,11 @@ class EndpointEmailIdp extends _i1.EndpointRef {
   ///
   /// Throws an [AuthUserBlockedException] if the auth user is blocked.
   /// {@endtemplate}
-  _i2.Future<_i3.AuthSuccess> login({
+  _i2.Future<_i4.AuthSuccess> login({
     required String email,
     required String password,
   }) =>
-      caller.callServerEndpoint<_i3.AuthSuccess>(
+      caller.callServerEndpoint<_i4.AuthSuccess>(
         'emailIdp',
         'login',
         {
@@ -212,8 +376,8 @@ class EndpointEmailIdp extends _i1.EndpointRef {
   /// registration. If the email is already registered, the returned ID will not
   /// be valid.
   /// {@endtemplate}
-  _i2.Future<_i4.UuidValue> startRegistration({required String email}) =>
-      caller.callServerEndpoint<_i4.UuidValue>(
+  _i2.Future<_i5.UuidValue> startRegistration({required String email}) =>
+      caller.callServerEndpoint<_i5.UuidValue>(
         'emailIdp',
         'startRegistration',
         {'email': email},
@@ -232,7 +396,7 @@ class EndpointEmailIdp extends _i1.EndpointRef {
   ///   for the given [accountRequestId] or [verificationCode] is invalid.
   /// {@endtemplate}
   _i2.Future<String> verifyRegistrationCode({
-    required _i4.UuidValue accountRequestId,
+    required _i5.UuidValue accountRequestId,
     required String verificationCode,
   }) =>
       caller.callServerEndpoint<String>(
@@ -260,11 +424,11 @@ class EndpointEmailIdp extends _i1.EndpointRef {
   ///
   /// Returns a session for the newly created user.
   /// {@endtemplate}
-  _i2.Future<_i3.AuthSuccess> finishRegistration({
+  _i2.Future<_i4.AuthSuccess> finishRegistration({
     required String registrationToken,
     required String password,
   }) =>
-      caller.callServerEndpoint<_i3.AuthSuccess>(
+      caller.callServerEndpoint<_i4.AuthSuccess>(
         'emailIdp',
         'finishRegistration',
         {
@@ -288,8 +452,8 @@ class EndpointEmailIdp extends _i1.EndpointRef {
   ///   made too many attempts trying to request a password reset.
   ///
   /// {@endtemplate}
-  _i2.Future<_i4.UuidValue> startPasswordReset({required String email}) =>
-      caller.callServerEndpoint<_i4.UuidValue>(
+  _i2.Future<_i5.UuidValue> startPasswordReset({required String email}) =>
+      caller.callServerEndpoint<_i5.UuidValue>(
         'emailIdp',
         'startPasswordReset',
         {'email': email},
@@ -312,7 +476,7 @@ class EndpointEmailIdp extends _i1.EndpointRef {
   /// of the credentials for setting the password.
   /// {@endtemplate}
   _i2.Future<String> verifyPasswordResetCode({
-    required _i4.UuidValue passwordResetRequestId,
+    required _i5.UuidValue passwordResetRequestId,
     required String verificationCode,
   }) =>
       caller.callServerEndpoint<String>(
@@ -387,9 +551,9 @@ class EndpointJwtRefresh extends _i1.EndpointRef {
   ///
   /// This endpoint is unauthenticated, meaning the client won't include any
   /// authentication information with the call.
-  _i2.Future<_i3.AuthSuccess> refreshAccessToken(
+  _i2.Future<_i4.AuthSuccess> refreshAccessToken(
           {required String refreshToken}) =>
-      caller.callServerEndpoint<_i3.AuthSuccess>(
+      caller.callServerEndpoint<_i4.AuthSuccess>(
         'jwtRefresh',
         'refreshAccessToken',
         {'refreshToken': refreshToken},
@@ -406,8 +570,8 @@ class EndpointGreeting extends _i1.EndpointRef {
   String get name => 'greeting';
 
   /// Returns a personalized greeting message: "Hello {name}".
-  _i2.Future<_i5.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i5.Greeting>(
+  _i2.Future<_i6.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_i6.Greeting>(
         'greeting',
         'hello',
         {'name': name},
@@ -416,13 +580,13 @@ class EndpointGreeting extends _i1.EndpointRef {
 
 class Modules {
   Modules(Client client) {
-    serverpod_auth_idp = _i6.Caller(client);
-    serverpod_auth_core = _i3.Caller(client);
+    serverpod_auth_idp = _i7.Caller(client);
+    serverpod_auth_core = _i4.Caller(client);
   }
 
-  late final _i6.Caller serverpod_auth_idp;
+  late final _i7.Caller serverpod_auth_idp;
 
-  late final _i3.Caller serverpod_auth_core;
+  late final _i4.Caller serverpod_auth_core;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -441,7 +605,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i7.Protocol(),
+          _i8.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
@@ -451,7 +615,10 @@ class Client extends _i1.ServerpodClientShared {
           disconnectStreamsOnLostInternetConnection:
               disconnectStreamsOnLostInternetConnection,
         ) {
+    courierController = EndpointCourierController(this);
     favouritesController = EndpointFavouritesController(this);
+    feedController = EndpointFeedController(this);
+    orderController = EndpointOrderController(this);
     restaurantController = EndpointRestaurantController(this);
     reviewsController = EndpointReviewsController(this);
     userProfileController = EndpointUserProfileController(this);
@@ -461,7 +628,13 @@ class Client extends _i1.ServerpodClientShared {
     modules = Modules(this);
   }
 
+  late final EndpointCourierController courierController;
+
   late final EndpointFavouritesController favouritesController;
+
+  late final EndpointFeedController feedController;
+
+  late final EndpointOrderController orderController;
 
   late final EndpointRestaurantController restaurantController;
 
@@ -479,7 +652,10 @@ class Client extends _i1.ServerpodClientShared {
 
   @override
   Map<String, _i1.EndpointRef> get endpointRefLookup => {
+        'courierController': courierController,
         'favouritesController': favouritesController,
+        'feedController': feedController,
+        'orderController': orderController,
         'restaurantController': restaurantController,
         'reviewsController': reviewsController,
         'userProfileController': userProfileController,

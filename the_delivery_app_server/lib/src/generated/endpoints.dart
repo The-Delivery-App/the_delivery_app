@@ -10,66 +10,141 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import '../application/controllers/favourites_controller.dart' as _i2;
-import '../application/controllers/restaurant_controller.dart' as _i3;
-import '../application/controllers/reviews_controller.dart' as _i4;
-import '../application/controllers/user_profile_controller.dart' as _i5;
-import '../auth/email_idp_endpoint.dart' as _i6;
-import '../auth/jwt_refresh_endpoint.dart' as _i7;
-import '../greetings/greeting_endpoint.dart' as _i8;
-import 'package:uuid/uuid_value.dart' as _i9;
+import '../application/controllers/courier_controller.dart' as _i2;
+import '../application/controllers/favourites_controller.dart' as _i3;
+import '../application/controllers/feed_controller.dart' as _i4;
+import '../application/controllers/order_controller.dart' as _i5;
+import '../application/controllers/restaurant_controller.dart' as _i6;
+import '../application/controllers/reviews_controller.dart' as _i7;
+import '../application/controllers/user_profile_controller.dart' as _i8;
+import '../auth/email_idp_endpoint.dart' as _i9;
+import '../auth/jwt_refresh_endpoint.dart' as _i10;
+import '../greetings/greeting_endpoint.dart' as _i11;
+import 'package:uuid/uuid_value.dart' as _i12;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
-    as _i10;
+    as _i13;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
-    as _i11;
+    as _i14;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
   void initializeEndpoints(_i1.Server server) {
     var endpoints = <String, _i1.Endpoint>{
-      'favouritesController': _i2.FavouritesController()
+      'courierController': _i2.CourierControllerEndpoint()
+        ..initialize(
+          server,
+          'courierController',
+          null,
+        ),
+      'favouritesController': _i3.FavouritesController()
         ..initialize(
           server,
           'favouritesController',
           null,
         ),
-      'restaurantController': _i3.RestaurantController()
+      'feedController': _i4.FeedControllerEndpoint()
+        ..initialize(
+          server,
+          'feedController',
+          null,
+        ),
+      'orderController': _i5.OrderControllerEndpoint()
+        ..initialize(
+          server,
+          'orderController',
+          null,
+        ),
+      'restaurantController': _i6.RestaurantController()
         ..initialize(
           server,
           'restaurantController',
           null,
         ),
-      'reviewsController': _i4.ReviewsController()
+      'reviewsController': _i7.ReviewsController()
         ..initialize(
           server,
           'reviewsController',
           null,
         ),
-      'userProfileController': _i5.UserProfileController()
+      'userProfileController': _i8.UserProfileController()
         ..initialize(
           server,
           'userProfileController',
           null,
         ),
-      'emailIdp': _i6.EmailIdpEndpoint()
+      'emailIdp': _i9.EmailIdpEndpoint()
         ..initialize(
           server,
           'emailIdp',
           null,
         ),
-      'jwtRefresh': _i7.JwtRefreshEndpoint()
+      'jwtRefresh': _i10.JwtRefreshEndpoint()
         ..initialize(
           server,
           'jwtRefresh',
           null,
         ),
-      'greeting': _i8.GreetingEndpoint()
+      'greeting': _i11.GreetingEndpoint()
         ..initialize(
           server,
           'greeting',
           null,
         ),
     };
+    connectors['courierController'] = _i1.EndpointConnector(
+      name: 'courierController',
+      endpoint: endpoints['courierController']!,
+      methodConnectors: {
+        'assignCourier': _i1.MethodConnector(
+          name: 'assignCourier',
+          params: {
+            'requestJson': _i1.ParameterDescription(
+              name: 'requestJson',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['courierController'] as _i2.CourierControllerEndpoint)
+                  .assignCourier(
+            session,
+            params['requestJson'],
+          ),
+        ),
+        'updateDeliveryStatus': _i1.MethodConnector(
+          name: 'updateDeliveryStatus',
+          params: {
+            'requestJson': _i1.ParameterDescription(
+              name: 'requestJson',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['courierController'] as _i2.CourierControllerEndpoint)
+                  .updateDeliveryStatus(
+            session,
+            params['requestJson'],
+          ),
+        ),
+        'getAvailableCouriers': _i1.MethodConnector(
+          name: 'getAvailableCouriers',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['courierController'] as _i2.CourierControllerEndpoint)
+                  .getAvailableCouriers(session),
+        ),
+      },
+    );
     connectors['favouritesController'] = _i1.EndpointConnector(
       name: 'favouritesController',
       endpoint: endpoints['favouritesController']!,
@@ -87,7 +162,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['favouritesController'] as _i2.FavouritesController)
+              (endpoints['favouritesController'] as _i3.FavouritesController)
                   .getFavourites(
             session,
             params['userId'],
@@ -106,7 +181,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['favouritesController'] as _i2.FavouritesController)
+              (endpoints['favouritesController'] as _i3.FavouritesController)
                   .addFavourite(
             session,
             params['requestJson'],
@@ -125,10 +200,300 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['favouritesController'] as _i2.FavouritesController)
+              (endpoints['favouritesController'] as _i3.FavouritesController)
                   .removeFavourite(
             session,
             params['favouriteId'],
+          ),
+        ),
+      },
+    );
+    connectors['feedController'] = _i1.EndpointConnector(
+      name: 'feedController',
+      endpoint: endpoints['feedController']!,
+      methodConnectors: {
+        'getFeedChunk': _i1.MethodConnector(
+          name: 'getFeedChunk',
+          params: {
+            'screenWidth': _i1.ParameterDescription(
+              name: 'screenWidth',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'screenHeight': _i1.ParameterDescription(
+              name: 'screenHeight',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'dpi': _i1.ParameterDescription(
+              name: 'dpi',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'dataTransferRate': _i1.ParameterDescription(
+              name: 'dataTransferRate',
+              type: _i1.getType<double>(),
+              nullable: false,
+            ),
+            'userLatitude': _i1.ParameterDescription(
+              name: 'userLatitude',
+              type: _i1.getType<double>(),
+              nullable: false,
+            ),
+            'userLongitude': _i1.ParameterDescription(
+              name: 'userLongitude',
+              type: _i1.getType<double>(),
+              nullable: false,
+            ),
+            'chunkSize': _i1.ParameterDescription(
+              name: 'chunkSize',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'chunkOffset': _i1.ParameterDescription(
+              name: 'chunkOffset',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'filters': _i1.ParameterDescription(
+              name: 'filters',
+              type: _i1.getType<Map<String, dynamic>?>(),
+              nullable: true,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['feedController'] as _i4.FeedControllerEndpoint)
+                  .getFeedChunk(
+            session,
+            params['screenWidth'],
+            params['screenHeight'],
+            params['dpi'],
+            params['dataTransferRate'],
+            params['userLatitude'],
+            params['userLongitude'],
+            params['chunkSize'],
+            params['chunkOffset'],
+            params['filters'],
+          ),
+        ),
+        'getSpecialDeals': _i1.MethodConnector(
+          name: 'getSpecialDeals',
+          params: {
+            'limit': _i1.ParameterDescription(
+              name: 'limit',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'city': _i1.ParameterDescription(
+              name: 'city',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['feedController'] as _i4.FeedControllerEndpoint)
+                  .getSpecialDeals(
+            session,
+            params['limit'],
+            params['city'],
+          ),
+        ),
+        'search': _i1.MethodConnector(
+          name: 'search',
+          params: {
+            'query': _i1.ParameterDescription(
+              name: 'query',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'limit': _i1.ParameterDescription(
+              name: 'limit',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'city': _i1.ParameterDescription(
+              name: 'city',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['feedController'] as _i4.FeedControllerEndpoint)
+                  .search(
+            session,
+            params['query'],
+            params['limit'],
+            params['city'],
+          ),
+        ),
+      },
+    );
+    connectors['orderController'] = _i1.EndpointConnector(
+      name: 'orderController',
+      endpoint: endpoints['orderController']!,
+      methodConnectors: {
+        'hello': _i1.MethodConnector(
+          name: 'hello',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['orderController'] as _i5.OrderControllerEndpoint)
+                  .hello(session),
+        ),
+        'getOrder': _i1.MethodConnector(
+          name: 'getOrder',
+          params: {
+            'orderId': _i1.ParameterDescription(
+              name: 'orderId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['orderController'] as _i5.OrderControllerEndpoint)
+                  .getOrder(
+            session,
+            params['orderId'],
+          ),
+        ),
+        'getOrderDetails': _i1.MethodConnector(
+          name: 'getOrderDetails',
+          params: {
+            'requestJson': _i1.ParameterDescription(
+              name: 'requestJson',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['orderController'] as _i5.OrderControllerEndpoint)
+                  .getOrderDetails(
+            session,
+            params['requestJson'],
+          ),
+        ),
+        'createOrder': _i1.MethodConnector(
+          name: 'createOrder',
+          params: {
+            'requestJson': _i1.ParameterDescription(
+              name: 'requestJson',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['orderController'] as _i5.OrderControllerEndpoint)
+                  .createOrder(
+            session,
+            params['requestJson'],
+          ),
+        ),
+        'processPayment': _i1.MethodConnector(
+          name: 'processPayment',
+          params: {
+            'requestJson': _i1.ParameterDescription(
+              name: 'requestJson',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['orderController'] as _i5.OrderControllerEndpoint)
+                  .processPayment(
+            session,
+            params['requestJson'],
+          ),
+        ),
+        'getHistory': _i1.MethodConnector(
+          name: 'getHistory',
+          params: {
+            'userId': _i1.ParameterDescription(
+              name: 'userId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'limit': _i1.ParameterDescription(
+              name: 'limit',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'offset': _i1.ParameterDescription(
+              name: 'offset',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['orderController'] as _i5.OrderControllerEndpoint)
+                  .getHistory(
+            session,
+            params['userId'],
+            params['limit'],
+            params['offset'],
+          ),
+        ),
+        'getTrackingInfo': _i1.MethodConnector(
+          name: 'getTrackingInfo',
+          params: {
+            'requestJson': _i1.ParameterDescription(
+              name: 'requestJson',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['orderController'] as _i5.OrderControllerEndpoint)
+                  .getTrackingInfo(
+            session,
+            params['requestJson'],
+          ),
+        ),
+        'updateCourierLocation': _i1.MethodConnector(
+          name: 'updateCourierLocation',
+          params: {
+            'requestJson': _i1.ParameterDescription(
+              name: 'requestJson',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['orderController'] as _i5.OrderControllerEndpoint)
+                  .updateCourierLocation(
+            session,
+            params['requestJson'],
           ),
         ),
       },
@@ -150,7 +515,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['restaurantController'] as _i3.RestaurantController)
+              (endpoints['restaurantController'] as _i6.RestaurantController)
                   .getRestaurant(
             session,
             params['restaurantId'],
@@ -169,7 +534,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['restaurantController'] as _i3.RestaurantController)
+              (endpoints['restaurantController'] as _i6.RestaurantController)
                   .getMenu(
             session,
             params['restaurantId'],
@@ -198,7 +563,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['restaurantController'] as _i3.RestaurantController)
+              (endpoints['restaurantController'] as _i6.RestaurantController)
                   .getReviews(
             session,
             params['restaurantId'],
@@ -219,7 +584,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['restaurantController'] as _i3.RestaurantController)
+              (endpoints['restaurantController'] as _i6.RestaurantController)
                   .getFeatured(
             session,
             params['limit'],
@@ -244,7 +609,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['reviewsController'] as _i4.ReviewsController)
+              (endpoints['reviewsController'] as _i7.ReviewsController)
                   .createReview(
             session,
             params['requestJson'],
@@ -273,7 +638,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['reviewsController'] as _i4.ReviewsController)
+              (endpoints['reviewsController'] as _i7.ReviewsController)
                   .getReviews(
             session,
             params['foodId'],
@@ -294,7 +659,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['reviewsController'] as _i4.ReviewsController)
+              (endpoints['reviewsController'] as _i7.ReviewsController)
                   .deleteReview(
             session,
             params['reviewId'],
@@ -319,7 +684,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['userProfileController'] as _i5.UserProfileController)
+              (endpoints['userProfileController'] as _i8.UserProfileController)
                   .getProfile(
             session,
             params['userId'],
@@ -338,7 +703,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['userProfileController'] as _i5.UserProfileController)
+              (endpoints['userProfileController'] as _i8.UserProfileController)
                   .updateProfile(
             session,
             params['requestJson'],
@@ -357,7 +722,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['userProfileController'] as _i5.UserProfileController)
+              (endpoints['userProfileController'] as _i8.UserProfileController)
                   .addAddress(
             session,
             params['requestJson'],
@@ -376,7 +741,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['userProfileController'] as _i5.UserProfileController)
+              (endpoints['userProfileController'] as _i8.UserProfileController)
                   .deleteAddress(
             session,
             params['addressId'],
@@ -406,7 +771,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['emailIdp'] as _i6.EmailIdpEndpoint).login(
+              (endpoints['emailIdp'] as _i9.EmailIdpEndpoint).login(
             session,
             email: params['email'],
             password: params['password'],
@@ -425,7 +790,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['emailIdp'] as _i6.EmailIdpEndpoint).startRegistration(
+              (endpoints['emailIdp'] as _i9.EmailIdpEndpoint).startRegistration(
             session,
             email: params['email'],
           ),
@@ -435,7 +800,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'accountRequestId': _i1.ParameterDescription(
               name: 'accountRequestId',
-              type: _i1.getType<_i9.UuidValue>(),
+              type: _i1.getType<_i12.UuidValue>(),
               nullable: false,
             ),
             'verificationCode': _i1.ParameterDescription(
@@ -448,7 +813,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['emailIdp'] as _i6.EmailIdpEndpoint)
+              (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
                   .verifyRegistrationCode(
             session,
             accountRequestId: params['accountRequestId'],
@@ -473,7 +838,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['emailIdp'] as _i6.EmailIdpEndpoint)
+              (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
                   .finishRegistration(
             session,
             registrationToken: params['registrationToken'],
@@ -493,7 +858,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['emailIdp'] as _i6.EmailIdpEndpoint)
+              (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
                   .startPasswordReset(
             session,
             email: params['email'],
@@ -504,7 +869,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'passwordResetRequestId': _i1.ParameterDescription(
               name: 'passwordResetRequestId',
-              type: _i1.getType<_i9.UuidValue>(),
+              type: _i1.getType<_i12.UuidValue>(),
               nullable: false,
             ),
             'verificationCode': _i1.ParameterDescription(
@@ -517,7 +882,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['emailIdp'] as _i6.EmailIdpEndpoint)
+              (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
                   .verifyPasswordResetCode(
             session,
             passwordResetRequestId: params['passwordResetRequestId'],
@@ -542,7 +907,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['emailIdp'] as _i6.EmailIdpEndpoint)
+              (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
                   .finishPasswordReset(
             session,
             finishPasswordResetToken: params['finishPasswordResetToken'],
@@ -556,7 +921,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['emailIdp'] as _i6.EmailIdpEndpoint)
+              (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
                   .hasAccount(session),
         ),
       },
@@ -578,7 +943,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['jwtRefresh'] as _i7.JwtRefreshEndpoint)
+              (endpoints['jwtRefresh'] as _i10.JwtRefreshEndpoint)
                   .refreshAccessToken(
             session,
             refreshToken: params['refreshToken'],
@@ -603,16 +968,16 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['greeting'] as _i8.GreetingEndpoint).hello(
+              (endpoints['greeting'] as _i11.GreetingEndpoint).hello(
             session,
             params['name'],
           ),
         )
       },
     );
-    modules['serverpod_auth_idp'] = _i10.Endpoints()
+    modules['serverpod_auth_idp'] = _i13.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i11.Endpoints()
+    modules['serverpod_auth_core'] = _i14.Endpoints()
       ..initializeEndpoints(server);
   }
 }
