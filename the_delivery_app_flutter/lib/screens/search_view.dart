@@ -43,13 +43,33 @@ class _SearchViewState extends State<SearchView> {
       return const Center(child: CircularProgressIndicator());
     }
     if (widget.state.query.isEmpty) {
-      return const Center(child: Text('Type to search for food.'));
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.search, size: 48, color: Colors.grey),
+            SizedBox(height: 12),
+            Text('Type to search for food.', style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
     }
     if (widget.state.results.isEmpty) {
-      return const Center(child: Text('No results found.'));
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.search_off, size: 48, color: Colors.grey),
+            SizedBox(height: 12),
+            Text('No results found.', style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
     }
-    return ListView.builder(
+    return ListView.separated(
       itemCount: widget.state.results.length,
+      separatorBuilder: (_, _) =>
+          const Divider(height: 1, indent: 16, endIndent: 16),
       itemBuilder: (context, index) =>
           _buildResultTile(widget.state.results[index]),
     );
