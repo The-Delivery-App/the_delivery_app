@@ -10,4 +10,19 @@ class AccountViewModel extends ChangeNotifier {
   AccountViewModel();
 
   AccountState getState() => _state;
+
+  void login() {
+    // No backend connected yet — sets a mock logged-in user locally.
+    _state = AccountState(
+      isLoggedIn: true,
+      user: const User(userId: 'user-1', name: 'Demo User', email: 'demo@example.com'),
+      session: const Session(sessionId: 'session-1', userId: 'user-1', isGuest: false),
+    );
+    notifyListeners();
+  }
+
+  void register() {
+    // No backend connected yet — behaves same as login locally.
+    login();
+  }
 }
