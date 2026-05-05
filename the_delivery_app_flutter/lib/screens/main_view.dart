@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../APIs/feed_api_service.dart';
+import '../main.dart';
 import '../repositories/basket_repository.dart';
+import '../repositories/food_repository.dart';
 import '../repositories/settings_repository.dart';
 import '../state/map_state.dart';
 import '../storage/local_storage.dart';
@@ -36,7 +39,13 @@ class _MainViewState extends State<MainView> {
     _settingsViewModel = SettingsViewModel(
       repository: SettingsRepository(storage: storage),
     );
-    _feedViewModel = FeedViewModel();
+    _feedViewModel = FeedViewModel(
+      repository: FoodRepository(
+        apiService: FeedAPIService(client: client),
+        sessionId: '',
+      ),
+    );
+    _feedViewModel.loadFeed();
   }
 
   @override
