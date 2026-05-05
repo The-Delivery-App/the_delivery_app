@@ -9,8 +9,9 @@ import '../view_models/restaurant_view_model.dart';
 
 class RestaurantView extends StatefulWidget {
   final Restaurant restaurant;
+  final void Function(Food)? onAddToBasket;
 
-  const RestaurantView({super.key, required this.restaurant});
+  const RestaurantView({super.key, required this.restaurant, this.onAddToBasket});
 
   @override
   State<RestaurantView> createState() => _RestaurantViewState();
