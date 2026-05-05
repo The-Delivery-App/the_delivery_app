@@ -15,7 +15,14 @@ class BasketView extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('£${food.price.toStringAsFixed(2)}'),
+          Text(
+            '£${food.price.toStringAsFixed(2)}',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+              color: Colors.deepOrange,
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.remove_circle_outline),
             onPressed: () => viewModel.removeItem(food),
@@ -58,7 +65,7 @@ class BasketView extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('${items.length} item(s)',
+                        Text('${items.length} ${items.length == 1 ? 'item' : 'items'}',
                             style: const TextStyle(color: Colors.grey)),
                         Text(
                           'Total: £${total.toStringAsFixed(2)}',
