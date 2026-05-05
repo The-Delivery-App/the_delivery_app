@@ -42,9 +42,20 @@ class _RestaurantViewState extends State<RestaurantView> {
       leading: const Icon(Icons.fastfood, color: Colors.deepOrange),
       title: Text(food.name),
       subtitle: Text('${food.calories} kcal · ⭐ ${food.rating.toStringAsFixed(1)}'),
-      trailing: Text(
-        '£${food.price.toStringAsFixed(2)}',
-        style: const TextStyle(fontWeight: FontWeight.bold),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '£${food.price.toStringAsFixed(2)}',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          if (widget.onAddToBasket != null)
+            IconButton(
+              icon: const Icon(Icons.add_shopping_cart, color: Colors.deepOrange),
+              onPressed: () => widget.onAddToBasket!(food),
+              tooltip: 'Add to basket',
+            ),
+        ],
       ),
     );
   }
