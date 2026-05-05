@@ -6,7 +6,7 @@ import '../../business/models/location.dart';
 import '../../generated/protocol.dart';
 import '../../data_access/daos/food_dao.dart';
 
-class FeedController extends Endpoint {
+class FeedControllerEndpoint extends Endpoint {
 
   Future<FeedChunkResponse> getFeedChunk(
     Session session,
@@ -90,7 +90,9 @@ class FeedController extends Endpoint {
         errorCode: 'INTERNAL_ERROR',
       );
     }
-      Future<String> getSpecialDeals(
+  }
+
+  Future<String> getSpecialDeals(
     Session session,
     int limit,
     String? city,

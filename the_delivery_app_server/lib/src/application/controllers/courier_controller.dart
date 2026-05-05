@@ -2,7 +2,7 @@ import 'package:serverpod/serverpod.dart';
 import '../../generated/protocol.dart';
 import 'dart:convert';
 
-class CourierController extends Endpoint {
+class CourierControllerEndpoint extends Endpoint {
 
   Future<String> assignCourier(Session session, String requestJson) async {
     try {

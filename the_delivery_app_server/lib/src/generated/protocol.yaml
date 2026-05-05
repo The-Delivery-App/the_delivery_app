@@ -2,13 +2,6 @@ favouritesController:
   - getFavourites:
   - addFavourite:
   - removeFavourite:
-feedController:
-  - getFeedChunk:
-orderController:
-  - hello:
-  - getOrder:
-  - createOrder:
-  - getHistory:
 restaurantController:
   - getRestaurant:
   - getMenu:

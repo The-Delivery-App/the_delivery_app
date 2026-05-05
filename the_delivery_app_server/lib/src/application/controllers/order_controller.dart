@@ -5,7 +5,7 @@ import '../../business/services/order_service.dart';
 import '../../business/models/order_models.dart';
 import 'dart:convert';
 
-class OrderController extends Endpoint {
+class OrderControllerEndpoint extends Endpoint {
 
   Future<String> hello(Session session) async {
     return 'Order controller working';
