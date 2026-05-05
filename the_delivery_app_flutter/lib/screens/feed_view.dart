@@ -120,16 +120,18 @@ class FeedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(title: const Text('Feed'));
     if (state.isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        appBar: appBar,
+        body: const Center(child: CircularProgressIndicator()),
       );
     }
     if (state.errorMessage != null) {
-      return Scaffold(body: _buildError(state.errorMessage!));
+      return Scaffold(appBar: appBar, body: _buildError(state.errorMessage!));
     }
     return Scaffold(
-      appBar: AppBar(title: const Text('Feed')),
+      appBar: appBar,
       body: state.feedItems.isEmpty
           ? _buildEmpty()
           : ListView.builder(
