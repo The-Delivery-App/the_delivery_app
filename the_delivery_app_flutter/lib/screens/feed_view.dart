@@ -8,8 +8,9 @@ class FeedView extends StatelessWidget {
   final FeedState state;
   final void Function(Food)? onAddToBasket;
   final VoidCallback? onRetry;
+  final VoidCallback? onLoadMore;
 
-  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry});
+  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore});
 
   Widget _buildFoodCard(BuildContext context, Food food) {
     final minutes = food.deliveryTime.inMinutes;
@@ -134,10 +135,27 @@ class FeedView extends StatelessWidget {
       appBar: appBar,
       body: state.feedItems.isEmpty
           ? _buildEmpty()
-          : ListView.builder(
-              itemCount: state.feedItems.length,
-              itemBuilder: (context, index) =>
-                  _buildFoodCard(context, state.feedItems[index]),
+          : NotificationListener<ScrollNotification>(
+              onNotification: (notification) {
+                if (onLoadMore != null &&
+                    notification.metrics.pixels >=
+                        notification.metrics.maxScrollExtent - 200) {
+                  onLoadMore!();
+                }
+                return false;
+              },
+              child: ListView.builder(
+                itemCount: state.feedItems.length + (state.isLoadingMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index == state.feedItems.length) {
+                    return const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  return _buildFoodCard(context, state.feedItems[index]);
+                },
+              ),
             ),
     );
   }
