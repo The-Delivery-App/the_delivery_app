@@ -16,12 +16,15 @@ class AccountView extends StatefulWidget {
 
 class _AccountViewState extends State<AccountView> {
   bool _isSignedIn = false;
+  String? _displayName;
+  String? _userEmail;
 
   @override
   void initState() {
     super.initState();
     client.auth.authInfoListenable.addListener(_updateSignedInState);
     _isSignedIn = client.auth.isAuthenticated;
+    if (_isSignedIn) _loadUserProfile();
   }
 
   @override
@@ -30,9 +33,26 @@ class _AccountViewState extends State<AccountView> {
     super.dispose();
   }
 
+  Future<void> _loadUserProfile() async {
+    try {
+      final profile = await client.modules.serverpod_auth_core.userProfileInfo.get();
+      if (!mounted) return;
+      setState(() {
+        _displayName = profile.fullName ?? profile.userName;
+        _userEmail = profile.email;
+      });
+    } catch (_) {}
+  }
+
   void _updateSignedInState() {
     setState(() {
       _isSignedIn = client.auth.isAuthenticated;
+      if (_isSignedIn) {
+        _loadUserProfile();
+      } else {
+        _displayName = null;
+        _userEmail = null;
+      }
     });
   }
 
@@ -52,16 +72,16 @@ class _AccountViewState extends State<AccountView> {
         const SizedBox(height: 40),
         const Icon(Icons.account_circle, size: 80, color: Colors.deepOrange),
         const SizedBox(height: 12),
-        const Text(
-          'My Account',
+        Text(
+          _displayName ?? 'My Account',
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 4),
-        const Text(
-          'Signed in',
+        Text(
+          _userEmail ?? 'Signed in',
           textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.grey, fontSize: 13),
+          style: const TextStyle(color: Colors.grey, fontSize: 13),
         ),
         const SizedBox(height: 32),
         const Divider(height: 1),
