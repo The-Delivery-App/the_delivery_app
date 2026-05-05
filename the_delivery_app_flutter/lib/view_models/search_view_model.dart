@@ -18,6 +18,7 @@ class SearchViewModel extends ChangeNotifier {
 
   void loadItems(List<Food> items) {
     _items = items;
+    if (_state.query.isNotEmpty) search(_state.query);
   }
 
   void search(String query) {
