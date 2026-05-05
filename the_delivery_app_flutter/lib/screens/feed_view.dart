@@ -18,7 +18,10 @@ class FeedView extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => RestaurantView(restaurant: food.restaurant),
+            builder: (_) => RestaurantView(
+              restaurant: food.restaurant,
+              onAddToBasket: onAddToBasket,
+            ),
           ),
         );
       },
