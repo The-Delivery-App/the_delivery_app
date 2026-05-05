@@ -24,9 +24,6 @@ class MapView extends StatelessWidget {
           children: [
             const Icon(Icons.map, size: 60, color: Colors.grey),
             const SizedBox(height: 8),
-            const Text('Map placeholder',
-                style: TextStyle(color: Colors.grey)),
-            const SizedBox(height: 4),
             Text(locationText,
                 style: const TextStyle(fontSize: 12, color: Colors.grey)),
           ],
@@ -39,7 +36,6 @@ class MapView extends StatelessWidget {
     return ListTile(
       leading: const Icon(Icons.restaurant, color: Colors.deepOrange),
       title: Text(restaurant.name),
-      subtitle: Text('ID: ${restaurant.id}'),
     );
   }
 
