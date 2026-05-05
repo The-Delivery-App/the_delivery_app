@@ -6,8 +6,9 @@ import '../state/search_state.dart';
 class SearchView extends StatefulWidget {
   final SearchState state;
   final ValueChanged<String> onSearch;
+  final void Function(Food)? onAddToBasket;
 
-  const SearchView({super.key, required this.state, required this.onSearch});
+  const SearchView({super.key, required this.state, required this.onSearch, this.onAddToBasket});
 
   @override
   State<SearchView> createState() => _SearchViewState();
