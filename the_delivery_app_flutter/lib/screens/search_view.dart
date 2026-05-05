@@ -27,7 +27,14 @@ class _SearchViewState extends State<SearchView> {
       leading: const Icon(Icons.fastfood, color: Colors.deepOrange),
       title: Text(food.name),
       subtitle: Text(food.restaurant.name),
-      trailing: Text('£${food.price.toStringAsFixed(2)}'),
+      trailing: Text(
+        '£${food.price.toStringAsFixed(2)}',
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 15,
+          color: Colors.deepOrange,
+        ),
+      ),
     );
   }
 
