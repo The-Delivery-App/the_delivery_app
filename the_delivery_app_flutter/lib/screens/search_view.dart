@@ -24,7 +24,19 @@ class _SearchViewState extends State<SearchView> {
 
   Widget _buildResultTile(Food food) {
     return ListTile(
-      leading: const Icon(Icons.fastfood, color: Colors.deepOrange),
+      leading: food.imageUrl.isNotEmpty
+          ? ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: Image.network(
+                food.imageUrl,
+                width: 40,
+                height: 40,
+                fit: BoxFit.cover,
+                errorBuilder: (_, _, _) =>
+                    const Icon(Icons.fastfood, color: Colors.deepOrange),
+              ),
+            )
+          : const Icon(Icons.fastfood, color: Colors.deepOrange),
       title: Text(food.name),
       subtitle: Text(food.restaurant.name),
       trailing: Text(
