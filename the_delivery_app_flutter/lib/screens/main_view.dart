@@ -5,17 +5,20 @@ import '../main.dart';
 import '../repositories/basket_repository.dart';
 import '../repositories/food_repository.dart';
 import '../repositories/settings_repository.dart';
+import '../repositories/special_deal_repository.dart';
 import '../state/map_state.dart';
 import '../storage/local_storage.dart';
 import '../view_models/basket_view_model.dart';
 import '../view_models/feed_view_model.dart';
 import '../view_models/search_view_model.dart';
 import '../view_models/settings_view_model.dart';
+import '../view_models/special_deal_view_model.dart';
 import 'account_view.dart';
 import 'basket_view.dart';
 import 'feed_view.dart';
 import 'map_view.dart';
 import 'search_view.dart';
+import 'special_deal_view.dart';
 
 class MainView extends StatefulWidget {
   const MainView({super.key});
@@ -31,6 +34,7 @@ class _MainViewState extends State<MainView> {
   late final SettingsViewModel _settingsViewModel;
   late final FeedViewModel _feedViewModel;
   late final SearchViewModel _searchViewModel;
+  late final SpecialDealViewModel _specialDealViewModel;
 
   @override
   void initState() {
@@ -49,6 +53,9 @@ class _MainViewState extends State<MainView> {
       ),
     );
     _searchViewModel = SearchViewModel();
+    _specialDealViewModel = SpecialDealViewModel(
+      repository: SpecialDealRepository(client: client),
+    );
     _basketViewModel.loadBasket();
     _feedViewModel.addListener(() {
       _searchViewModel.loadItems(_feedViewModel.getState().feedItems);
@@ -62,6 +69,7 @@ class _MainViewState extends State<MainView> {
     _settingsViewModel.dispose();
     _feedViewModel.dispose();
     _searchViewModel.dispose();
+    _specialDealViewModel.dispose();
     super.dispose();
   }
 
@@ -81,6 +89,20 @@ class _MainViewState extends State<MainView> {
             onAddToBasket: _basketViewModel.addItem,
             onRetry: _feedViewModel.loadFeed,
             onLoadMore: _feedViewModel.loadMore,
+            onDeals: () {
+              _specialDealViewModel.loadDeals();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ListenableBuilder(
+                    listenable: _specialDealViewModel,
+                    builder: (_, _) => SpecialDealView(
+                      state: _specialDealViewModel.getState(),
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         );
       case 1:
@@ -103,6 +125,7 @@ class _MainViewState extends State<MainView> {
           onAddToBasket: _basketViewModel.addItem,
           onRetry: _feedViewModel.loadFeed,
           onLoadMore: _feedViewModel.loadMore,
+          onDeals: () {},
         );
     }
   }
