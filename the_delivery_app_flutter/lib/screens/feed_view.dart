@@ -53,7 +53,7 @@ class FeedView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '\$${food.price.toStringAsFixed(2)}',
+                  '£${food.price.toStringAsFixed(2)}',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
