@@ -18,11 +18,7 @@ class RestaurantDAO {
   Future<Restaurant?> getWithPlace(int restaurantId) async {
     try {
       final restaurant = await Restaurant.db.findById(session, restaurantId);
-      if (restaurant == null) return null;
-
-      final place = await RestaurantPlace.db.findById(session, restaurant.placeId);
-      // Note - serverpod will handle the relation loading
-      
+      if (restaurant == null) return null;      
       return restaurant;
     } catch (e) {
       session.log('Error getting restaurant with place: $e');
@@ -65,7 +61,7 @@ class RestaurantDAO {
       for (final foodItemId in foodItemIds) {
         final itemReviews = await FoodReview.db.find(
           session,
-          where: (t) => t.foodItemId.equals(foodItemId),
+          where: (t) => t.foodId.equals(foodItemId),
           limit: limit,
           offset: offset,
         );
