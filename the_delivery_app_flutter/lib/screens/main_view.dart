@@ -67,7 +67,10 @@ class _MainViewState extends State<MainView> {
       case 0:
         return ListenableBuilder(
           listenable: _feedViewModel,
-          builder: (_, _) => FeedView(state: _feedViewModel.getState()),
+          builder: (_, _) => FeedView(
+            state: _feedViewModel.getState(),
+            onAddToBasket: _basketViewModel.addItem,
+          ),
         );
       case 1:
         return const Center(child: Text('Search'));
