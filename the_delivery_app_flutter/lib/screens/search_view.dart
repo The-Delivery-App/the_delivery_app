@@ -3,34 +3,48 @@ import 'package:flutter/material.dart';
 import '../models/food.dart';
 import '../state/search_state.dart';
 
-class SearchView extends StatelessWidget {
+class SearchView extends StatefulWidget {
   final SearchState state;
   final ValueChanged<String> onSearch;
 
   const SearchView({super.key, required this.state, required this.onSearch});
+
+  @override
+  State<SearchView> createState() => _SearchViewState();
+}
+
+class _SearchViewState extends State<SearchView> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   Widget _buildResultTile(Food food) {
     return ListTile(
       leading: const Icon(Icons.fastfood, color: Colors.deepOrange),
       title: Text(food.name),
       subtitle: Text(food.restaurant.name),
-      trailing: Text('\$${food.price.toStringAsFixed(2)}'),
+      trailing: Text('£${food.price.toStringAsFixed(2)}'),
     );
   }
 
   Widget _buildBody() {
-    if (state.isLoading) {
+    if (widget.state.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
-    if (state.query.isEmpty) {
+    if (widget.state.query.isEmpty) {
       return const Center(child: Text('Type to search for food.'));
     }
-    if (state.results.isEmpty) {
+    if (widget.state.results.isEmpty) {
       return const Center(child: Text('No results found.'));
     }
     return ListView.builder(
-      itemCount: state.results.length,
-      itemBuilder: (context, index) => _buildResultTile(state.results[index]),
+      itemCount: widget.state.results.length,
+      itemBuilder: (context, index) =>
+          _buildResultTile(widget.state.results[index]),
     );
   }
 
@@ -39,12 +53,25 @@ class SearchView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: TextField(
+          controller: _controller,
           autofocus: true,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             hintText: 'Search food...',
             border: InputBorder.none,
+            suffixIcon: _controller.text.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _controller.clear();
+                      widget.onSearch('');
+                    },
+                  )
+                : null,
           ),
-          onSubmitted: onSearch,
+          onChanged: (value) {
+            setState(() {});
+            widget.onSearch(value);
+          },
         ),
       ),
       body: _buildBody(),
