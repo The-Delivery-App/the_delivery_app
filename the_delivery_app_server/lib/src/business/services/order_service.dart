@@ -1,8 +1,8 @@
 import 'package:serverpod/serverpod.dart';
 import '../../generated/protocol.dart';
 import '../../data_access/daos/order_dao.dart';
+import '../../models/order_models.dart';
 
-/// Handles order creation, validation, and workflow
 class OrderService {
   final Session session;
   late final OrderDAO orderDAO;
@@ -23,7 +23,6 @@ class OrderService {
     String? deliveryInstructions,
   }) async {
     try {
-      // 1. prevent duplicate orders
       final existingOrder = await orderDAO.findByIdempotencyKey(idempotencyKey);
       if (existingOrder != null) {
         return OrderResult.fromExisting(existingOrder);
@@ -78,8 +77,7 @@ class OrderService {
 
       await orderDAO.addStatusHistory(
         orderId: order.id!,
-        status: OrderStatus.pending,
-        note: 'Order created',
+        status: OrderStatus.placed,
       );
 
       if (isSplit &&
@@ -117,8 +115,8 @@ class OrderService {
         return PaymentResult.error('Unauthorized');
       }
 
-      if (order.currentStatus != OrderStatus.pending) {
-        return PaymentResult.error('Order is not in pending state');
+      if (order.currentStatus != OrderStatus.placed) {
+        return PaymentResult.error('Order is not in placed state');
       }
 
       final paymentSuccess = await _processPaymentWithProvider(
@@ -148,12 +146,6 @@ class OrderService {
       await orderDAO.updatePaymentStatus(payment.id!, 'succeeded');
       await _updateOrderStatus(orderId, OrderStatus.confirmed);
 
-      // 6. TODO: Assign courier (implement in Step 5)
-      // await _assignCourier(orderId);
-
-      // 7. TODO: Notify restaurant (implement FCM later)
-      // await _notifyRestaurant(order.restaurantId, orderId);
-
       return PaymentResult.success(
         transactionId: paymentSuccess.transactionId!,
         amount: order.totalAmount,
@@ -171,7 +163,6 @@ class OrderService {
         return null;
       }
 
-      // Verify ownership
       if (orderWithDetails.order.userId != userId) {
         throw Exception('Unauthorized access to order');
       }
@@ -202,7 +193,6 @@ class OrderService {
     await orderDAO.addStatusHistory(
       orderId: orderId,
       status: newStatus,
-      note: 'Status updated to ${newStatus.name}',
     );
   }
 
@@ -217,7 +207,6 @@ class OrderService {
     final validatedItems = <ValidatedBasketItem>[];
 
     for (final item in items) {
-      // Load food item from database
       final foodItem = await FoodItem.db.findById(session, item.foodItemId);
 
       if (foodItem == null) {
@@ -253,30 +242,22 @@ class OrderService {
     return BasketValidationResult.valid(validatedItems);
   }
 
-  Future<OrderPricing> _calculatePricing({
+    OrderPricing _calculatePricing({
     required List<ValidatedBasketItem> items,
-    required int restaurantId,
-    required int deliveryAddressId,
     String? couponCode,
-  }) async {
+  }) {
     double subtotal = 0;
     for (final item in items) {
       subtotal += item.unitPrice * item.quantity;
     }
 
-    double deliveryFee = 2.99;
-    if (subtotal >= 15.0) {
-      deliveryFee = 0.0; // Free delivery over £15
-    }
-
-    double serviceFee = subtotal * 0.10;
-
-    double discount = 0.0;
-    if (couponCode != null) {
-      discount = await _calculateDiscount(subtotal, couponCode);
-    }
-
-    double total = subtotal + deliveryFee + serviceFee - discount;
+    final double deliveryFee = subtotal >= 15.0 ? 0.0 : 2.99;
+    final double serviceFee = subtotal * 0.10;
+    final double discount = couponCode != null
+        ? _calculateDiscount(subtotal, couponCode)
+        : 0.0;
+    final double total =
+        (subtotal + deliveryFee + serviceFee - discount).clamp(0.0, double.infinity);
 
     return OrderPricing(
       subtotal: subtotal,
@@ -287,19 +268,19 @@ class OrderService {
     );
   }
 
-  Future<double> _calculateDiscount(double subtotal, String couponCode) async {
-    // TODO: Look up coupon in database
-    if (couponCode.toUpperCase() == 'SAVE10') {
-      return subtotal * 0.10; // 10% off
+  double _calculateDiscount(double subtotal, String couponCode) {
+    switch (couponCode.toUpperCase()) {
+      case 'SAVE10': return subtotal * 0.10;
+      case 'SAVE20': return subtotal * 0.20;
+      case 'FREESHIP': return 2.99;
+      default: return 0.0;
     }
-    return 0.0;
   }
 
   Future<DateTime> _estimateDeliveryTime({
     required int restaurantId,
     required int deliveryAddressId,
   }) async {
-    // estimate 45 minutes
     return DateTime.now().add(Duration(minutes: 45));
   }
 
@@ -309,7 +290,6 @@ class OrderService {
     required String paymentMethod,
     required String idempotencyKey,
   }) async {
-    // Mock payment processing
     // this would call Stripe API
 
     if (paymentToken.startsWith('tok_') || paymentToken == 'test_success') {
@@ -324,122 +304,39 @@ class OrderService {
       errorMessage: 'Invalid payment token',
     );
   }
-}
 
-class BasketItemInput {
-  final int foodItemId;
-  final int quantity;
-  final String? specialInstructions;
+class CourierTrackingInfo {
+  final int courierId;
+  final String courierName;
+  final String courierPhone;
+  final String vehicleInfo;
+  final double? currentLatitude;
+  final double? currentLongitude;
+  final DateTime? estimatedDeliveryTime;
+  final int? minutesRemaining;
+  final OrderStatus currentStatus;
 
-  BasketItemInput({
-    required this.foodItemId,
-    required this.quantity,
-    this.specialInstructions,
+  CourierTrackingInfo({
+    required this.courierId,
+    required this.courierName,
+    required this.courierPhone,
+    required this.vehicleInfo,
+    this.currentLatitude,
+    this.currentLongitude,
+    this.estimatedDeliveryTime,
+    this.minutesRemaining,
+    required this.currentStatus,
   });
-}
 
-class ValidatedBasketItem {
-  final int foodItemId;
-  final int quantity;
-  final double unitPrice;
-  final String? specialInstructions;
-  final String foodItemName;
-  final String? foodItemDescription;
-
-  ValidatedBasketItem({
-    required this.foodItemId,
-    required this.quantity,
-    required this.unitPrice,
-    this.specialInstructions,
-    required this.foodItemName,
-    this.foodItemDescription,
-  });
-}
-
-class BasketValidationResult {
-  final bool isValid;
-  final String? errorMessage;
-  final List<ValidatedBasketItem>? validatedItems;
-
-  BasketValidationResult.valid(this.validatedItems)
-    : isValid = true,
-      errorMessage = null;
-
-  BasketValidationResult.invalid(this.errorMessage)
-    : isValid = false,
-      validatedItems = null;
-}
-
-class OrderPricing {
-  final double subtotal;
-  final double deliveryFee;
-  final double serviceFee;
-  final double discount;
-  final double total;
-
-  OrderPricing({
-    required this.subtotal,
-    required this.deliveryFee,
-    required this.serviceFee,
-    required this.discount,
-    required this.total,
-  });
-}
-
-class OrderResult {
-  final bool success;
-  final Order? order;
-  final String? errorMessage;
-
-  OrderResult.success(this.order) : success = true, errorMessage = null;
-
-  OrderResult.fromExisting(this.order) : success = true, errorMessage = null;
-
-  OrderResult.error(this.errorMessage) : success = false, order = null;
-}
-
-class PaymentResult {
-  final bool success;
-  final String? transactionId;
-  final double? amount;
-  final String? errorMessage;
-
-  PaymentResult.success({
-    required this.transactionId,
-    required this.amount,
-  }) : success = true,
-       errorMessage = null;
-
-  PaymentResult.error(this.errorMessage)
-    : success = false,
-      transactionId = null,
-      amount = null;
-}
-
-class ProviderPaymentResult {
-  final bool success;
-  final String? transactionId;
-  final String? errorMessage;
-
-  ProviderPaymentResult({
-    required this.success,
-    this.transactionId,
-    this.errorMessage,
-  });
-}
-
-class OrderDetails {
-  final Order order;
-  final List<OrderItem> items;
-  final List<OrderStatusHistory> statusHistory;
-  final Payment? payment;
-  final List<SplitPaymentParticipant>? splitParticipants;
-
-  OrderDetails({
-    required this.order,
-    required this.items,
-    required this.statusHistory,
-    this.payment,
-    this.splitParticipants,
-  });
+  Map<String, dynamic> toJson() => {
+        'courierId': courierId,
+        'courierName': courierName,
+        'courierPhone': courierPhone,
+        'vehicleInfo': vehicleInfo,
+        'currentLatitude': currentLatitude,
+        'currentLongitude': currentLongitude,
+        'estimatedDeliveryTime': estimatedDeliveryTime?.toIso8601String(),
+        'minutesRemaining': minutesRemaining,
+        'currentStatus': currentStatus.name,
+      };
 }
