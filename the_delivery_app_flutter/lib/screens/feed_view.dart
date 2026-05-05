@@ -5,8 +5,9 @@ import '../state/feed_state.dart';
 
 class FeedView extends StatelessWidget {
   final FeedState state;
+  final void Function(Food)? onAddToBasket;
 
-  const FeedView({super.key, required this.state});
+  const FeedView({super.key, required this.state, this.onAddToBasket});
 
   Widget _buildFoodCard(Food food) {
     final minutes = food.deliveryTime.inMinutes;
@@ -48,12 +49,24 @@ class FeedView extends StatelessWidget {
                 ],
               ),
             ),
-            Text(
-              '\$${food.price.toStringAsFixed(2)}',
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.deepOrange),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '\$${food.price.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Colors.deepOrange),
+                ),
+                if (onAddToBasket != null)
+                  IconButton(
+                    icon: const Icon(Icons.add_shopping_cart,
+                        color: Colors.deepOrange),
+                    onPressed: () => onAddToBasket!(food),
+                    tooltip: 'Add to basket',
+                  ),
+              ],
             ),
           ],
         ),
