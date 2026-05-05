@@ -94,7 +94,16 @@ class FeedView extends StatelessWidget {
   }
 
   Widget _buildEmpty() {
-    return const Center(child: Text('No items in feed.'));
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.fastfood, size: 48, color: Colors.grey),
+          SizedBox(height: 12),
+          Text('No items in feed.', style: TextStyle(color: Colors.grey)),
+        ],
+      ),
+    );
   }
 
   Widget _buildError(String message) {
