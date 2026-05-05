@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/food.dart';
 import '../state/search_state.dart';
+import 'restaurant_view.dart';
 
 class SearchView extends StatefulWidget {
   final SearchState state;
