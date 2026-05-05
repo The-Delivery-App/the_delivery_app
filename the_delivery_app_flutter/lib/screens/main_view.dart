@@ -96,7 +96,10 @@ class _MainViewState extends State<MainView> {
       case 4:
         return const AccountView();
       default:
-        return FeedView(state: _feedViewModel.getState());
+        return FeedView(
+          state: _feedViewModel.getState(),
+          onAddToBasket: _basketViewModel.addItem,
+        );
     }
   }
 
