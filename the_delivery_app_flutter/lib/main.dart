@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'The Delivery App',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(colorSchemeSeed: Colors.deepOrange),
       home: const MainView(),
     );
   }
