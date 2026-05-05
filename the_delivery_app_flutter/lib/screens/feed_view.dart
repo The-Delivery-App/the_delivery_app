@@ -94,6 +94,10 @@ class FeedView extends StatelessWidget {
             Text(message,
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Colors.grey, fontSize: 12)),
+            if (onRetry != null) ...[
+              const SizedBox(height: 16),
+              TextButton(onPressed: onRetry, child: const Text('Retry')),
+            ],
           ],
         ),
       ),
