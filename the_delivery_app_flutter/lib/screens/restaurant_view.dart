@@ -23,6 +23,7 @@ class _RestaurantViewState extends State<RestaurantView> {
   late final RestaurantViewModel _viewModel;
   String? _cuisine;
   int? _deliveryMinutes;
+  List<Map<String, dynamic>> _reviews = [];
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _RestaurantViewState extends State<RestaurantView> {
     );
     _viewModel.loadMenu(widget.restaurant.id);
     _loadDetails();
+    _loadReviews();
   }
 
   Future<void> _loadDetails() async {
@@ -50,6 +52,20 @@ class _RestaurantViewState extends State<RestaurantView> {
           _deliveryMinutes = (r['estimatedDeliveryTime'] as num?)?.round();
         });
       }
+    } catch (_) {}
+  }
+
+  Future<void> _loadReviews() async {
+    final id = int.tryParse(widget.restaurant.id);
+    if (id == null) return;
+    try {
+      final raw = await client.restaurantController.getReviews(id, 10, 0);
+      final decoded = jsonDecode(raw) as Map<String, dynamic>;
+      if (decoded['success'] != true) return;
+      final list = (decoded['reviews'] as List<dynamic>? ?? [])
+          .whereType<Map<String, dynamic>>()
+          .toList();
+      if (mounted) setState(() => _reviews = list);
     } catch (_) {}
   }
 
@@ -155,6 +171,45 @@ class _RestaurantViewState extends State<RestaurantView> {
     );
   }
 
+  Widget _buildReviewsHeader() {
+    return const Padding(
+      padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+      child: Text('Reviews', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+    );
+  }
+
+  Widget _buildReviewItem(Map<String, dynamic> review) {
+    final rating = (review['rating'] as num?)?.toDouble() ?? 0;
+    final userName = review['userName'] as String? ?? 'Anonymous';
+    final comment = review['comment'] as String? ?? '';
+    final foodName = review['foodItemName'] as String? ?? '';
+    return Column(
+      children: [
+        ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          leading: const Icon(Icons.person, color: Colors.grey, size: 32),
+          title: Row(
+            children: [
+              Text(userName, style: const TextStyle(fontWeight: FontWeight.w600)),
+              const SizedBox(width: 8),
+              Text('⭐ ${rating.toStringAsFixed(1)}',
+                  style: const TextStyle(fontSize: 12, color: Colors.grey)),
+            ],
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (foodName.isNotEmpty)
+                Text(foodName, style: const TextStyle(fontSize: 12, color: Colors.deepOrange)),
+              if (comment.isNotEmpty) Text(comment),
+            ],
+          ),
+        ),
+        const Divider(height: 1, indent: 16, endIndent: 16),
+      ],
+    );
+  }
+
   Widget _buildEmpty() {
     return const Center(
       child: Column(
@@ -179,11 +234,16 @@ class _RestaurantViewState extends State<RestaurantView> {
           if (state.isLoading) return _buildLoading();
           if (state.errorMessage != null) return _buildError(state.errorMessage!);
           if (state.menuItems.isEmpty) return _buildEmpty();
+          final menuCount = state.menuItems.length;
+          final hasReviews = _reviews.isNotEmpty;
+          final itemCount = 1 + menuCount + (hasReviews ? 1 + _reviews.length : 0);
           return ListView.builder(
-            itemCount: state.menuItems.length + 1,
+            itemCount: itemCount,
             itemBuilder: (context, index) {
               if (index == 0) return _buildMenuHeader();
-              return _buildMenuItem(state.menuItems[index - 1]);
+              if (index <= menuCount) return _buildMenuItem(state.menuItems[index - 1]);
+              if (index == menuCount + 1) return _buildReviewsHeader();
+              return _buildReviewItem(_reviews[index - menuCount - 2]);
             },
           );
         },
