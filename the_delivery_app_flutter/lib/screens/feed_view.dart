@@ -9,8 +9,9 @@ class FeedView extends StatelessWidget {
   final void Function(Food)? onAddToBasket;
   final VoidCallback? onRetry;
   final VoidCallback? onLoadMore;
+  final VoidCallback? onDeals;
 
-  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore});
+  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals});
 
   Widget _buildFoodCard(BuildContext context, Food food) {
     final minutes = food.deliveryTime.inMinutes;
@@ -133,7 +134,17 @@ class FeedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appBar = AppBar(title: const Text('Feed'));
+    final appBar = AppBar(
+      title: const Text('Feed'),
+      actions: [
+        if (onDeals != null)
+          IconButton(
+            icon: const Icon(Icons.local_offer_outlined),
+            tooltip: 'Deals',
+            onPressed: onDeals,
+          ),
+      ],
+    );
     if (state.isLoading) {
       return Scaffold(
         appBar: appBar,
