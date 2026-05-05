@@ -14,6 +14,12 @@ class BasketViewModel extends ChangeNotifier {
 
   BasketState getState() => _state;
 
+  Future<void> loadBasket() async {
+    final basket = await _repository.getBasket();
+    _state = BasketState(basket: basket);
+    notifyListeners();
+  }
+
   void addItem(Food food) {
     final newItems = [..._state.basket.items, food];
     _state = BasketState(basket: Basket(items: newItems));
