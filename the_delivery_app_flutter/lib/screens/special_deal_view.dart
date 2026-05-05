@@ -12,7 +12,19 @@ class SpecialDealView extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: ListTile(
-        leading: const Icon(Icons.local_offer, color: Colors.deepOrange),
+        leading: food.imageUrl.isNotEmpty
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: Image.network(
+                  food.imageUrl,
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) =>
+                      const Icon(Icons.local_offer, color: Colors.deepOrange),
+                ),
+              )
+            : const Icon(Icons.local_offer, color: Colors.deepOrange),
         title: Text(food.name),
         subtitle: Text(food.restaurant.name),
         trailing: Text(
