@@ -92,7 +92,19 @@ class _RestaurantViewState extends State<RestaurantView> {
       children: [
         ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          leading: const Icon(Icons.fastfood, color: Colors.deepOrange, size: 32),
+          leading: food.imageUrl.isNotEmpty
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: Image.network(
+                    food.imageUrl,
+                    width: 48,
+                    height: 48,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, _, _) =>
+                        const Icon(Icons.fastfood, color: Colors.deepOrange, size: 32),
+                  ),
+                )
+              : const Icon(Icons.fastfood, color: Colors.deepOrange, size: 32),
           title: Text(food.name, style: const TextStyle(fontWeight: FontWeight.w600)),
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 2),
