@@ -49,6 +49,9 @@ class _MainViewState extends State<MainView> {
       ),
     );
     _searchViewModel = SearchViewModel();
+    _feedViewModel.addListener(() {
+      _searchViewModel.loadItems(_feedViewModel.getState().feedItems);
+    });
     _feedViewModel.loadFeed();
   }
 
@@ -72,13 +75,10 @@ class _MainViewState extends State<MainView> {
       case 0:
         return ListenableBuilder(
           listenable: _feedViewModel,
-          builder: (_, _) {
-            _searchViewModel.loadItems(_feedViewModel.getState().feedItems);
-            return FeedView(
-              state: _feedViewModel.getState(),
-              onAddToBasket: _basketViewModel.addItem,
-            );
-          },
+          builder: (_, _) => FeedView(
+            state: _feedViewModel.getState(),
+            onAddToBasket: _basketViewModel.addItem,
+          ),
         );
       case 1:
         return ListenableBuilder(
