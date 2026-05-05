@@ -36,7 +36,19 @@ class FeedView extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            const Icon(Icons.fastfood, size: 48, color: Colors.deepOrange),
+            food.imageUrl.isNotEmpty
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      food.imageUrl,
+                      width: 48,
+                      height: 48,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, _) =>
+                          const Icon(Icons.fastfood, size: 48, color: Colors.deepOrange),
+                    ),
+                  )
+                : const Icon(Icons.fastfood, size: 48, color: Colors.deepOrange),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
