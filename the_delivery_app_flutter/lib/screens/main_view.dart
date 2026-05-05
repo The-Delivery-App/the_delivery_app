@@ -79,6 +79,7 @@ class _MainViewState extends State<MainView> {
           builder: (_, _) => FeedView(
             state: _feedViewModel.getState(),
             onAddToBasket: _basketViewModel.addItem,
+            onRetry: _feedViewModel.loadFeed,
           ),
         );
       case 1:
@@ -99,6 +100,7 @@ class _MainViewState extends State<MainView> {
         return FeedView(
           state: _feedViewModel.getState(),
           onAddToBasket: _basketViewModel.addItem,
+          onRetry: _feedViewModel.loadFeed,
         );
     }
   }
