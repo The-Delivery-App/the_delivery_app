@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
 import '../main.dart';
+import '../view_models/settings_view_model.dart';
+import 'settings_view.dart';
 
 class AccountView extends StatefulWidget {
-  const AccountView({super.key});
+  final SettingsViewModel settingsViewModel;
+
+  const AccountView({super.key, required this.settingsViewModel});
 
   @override
   State<AccountView> createState() => _AccountViewState();
@@ -32,7 +36,16 @@ class _AccountViewState extends State<AccountView> {
     });
   }
 
-  Widget _buildSignedIn() {
+  void _openSettings(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => SettingsView(viewModel: widget.settingsViewModel),
+      ),
+    );
+  }
+
+  Widget _buildSignedIn(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -47,6 +60,12 @@ class _AccountViewState extends State<AccountView> {
             },
             child: const Text('Sign Out'),
           ),
+          const SizedBox(height: 12),
+          TextButton.icon(
+            onPressed: () => _openSettings(context),
+            icon: const Icon(Icons.settings),
+            label: const Text('Settings'),
+          ),
         ],
       ),
     );
@@ -57,7 +76,7 @@ class _AccountViewState extends State<AccountView> {
     return Scaffold(
       appBar: AppBar(title: const Text('Account')),
       body: _isSignedIn
-          ? _buildSignedIn()
+          ? _buildSignedIn(context)
           : Center(
               child: SignInWidget(
                 client: client,
