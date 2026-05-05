@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:the_delivery_app_client/the_delivery_app_client.dart';
 
 import '../dtos/feed_portion_dto.dart';
@@ -50,8 +52,29 @@ class FeedAPIService implements IFoodApiService {
     required String query,
     required Location location,
   }) async {
-    // Local search only — backend search not wired yet.
-    return [];
+    final raw = await _client.feedController.search(query, 20, null);
+    final decoded = jsonDecode(raw) as Map<String, dynamic>;
+    if (decoded['success'] != true) return [];
+    final items = decoded['foodItems'] as List<dynamic>? ?? [];
+    return items.whereType<Map<String, dynamic>>().map((f) {
+      return FoodDTO(
+        foodId: (f['id'] as int?)?.toString() ?? '',
+        name: (f['name'] as String?) ?? '',
+        price: (f['price'] as num? ?? 0).toDouble(),
+        rating: (f['rating'] as num? ?? 0).toDouble(),
+        tags: const [],
+        foodThumbnail: (f['thumbnail'] as String?) ?? '',
+        restaurantThumbnail: '',
+        restaurantId: (f['restaurantId'] as int?)?.toString() ?? '',
+        restaurantName: (f['restaurantName'] as String?) ?? '',
+        recentOrders: 0,
+        deliveryTimeMinutes: 30,
+        unitType: 'pcs',
+        size: 1,
+        calories: 0,
+        isDiscounted: false,
+      );
+    }).toList();
   }
 
   @override
