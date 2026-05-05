@@ -238,7 +238,19 @@ class _RestaurantViewState extends State<RestaurantView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.restaurant.name)),
+      appBar: AppBar(
+        title: Text(widget.restaurant.name),
+        actions: [
+          IconButton(
+            icon: Icon(
+              _isFavourited ? Icons.favorite : Icons.favorite_border,
+              color: Colors.deepOrange,
+            ),
+            tooltip: 'Favourite',
+            onPressed: _toggleFavourite,
+          ),
+        ],
+      ),
       body: ListenableBuilder(
         listenable: _viewModel,
         builder: (context, _) {
