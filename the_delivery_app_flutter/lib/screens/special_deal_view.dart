@@ -9,10 +9,18 @@ class SpecialDealView extends StatelessWidget {
 
   const SpecialDealView({super.key, required this.state});
 
-  Widget _buildDealCard(Food food) {
+  Widget _buildDealCard(BuildContext context, Food food) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: ListTile(
+        onTap: int.tryParse(food.restaurant.id) != null
+            ? () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => RestaurantView(restaurant: food.restaurant),
+                  ),
+                )
+            : null,
         leading: food.imageUrl.isNotEmpty
             ? ClipRRect(
                 borderRadius: BorderRadius.circular(6),
@@ -55,7 +63,7 @@ class SpecialDealView extends StatelessWidget {
               : ListView.builder(
                   itemCount: state.deals.length,
                   itemBuilder: (context, index) =>
-                      _buildDealCard(state.deals[index]),
+                      _buildDealCard(context, state.deals[index]),
                 ),
     );
   }
