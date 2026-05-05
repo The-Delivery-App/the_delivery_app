@@ -1,5 +1,6 @@
 import 'package:serverpod/serverpod.dart';
-import '../../generated/protocol.dart';
+import '../../generated/protocol.dart' hide Order;
+import '../../generated/protocol.dart' as protocol;
 import 'dart:convert';
 
 class CourierControllerEndpoint extends Endpoint {
@@ -10,7 +11,7 @@ class CourierControllerEndpoint extends Endpoint {
       final orderId = data['orderId'] as int;
       final courierId = data['courierId'] as int;
 
-      final order = await Order.db.findById(session, orderId);
+      final order = await protocol.Order.db.findById(session, orderId);
       if (order == null) {
         return jsonEncode({
           'success': false,
@@ -28,7 +29,7 @@ class CourierControllerEndpoint extends Endpoint {
         });
       }
 
-      if (order.currentStatus != OrderStatus.confirmed) {
+      if (order.currentStatus != protocol.OrderStatus.confirmed) {
         return jsonEncode({
           'success': false,
           'errorMessage': 'Can only assign courier to confirmed orders. '
@@ -40,7 +41,7 @@ class CourierControllerEndpoint extends Endpoint {
       order.courierId = courierId;
       order.currentStatus = OrderStatus.assigned;
       order.updatedAt = DateTime.now();
-      await Order.db.updateRow(session, order);
+      await protocol.Order.db.updateRow(session, order);
 
       await OrderStatusHistory.db.insertRow(
         session,
@@ -70,7 +71,7 @@ class CourierControllerEndpoint extends Endpoint {
       final orderId = data['orderId'] as int;
       final newStatusStr = data['newStatus'] as String;
 
-      final order = await Order.db.findById(session, orderId);
+      final order = await protocol.Order.db.findById(session, orderId);
       if (order == null) {
         return jsonEncode({
           'success': false,
@@ -98,7 +99,7 @@ class CourierControllerEndpoint extends Endpoint {
         order.actualDeliveryTime = DateTime.now();
       }
 
-      await Order.db.updateRow(session, order);
+      await protocol.Order.db.updateRow(session, order);
 
       await OrderStatusHistory.db.insertRow(
         session,

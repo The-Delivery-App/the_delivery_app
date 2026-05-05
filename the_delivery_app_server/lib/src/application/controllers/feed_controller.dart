@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:serverpod/serverpod.dart';
 import '../../business/services/feed_service.dart';
-import '../../business/models/food.dart';
+import '../../business/models/food.dart' hide FoodItem;
 import '../../business/models/location.dart';
 import '../../generated/protocol.dart';
 import '../../data_access/daos/food_dao.dart';

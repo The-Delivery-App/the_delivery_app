@@ -305,6 +305,47 @@ class OrderService {
     );
   }
 
+  Future<bool> updateCourierLocation(
+    int orderId,
+    double latitude,
+    double longitude,
+  ) async {
+    return orderDAO.updateCourierLocation(orderId, latitude, longitude);
+  }
+
+  Future<CourierTrackingInfo?> getCourierTracking(int orderId, int userId) async {
+    try {
+      final order = await orderDAO.getById(orderId);
+      if (order == null || order.userId != userId) return null;
+      if (order.courierId == null) return null;
+
+      final courier = await Courier.db.findById(session, order.courierId!);
+      if (courier == null) return null;
+
+      int? minutesRemaining;
+      if (order.estimatedDeliveryTime != null) {
+        final diff = order.estimatedDeliveryTime!.difference(DateTime.now());
+        minutesRemaining = diff.inMinutes.clamp(0, 9999);
+      }
+
+      return CourierTrackingInfo(
+        courierId: courier.id!,
+        courierName: '${courier.fname} ${courier.lname}',
+        courierPhone: courier.phone,
+        vehicleInfo: '${courier.carName} (${courier.plateNum})',
+        currentLatitude: order.courierLatitude,
+        currentLongitude: order.courierLongitude,
+        estimatedDeliveryTime: order.estimatedDeliveryTime,
+        minutesRemaining: minutesRemaining,
+        currentStatus: order.currentStatus,
+      );
+    } catch (e) {
+      session.log('Error getting courier tracking: $e', level: LogLevel.error);
+      return null;
+    }
+  }
+}
+
 class CourierTrackingInfo {
   final int courierId;
   final String courierName;
@@ -340,3 +381,41 @@ class CourierTrackingInfo {
         'currentStatus': currentStatus.name,
       };
 }
+
+class CourierTrackingInfo {
+  final int courierId;
+  final String courierName;
+  final String courierPhone;
+  final String vehicleInfo;
+  final double? currentLatitude;
+  final double? currentLongitude;
+  final DateTime? estimatedDeliveryTime;
+  final int? minutesRemaining;
+  final OrderStatus currentStatus;
+
+  CourierTrackingInfo({
+    required this.courierId,
+    required this.courierName,
+    required this.courierPhone,
+    required this.vehicleInfo,
+    this.currentLatitude,
+    this.currentLongitude,
+    this.estimatedDeliveryTime,
+    this.minutesRemaining,
+    required this.currentStatus,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'courierId': courierId,
+        'courierName': courierName,
+        'courierPhone': courierPhone,
+        'vehicleInfo': vehicleInfo,
+        'currentLatitude': currentLatitude,
+        'currentLongitude': currentLongitude,
+        'estimatedDeliveryTime': estimatedDeliveryTime?.toIso8601String(),
+        'minutesRemaining': minutesRemaining,
+        'currentStatus': currentStatus.name,
+      };
+  
+}
+
