@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/food.dart';
 import '../state/special_deal_state.dart';
+import 'restaurant_view.dart';
 
 class SpecialDealView extends StatelessWidget {
   final SpecialDealState state;
