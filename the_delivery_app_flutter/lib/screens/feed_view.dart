@@ -15,16 +15,10 @@ class FeedView extends StatelessWidget {
     final minutes = food.deliveryTime.inMinutes;
     return GestureDetector(
       onTap: () {
-        final menuItems = state.feedItems
-            .where((f) => f.restaurant.id == food.restaurant.id)
-            .toList();
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => RestaurantView(
-              restaurant: food.restaurant,
-              menuItems: menuItems,
-            ),
+            builder: (_) => RestaurantView(restaurant: food.restaurant),
           ),
         );
       },
