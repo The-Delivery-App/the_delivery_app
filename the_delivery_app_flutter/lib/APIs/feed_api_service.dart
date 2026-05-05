@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
+import 'package:the_delivery_app_client/the_delivery_app_client.dart';
 
 import '../dtos/feed_portion_dto.dart';
 import '../dtos/food_dto.dart';
@@ -9,38 +8,12 @@ import '../models/location.dart';
 import 'i_food_api_service.dart';
 
 class FeedAPIService implements IFoodApiService {
-  final String _baseUrl;
-  final HttpClient _httpClient;
+  final Client _client;
 
-  FeedAPIService({required String baseUrl})
-    : _baseUrl = baseUrl,
-      _httpClient = HttpClient();
+  // Items fetched from the last getFeedChunk call, keyed by synthetic string ID.
+  final Map<String, _CachedItem> _cache = {};
 
-  Future<Map<String, dynamic>> _get(
-    String path,
-    Map<String, String> queryParams,
-  ) async {
-    final uri = Uri.parse(
-      '$_baseUrl$path',
-    ).replace(queryParameters: queryParams);
-    final request = await _httpClient.getUrl(uri);
-    final response = await request.close();
-    final body = await response.transform(utf8.decoder).join();
-    return jsonDecode(body) as Map<String, dynamic>;
-  }
-
-  Future<Map<String, dynamic>> _post(
-    String path,
-    Map<String, dynamic> payload,
-  ) async {
-    final uri = Uri.parse('$_baseUrl$path');
-    final request = await _httpClient.postUrl(uri);
-    request.headers.set(HttpHeaders.contentTypeHeader, 'application/json');
-    request.write(jsonEncode(payload));
-    final response = await request.close();
-    final body = await response.transform(utf8.decoder).join();
-    return jsonDecode(body) as Map<String, dynamic>;
-  }
+  FeedAPIService({required Client client}) : _client = client;
 
   @override
   Future<FeedPortionDTO> fetchFeedPortion({
@@ -48,27 +21,27 @@ class FeedAPIService implements IFoodApiService {
     required Location location,
     FoodFilter? filter,
   }) async {
-    final payload = <String, dynamic>{
-      'session_id': sessionId,
-      'latitude': location.latitude,
-      'longitude': location.longitude,
-      if (filter != null)
-        'filter': {
-          if (filter.priceTier != null) 'price_tier': filter.priceTier,
-          if (filter.discounted != null) 'discounted': filter.discounted,
-          if (filter.category != null) 'category': filter.category,
-        },
-    };
-    final json = await _post('/feed/portion', payload);
-    return FeedPortionDTO.fromJson(json);
+    _cache.clear();
+    final response = await _client.feedController.getFeedChunk(
+      390, 844, 2, 10.0,
+      location.latitude, location.longitude,
+      100, 0,
+      null,
+    );
+    for (var i = 0; i < response.foodItems.length; i++) {
+      _cache[i.toString()] = _CachedItem(response.foodItems[i]);
+    }
+    return FeedPortionDTO(
+      foodIds: List.generate(response.foodItems.length, (i) => i.toString()),
+      portionToken: '',
+    );
   }
 
   @override
   Future<List<FoodDTO>> fetchFoodChunk({required List<String> foodIds}) async {
-    final json = await _post('/feed/chunk', {'food_ids': foodIds});
-    final items = json['items'] as List<dynamic>;
-    return items
-        .map((e) => FoodDTO.fromJson(e as Map<String, dynamic>))
+    return foodIds
+        .where((id) => _cache.containsKey(id))
+        .map((id) => _cache[id]!.toFoodDTO())
         .toList();
   }
 
@@ -77,25 +50,39 @@ class FeedAPIService implements IFoodApiService {
     required String query,
     required Location location,
   }) async {
-    final json = await _get('/feed/search', {
-      'query': query,
-      'lat': location.latitude.toString(),
-      'lng': location.longitude.toString(),
-    });
-    final items = json['items'] as List<dynamic>;
-    return items
-        .map((e) => FoodDTO.fromJson(e as Map<String, dynamic>))
-        .toList();
+    // Local search only — backend search not wired yet.
+    return [];
   }
 
   @override
   Future<PriceTierInfoDTO> fetchPriceTierInfo({
     required Location location,
   }) async {
-    final json = await _get('/feed/price-tiers', {
-      'lat': location.latitude.toString(),
-      'lng': location.longitude.toString(),
-    });
-    return PriceTierInfoDTO.fromJson(json);
+    return const PriceTierInfoDTO(q1: 0, median: 0, q3: 0);
+  }
+}
+
+class _CachedItem {
+  final dynamic _item;
+  _CachedItem(this._item);
+
+  FoodDTO toFoodDTO() {
+    return FoodDTO(
+      foodId: _item.id?.toString() ?? '',
+      name: _item.name as String,
+      price: (_item.price as num).toDouble(),
+      rating: (_item.rating as num).toDouble(),
+      tags: const [],
+      foodThumbnail: (_item.iconUrl as String?) ?? '',
+      restaurantThumbnail: (_item.restaurantIconUrl as String?) ?? '',
+      restaurantId: '',
+      restaurantName: _item.restaurantName as String,
+      recentOrders: _item.estimatedOrdersAmount as int,
+      deliveryTimeMinutes: (_item.estimatedDeliveryTime as num).round(),
+      unitType: 'pcs',
+      size: 1,
+      calories: 0,
+      isDiscounted: false,
+    );
   }
 }
