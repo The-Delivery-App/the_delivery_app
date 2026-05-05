@@ -18,10 +18,34 @@ class FeedViewModel extends ChangeNotifier {
     dataTransferRateMbps: 10.0,
   );
 
+  bool _isLoadingMore = false;
+
   FeedViewModel({required IFoodRepository repository})
       : _repository = repository;
 
   FeedState getState() => _state;
+
+  Future<void> loadMore() async {
+    if (_isLoadingMore || _state.isLoading) return;
+    _isLoadingMore = true;
+    _state = FeedState(
+      feedItems: _state.feedItems,
+      isLoading: false,
+      isLoadingMore: true,
+    );
+    notifyListeners();
+    try {
+      final newItems = await _repository.loadNextChunk();
+      _state = FeedState(
+        feedItems: [..._state.feedItems, ...newItems],
+        isLoading: false,
+      );
+    } catch (_) {
+      _state = FeedState(feedItems: _state.feedItems, isLoading: false);
+    }
+    _isLoadingMore = false;
+    notifyListeners();
+  }
 
   Future<void> loadFeed() async {
     _state = const FeedState(feedItems: [], isLoading: true);
