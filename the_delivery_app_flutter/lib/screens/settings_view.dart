@@ -20,13 +20,18 @@ class _SettingsViewState extends State<SettingsView> {
   }
 
   Widget _buildLanguageRow(Settings settings) {
-    const languages = ['en', 'tr', 'de', 'fr'];
+    const languages = {
+      'en': 'English',
+      'tr': 'Türkçe',
+      'de': 'Deutsch',
+      'fr': 'Français',
+    };
     return ListTile(
       title: const Text('Language'),
       trailing: DropdownButton<String>(
         value: settings.language,
-        items: languages
-            .map((l) => DropdownMenuItem(value: l, child: Text(l)))
+        items: languages.entries
+            .map((e) => DropdownMenuItem(value: e.key, child: Text(e.value)))
             .toList(),
         onChanged: (value) {
           if (value == null) return;
