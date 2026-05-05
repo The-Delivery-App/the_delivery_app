@@ -56,6 +56,17 @@ class _RestaurantViewState extends State<RestaurantView> {
     } catch (_) {}
   }
 
+  Future<void> _toggleFavourite() async {
+    final id = int.tryParse(widget.restaurant.id);
+    if (id == null) return;
+    setState(() => _isFavourited = !_isFavourited);
+    try {
+      await client.favouritesController.addFavourite(
+        jsonEncode({'restaurantId': id}),
+      );
+    } catch (_) {}
+  }
+
   Future<void> _loadReviews() async {
     final id = int.tryParse(widget.restaurant.id);
     if (id == null) return;
