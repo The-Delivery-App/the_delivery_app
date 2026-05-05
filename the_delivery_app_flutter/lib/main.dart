@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Serverpod Demo',
+      title: 'The Delivery App',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const MainView(),
     );
