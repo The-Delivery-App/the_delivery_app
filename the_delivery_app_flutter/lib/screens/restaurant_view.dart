@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../APIs/restaurant_api_service.dart';
@@ -19,6 +21,8 @@ class RestaurantView extends StatefulWidget {
 
 class _RestaurantViewState extends State<RestaurantView> {
   late final RestaurantViewModel _viewModel;
+  String? _cuisine;
+  int? _deliveryMinutes;
 
   @override
   void initState() {
@@ -29,6 +33,24 @@ class _RestaurantViewState extends State<RestaurantView> {
       ),
     );
     _viewModel.loadMenu(widget.restaurant.id);
+    _loadDetails();
+  }
+
+  Future<void> _loadDetails() async {
+    final id = int.tryParse(widget.restaurant.id);
+    if (id == null) return;
+    try {
+      final raw = await client.restaurantController.getRestaurant(id);
+      final decoded = jsonDecode(raw) as Map<String, dynamic>;
+      if (decoded['success'] != true) return;
+      final r = decoded['restaurant'] as Map<String, dynamic>;
+      if (mounted) {
+        setState(() {
+          _cuisine = r['cuisine'] as String?;
+          _deliveryMinutes = (r['estimatedDeliveryTime'] as num?)?.round();
+        });
+      }
+    } catch (_) {}
   }
 
   @override
@@ -79,11 +101,22 @@ class _RestaurantViewState extends State<RestaurantView> {
   }
 
   Widget _buildMenuHeader() {
-    return const Padding(
-      padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
-      child: Text(
-        'Menu',
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    final details = [
+      if (_cuisine != null) _cuisine!,
+      if (_deliveryMinutes != null) '$_deliveryMinutes min',
+    ].join('  ·  ');
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Menu', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          if (details.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(details, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+          ],
+        ],
       ),
     );
   }
