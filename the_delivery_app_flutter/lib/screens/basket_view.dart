@@ -39,6 +39,8 @@ class BasketView extends StatelessWidget {
         final state = viewModel.getState();
         final items = state.basket.items;
 
+        final total = items.fold(0.0, (sum, f) => sum + f.price);
+
         return Scaffold(
           appBar: AppBar(title: const Text('Basket')),
           body: items.isEmpty
@@ -46,6 +48,26 @@ class BasketView extends StatelessWidget {
               : ListView.builder(
                   itemCount: items.length,
                   itemBuilder: (context, index) => _buildItem(items[index]),
+                ),
+          bottomNavigationBar: items.isEmpty
+              ? null
+              : SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('${items.length} item(s)',
+                            style: const TextStyle(color: Colors.grey)),
+                        Text(
+                          'Total: £${total.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
         );
       },

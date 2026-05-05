@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-import '../models/restaurant.dart';
+import '../APIs/feed_api_service.dart';
+import '../main.dart';
 import '../repositories/basket_repository.dart';
+import '../repositories/food_repository.dart';
 import '../repositories/settings_repository.dart';
 import '../state/map_state.dart';
-import '../state/order_status_state.dart';
 import '../storage/local_storage.dart';
 import '../view_models/basket_view_model.dart';
+import '../view_models/feed_view_model.dart';
 import '../view_models/settings_view_model.dart';
 import 'account_view.dart';
 import 'basket_view.dart';
+import 'feed_view.dart';
 import 'map_view.dart';
-import 'order_status_view.dart';
-import 'restaurant_view.dart';
-import 'settings_view.dart';
 
 class MainView extends StatefulWidget {
   const MainView({super.key});
@@ -27,6 +27,7 @@ class _MainViewState extends State<MainView> {
 
   late final BasketViewModel _basketViewModel;
   late final SettingsViewModel _settingsViewModel;
+  late final FeedViewModel _feedViewModel;
 
   @override
   void initState() {
@@ -38,12 +39,20 @@ class _MainViewState extends State<MainView> {
     _settingsViewModel = SettingsViewModel(
       repository: SettingsRepository(storage: storage),
     );
+    _feedViewModel = FeedViewModel(
+      repository: FoodRepository(
+        apiService: FeedAPIService(client: client),
+        sessionId: '',
+      ),
+    );
+    _feedViewModel.loadFeed();
   }
 
   @override
   void dispose() {
     _basketViewModel.dispose();
     _settingsViewModel.dispose();
+    _feedViewModel.dispose();
     super.dispose();
   }
 
@@ -53,56 +62,16 @@ class _MainViewState extends State<MainView> {
     });
   }
 
-  Widget _buildFeedPlaceholder() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('Feed coming soon.'),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => SettingsView(viewModel: _settingsViewModel),
-              ),
-            ),
-            child: const Text('Open Settings'),
-          ),
-          const SizedBox(height: 12),
-          ElevatedButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => RestaurantView(
-                  restaurant: const Restaurant(id: 'demo-1', name: 'Demo Restaurant'),
-                  menuItems: const [],
-                ),
-              ),
-            ),
-            child: const Text('View Restaurant'),
-          ),
-          const SizedBox(height: 12),
-          ElevatedButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const OrderStatusView(
-                  state: OrderStatusState(),
-                ),
-              ),
-            ),
-            child: const Text('Track Order'),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildBody() {
     switch (_selectedIndex) {
       case 0:
-        return _buildFeedPlaceholder();
+        return ListenableBuilder(
+          listenable: _feedViewModel,
+          builder: (_, _) => FeedView(
+            state: _feedViewModel.getState(),
+            onAddToBasket: _basketViewModel.addItem,
+          ),
+        );
       case 1:
         return const Center(child: Text('Search'));
       case 2:
@@ -112,7 +81,7 @@ class _MainViewState extends State<MainView> {
       case 4:
         return const AccountView();
       default:
-        return _buildFeedPlaceholder();
+        return FeedView(state: _feedViewModel.getState());
     }
   }
 
