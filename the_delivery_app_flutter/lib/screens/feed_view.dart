@@ -6,8 +6,9 @@ import '../state/feed_state.dart';
 class FeedView extends StatelessWidget {
   final FeedState state;
   final void Function(Food)? onAddToBasket;
+  final VoidCallback? onRetry;
 
-  const FeedView({super.key, required this.state, this.onAddToBasket});
+  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry});
 
   Widget _buildFoodCard(Food food) {
     final minutes = food.deliveryTime.inMinutes;
