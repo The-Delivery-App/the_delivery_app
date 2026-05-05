@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../APIs/feed_api_service.dart';
+import '../APIs/restaurant_api_service.dart';
 import '../main.dart';
+import '../models/restaurant.dart';
 import '../repositories/basket_repository.dart';
 import '../repositories/food_repository.dart';
+import '../repositories/restaurant_repository.dart';
 import '../repositories/settings_repository.dart';
 import '../repositories/special_deal_repository.dart';
 import '../state/map_state.dart';
@@ -35,6 +38,7 @@ class _MainViewState extends State<MainView> {
   late final FeedViewModel _feedViewModel;
   late final SearchViewModel _searchViewModel;
   late final SpecialDealViewModel _specialDealViewModel;
+  List<Restaurant> _featuredRestaurants = [];
 
   @override
   void initState() {
@@ -56,6 +60,7 @@ class _MainViewState extends State<MainView> {
     _specialDealViewModel = SpecialDealViewModel(
       repository: SpecialDealRepository(client: client),
     );
+    _loadFeaturedRestaurants();
     _basketViewModel.loadBasket();
     _feedViewModel.addListener(() {
       _searchViewModel.loadItems(_feedViewModel.getState().feedItems);
@@ -71,6 +76,16 @@ class _MainViewState extends State<MainView> {
     _searchViewModel.dispose();
     _specialDealViewModel.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadFeaturedRestaurants() async {
+    try {
+      final repo = RestaurantRepository(
+        apiService: RestaurantAPIService(client: client),
+      );
+      final results = await repo.getRestaurantList();
+      if (mounted) setState(() => _featuredRestaurants = results);
+    } catch (_) {}
   }
 
   void _onTabTapped(int index) {
@@ -114,7 +129,7 @@ class _MainViewState extends State<MainView> {
           ),
         );
       case 2:
-        return const MapView(state: MapState(restaurants: []));
+        return MapView(state: MapState(restaurants: _featuredRestaurants));
       case 3:
         return BasketView(viewModel: _basketViewModel);
       case 4:
