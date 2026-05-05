@@ -24,6 +24,7 @@ class _RestaurantViewState extends State<RestaurantView> {
   String? _cuisine;
   int? _deliveryMinutes;
   List<Map<String, dynamic>> _reviews = [];
+  bool _isFavourited = false;
 
   @override
   void initState() {
