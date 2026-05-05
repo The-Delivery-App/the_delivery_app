@@ -24,8 +24,19 @@ class _SearchViewState extends State<SearchView> {
     super.dispose();
   }
 
-  Widget _buildResultTile(Food food) {
+  Widget _buildResultTile(BuildContext context, Food food) {
     return ListTile(
+      onTap: int.tryParse(food.restaurant.id) != null
+          ? () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => RestaurantView(
+                    restaurant: food.restaurant,
+                    onAddToBasket: widget.onAddToBasket,
+                  ),
+                ),
+              )
+          : null,
       leading: food.imageUrl.isNotEmpty
           ? ClipRRect(
               borderRadius: BorderRadius.circular(6),
@@ -85,7 +96,7 @@ class _SearchViewState extends State<SearchView> {
       separatorBuilder: (_, _) =>
           const Divider(height: 1, indent: 16, endIndent: 16),
       itemBuilder: (context, index) =>
-          _buildResultTile(widget.state.results[index]),
+          _buildResultTile(context, widget.state.results[index]),
     );
   }
 
