@@ -32,6 +32,7 @@ webServer:
 database:
   host: localhost
   port: 8090
+  port: 8090
   name: the_delivery_app
   user: postgres
   password: "qCxrveH3c60vgSB9KMWEWyW1usVeIVI9"
