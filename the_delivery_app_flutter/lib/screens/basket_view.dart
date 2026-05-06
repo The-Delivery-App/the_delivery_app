@@ -15,7 +15,14 @@ class BasketView extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('£${food.price.toStringAsFixed(2)}'),
+          Text(
+            '£${food.price.toStringAsFixed(2)}',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+              color: Colors.deepOrange,
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.remove_circle_outline),
             onPressed: () => viewModel.removeItem(food),
@@ -27,7 +34,14 @@ class BasketView extends StatelessWidget {
 
   Widget _buildEmptyState() {
     return const Center(
-      child: Text('Your basket is empty.'),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.shopping_basket_outlined, size: 48, color: Colors.grey),
+          SizedBox(height: 12),
+          Text('Your basket is empty.', style: TextStyle(color: Colors.grey)),
+        ],
+      ),
     );
   }
 
@@ -45,8 +59,10 @@ class BasketView extends StatelessWidget {
           appBar: AppBar(title: const Text('Basket')),
           body: items.isEmpty
               ? _buildEmptyState()
-              : ListView.builder(
+              : ListView.separated(
                   itemCount: items.length,
+                  separatorBuilder: (_, _) =>
+                      const Divider(height: 1, indent: 16, endIndent: 16),
                   itemBuilder: (context, index) => _buildItem(items[index]),
                 ),
           bottomNavigationBar: items.isEmpty
@@ -58,12 +74,42 @@ class BasketView extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('${items.length} item(s)',
+                        Text('${items.length} ${items.length == 1 ? 'item' : 'items'}',
                             style: const TextStyle(color: Colors.grey)),
-                        Text(
-                          'Total: £${total.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'Total: £${total.toStringAsFixed(2)}',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            const SizedBox(height: 8),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.deepOrange,
+                                foregroundColor: Colors.white,
+                              ),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                    title: const Text('Place Order'),
+                                    content: const Text(
+                                      'To place an order, please sign in and add a delivery address in your account.',
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              child: const Text('Place Order'),
+                            ),
+                          ],
                         ),
                       ],
                     ),

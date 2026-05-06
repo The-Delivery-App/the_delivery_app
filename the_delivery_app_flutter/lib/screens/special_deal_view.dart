@@ -2,20 +2,48 @@ import 'package:flutter/material.dart';
 
 import '../models/food.dart';
 import '../state/special_deal_state.dart';
+import 'restaurant_view.dart';
 
 class SpecialDealView extends StatelessWidget {
   final SpecialDealState state;
 
   const SpecialDealView({super.key, required this.state});
 
-  Widget _buildDealCard(Food food) {
+  Widget _buildDealCard(BuildContext context, Food food) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: ListTile(
-        leading: const Icon(Icons.local_offer, color: Colors.deepOrange),
+        onTap: int.tryParse(food.restaurant.id) != null
+            ? () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => RestaurantView(restaurant: food.restaurant),
+                  ),
+                )
+            : null,
+        leading: food.imageUrl.isNotEmpty
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: Image.network(
+                  food.imageUrl,
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) =>
+                      const Icon(Icons.local_offer, color: Colors.deepOrange),
+                ),
+              )
+            : const Icon(Icons.local_offer, color: Colors.deepOrange),
         title: Text(food.name),
         subtitle: Text(food.restaurant.name),
-        trailing: Text('\$${food.price.toStringAsFixed(2)}'),
+        trailing: Text(
+          '£${food.price.toStringAsFixed(2)}',
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+            color: Colors.deepOrange,
+          ),
+        ),
       ),
     );
   }
@@ -35,7 +63,7 @@ class SpecialDealView extends StatelessWidget {
               : ListView.builder(
                   itemCount: state.deals.length,
                   itemBuilder: (context, index) =>
-                      _buildDealCard(state.deals[index]),
+                      _buildDealCard(context, state.deals[index]),
                 ),
     );
   }

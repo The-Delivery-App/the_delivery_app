@@ -2,22 +2,53 @@ import 'package:flutter/material.dart';
 
 import '../models/food.dart';
 import '../state/feed_state.dart';
+import 'restaurant_view.dart';
 
 class FeedView extends StatelessWidget {
   final FeedState state;
   final void Function(Food)? onAddToBasket;
+  final VoidCallback? onRetry;
+  final VoidCallback? onLoadMore;
+  final VoidCallback? onDeals;
 
-  const FeedView({super.key, required this.state, this.onAddToBasket});
+  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals});
 
-  Widget _buildFoodCard(Food food) {
+  Widget _buildFoodCard(BuildContext context, Food food) {
     final minutes = food.deliveryTime.inMinutes;
-    return Card(
+    final hasValidId = int.tryParse(food.restaurant.id) != null;
+    return GestureDetector(
+      onTap: hasValidId
+          ? () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => RestaurantView(
+                    restaurant: food.restaurant,
+                    onAddToBasket: onAddToBasket,
+                  ),
+                ),
+              );
+            }
+          : null,
+      child: Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            const Icon(Icons.fastfood, size: 48, color: Colors.deepOrange),
+            food.imageUrl.isNotEmpty
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      food.imageUrl,
+                      width: 48,
+                      height: 48,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, _) =>
+                          const Icon(Icons.fastfood, size: 48, color: Colors.deepOrange),
+                    ),
+                  )
+                : const Icon(Icons.fastfood, size: 48, color: Colors.deepOrange),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -53,7 +84,7 @@ class FeedView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '\$${food.price.toStringAsFixed(2)}',
+                  '£${food.price.toStringAsFixed(2)}',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
@@ -71,11 +102,21 @@ class FeedView extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 
   Widget _buildEmpty() {
-    return const Center(child: Text('No items in feed.'));
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.fastfood, size: 48, color: Colors.grey),
+          SizedBox(height: 12),
+          Text('No items in feed.', style: TextStyle(color: Colors.grey)),
+        ],
+      ),
+    );
   }
 
   Widget _buildError(String message) {
@@ -93,6 +134,10 @@ class FeedView extends StatelessWidget {
             Text(message,
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Colors.grey, fontSize: 12)),
+            if (onRetry != null) ...[
+              const SizedBox(height: 16),
+              TextButton(onPressed: onRetry, child: const Text('Retry')),
+            ],
           ],
         ),
       ),
@@ -101,22 +146,51 @@ class FeedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      title: const Text('Feed'),
+      actions: [
+        if (onDeals != null)
+          IconButton(
+            icon: const Icon(Icons.local_offer_outlined),
+            tooltip: 'Deals',
+            onPressed: onDeals,
+          ),
+      ],
+    );
     if (state.isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        appBar: appBar,
+        body: const Center(child: CircularProgressIndicator()),
       );
     }
     if (state.errorMessage != null) {
-      return Scaffold(body: _buildError(state.errorMessage!));
+      return Scaffold(appBar: appBar, body: _buildError(state.errorMessage!));
     }
     return Scaffold(
-      appBar: AppBar(title: const Text('Feed')),
+      appBar: appBar,
       body: state.feedItems.isEmpty
           ? _buildEmpty()
-          : ListView.builder(
-              itemCount: state.feedItems.length,
-              itemBuilder: (context, index) =>
-                  _buildFoodCard(state.feedItems[index]),
+          : NotificationListener<ScrollNotification>(
+              onNotification: (notification) {
+                if (onLoadMore != null &&
+                    notification.metrics.pixels >=
+                        notification.metrics.maxScrollExtent - 200) {
+                  onLoadMore!();
+                }
+                return false;
+              },
+              child: ListView.builder(
+                itemCount: state.feedItems.length + (state.isLoadingMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index == state.feedItems.length) {
+                    return const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  return _buildFoodCard(context, state.feedItems[index]);
+                },
+              ),
             ),
     );
   }

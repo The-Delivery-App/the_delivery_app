@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/restaurant.dart';
 import '../state/map_state.dart';
+import 'restaurant_view.dart';
 
 class MapView extends StatelessWidget {
   final MapState state;
@@ -24,9 +25,6 @@ class MapView extends StatelessWidget {
           children: [
             const Icon(Icons.map, size: 60, color: Colors.grey),
             const SizedBox(height: 8),
-            const Text('Map placeholder',
-                style: TextStyle(color: Colors.grey)),
-            const SizedBox(height: 4),
             Text(locationText,
                 style: const TextStyle(fontSize: 12, color: Colors.grey)),
           ],
@@ -35,11 +33,17 @@ class MapView extends StatelessWidget {
     );
   }
 
-  Widget _buildRestaurantTile(Restaurant restaurant) {
+  Widget _buildRestaurantTile(BuildContext context, Restaurant restaurant) {
     return ListTile(
       leading: const Icon(Icons.restaurant, color: Colors.deepOrange),
       title: Text(restaurant.name),
-      subtitle: Text('ID: ${restaurant.id}'),
+      trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => RestaurantView(restaurant: restaurant),
+        ),
+      ),
     );
   }
 
@@ -57,7 +61,7 @@ class MapView extends StatelessWidget {
                 : ListView.builder(
                     itemCount: state.restaurants.length,
                     itemBuilder: (context, index) =>
-                        _buildRestaurantTile(state.restaurants[index]),
+                        _buildRestaurantTile(context, state.restaurants[index]),
                   ),
           ),
         ],

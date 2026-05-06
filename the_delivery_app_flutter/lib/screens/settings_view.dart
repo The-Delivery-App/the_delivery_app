@@ -19,14 +19,37 @@ class _SettingsViewState extends State<SettingsView> {
     widget.viewModel.loadSettings();
   }
 
+  Widget _buildSectionHeader(String label) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey,
+          letterSpacing: 0.8,
+        ),
+      ),
+    );
+  }
+
   Widget _buildLanguageRow(Settings settings) {
-    const languages = ['en', 'tr', 'de', 'fr'];
+    const languages = {
+      'en': 'English',
+      'tr': 'Türkçe',
+      'de': 'Deutsch',
+      'fr': 'Français',
+    };
     return ListTile(
+      leading: const Icon(Icons.language, color: Colors.deepOrange),
       title: const Text('Language'),
+      subtitle: const Text('App display language'),
       trailing: DropdownButton<String>(
         value: settings.language,
-        items: languages
-            .map((l) => DropdownMenuItem(value: l, child: Text(l)))
+        underline: const SizedBox.shrink(),
+        items: languages.entries
+            .map((e) => DropdownMenuItem(value: e.key, child: Text(e.value)))
             .toList(),
         onChanged: (value) {
           if (value == null) return;
@@ -40,8 +63,11 @@ class _SettingsViewState extends State<SettingsView> {
 
   Widget _buildNotificationsRow(Settings settings) {
     return SwitchListTile(
+      secondary: const Icon(Icons.notifications_outlined, color: Colors.deepOrange),
       title: const Text('Notifications'),
+      subtitle: const Text('Push notifications'),
       value: settings.notificationsEnabled,
+      activeThumbColor: Colors.deepOrange,
       onChanged: (value) {
         widget.viewModel.updateSettings(
           Settings(language: settings.language, notificationsEnabled: value),
@@ -60,8 +86,11 @@ class _SettingsViewState extends State<SettingsView> {
           appBar: AppBar(title: const Text('Settings')),
           body: ListView(
             children: [
+              _buildSectionHeader('PREFERENCES'),
               _buildLanguageRow(settings),
+              const Divider(height: 1, indent: 16, endIndent: 16),
               _buildNotificationsRow(settings),
+              const Divider(height: 1),
             ],
           ),
         );
