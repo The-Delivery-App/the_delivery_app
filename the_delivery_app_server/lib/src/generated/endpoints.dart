@@ -671,6 +671,16 @@ class Endpoints extends _i1.EndpointDispatch {
       name: 'userProfileController',
       endpoint: endpoints['userProfileController']!,
       methodConnectors: {
+        'getCurrentUser': _i1.MethodConnector(
+          name: 'getCurrentUser',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['userProfileController'] as _i8.UserProfileController)
+                  .getCurrentUser(session),
+        ),
         'getProfile': _i1.MethodConnector(
           name: 'getProfile',
           params: {

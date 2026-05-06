@@ -301,6 +301,12 @@ class EndpointUserProfileController extends _i1.EndpointRef {
   @override
   String get name => 'userProfileController';
 
+  _i2.Future<String> getCurrentUser() => caller.callServerEndpoint<String>(
+        'userProfileController',
+        'getCurrentUser',
+        {},
+      );
+
   _i2.Future<String> getProfile(int userId) =>
       caller.callServerEndpoint<String>(
         'userProfileController',

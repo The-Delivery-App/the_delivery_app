@@ -1,8 +1,26 @@
 import 'package:serverpod/serverpod.dart';
 import '../../generated/protocol.dart';
+import '../../auth/auth_hooks.dart';
 import 'dart:convert';
 
 class UserProfileController extends Endpoint {
+
+  Future<String> getCurrentUser(Session session) async {
+    try {
+      final user = await AuthHooks.getAppUser(session);
+      if (user == null) {
+        return jsonEncode({'success': false, 'errorMessage': 'Not authenticated'});
+      }
+      return jsonEncode({
+        'success': true,
+        'userId': user.id,
+        'name': user.name,
+        'email': user.email,
+      });
+    } catch (e) {
+      return jsonEncode({'success': false, 'error': '$e'});
+    }
+  }
 
   Future<String> getProfile(
     Session session,

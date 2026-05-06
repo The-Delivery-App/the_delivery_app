@@ -29,6 +29,7 @@ reviewsController:
   - getReviews:
   - deleteReview:
 userProfileController:
+  - getCurrentUser:
   - getProfile:
   - updateProfile:
   - addAddress:
