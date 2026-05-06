@@ -155,11 +155,15 @@ class OrderDAO {
     required OrderStatus status,
     DateTime? time,
   }) async {
+    try {
+      await OrderStatusHistory.db.insertRow(
+        session,
         OrderStatusHistory(
           orderId: orderId,
           status: status,
           timestamp: time ?? DateTime.now(),
         ),
+      );
     } catch (e) {
       session.log('Error adding status history: $e');
       rethrow;
