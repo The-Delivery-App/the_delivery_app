@@ -33,6 +33,7 @@ database:
   port: 5432
   name: the_delivery_app
   user: postgres
+  password: password123
   #requireSsl: true # defaults to false
   #isUnixSocket: true # defaults to false
   #maxConnectionCount: 10 # Defaults to 10, a negative or null value removes the limit
