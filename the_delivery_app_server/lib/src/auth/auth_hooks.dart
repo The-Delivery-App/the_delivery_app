@@ -1,6 +1,6 @@
 import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
- import 'package:serverpod_auth_server/serverpod_auth_server.dart';
+import 'package:serverpod_auth_server/serverpod_auth_server.dart';
  
 class AuthHooks {
   /// Called when a new user is created via email authentication
