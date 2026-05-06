@@ -137,7 +137,7 @@ class OrderService {
 
       if (!paymentSuccess.success) {
         await orderDAO.updatePaymentStatus(payment.id!, 'failed');
-        await _updateOrderStatus(orderId, OrderStatus.paymentFailed);
+        await _updateOrderStatus(orderId, OrderStatus.placed);
         return PaymentResult.error(
           paymentSuccess.errorMessage ?? 'Payment failed',
         );
