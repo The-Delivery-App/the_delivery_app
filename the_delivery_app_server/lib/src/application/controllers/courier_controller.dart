@@ -1,4 +1,4 @@
-import 'package:serverpod/serverpod.dart';
+import 'package:serverpod/serverpod.dart' hide Order;
 import '../../generated/protocol.dart' hide Order;
 import '../../generated/protocol.dart' as protocol;
 import 'dart:convert';
