@@ -242,10 +242,12 @@ class OrderService {
     return BasketValidationResult.valid(validatedItems);
   }
 
-    OrderPricing _calculatePricing({
+  Future<OrderPricing> _calculatePricing({
     required List<ValidatedBasketItem> items,
+    required int restaurantId,
+    required int deliveryAddressId,
     String? couponCode,
-  }) {
+  }) async {
     double subtotal = 0;
     for (final item in items) {
       subtotal += item.unitPrice * item.quantity;
@@ -382,40 +384,5 @@ class CourierTrackingInfo {
       };
 }
 
-class CourierTrackingInfo {
-  final int courierId;
-  final String courierName;
-  final String courierPhone;
-  final String vehicleInfo;
-  final double? currentLatitude;
-  final double? currentLongitude;
-  final DateTime? estimatedDeliveryTime;
-  final int? minutesRemaining;
-  final OrderStatus currentStatus;
 
-  CourierTrackingInfo({
-    required this.courierId,
-    required this.courierName,
-    required this.courierPhone,
-    required this.vehicleInfo,
-    this.currentLatitude,
-    this.currentLongitude,
-    this.estimatedDeliveryTime,
-    this.minutesRemaining,
-    required this.currentStatus,
-  });
-
-  Map<String, dynamic> toJson() => {
-        'courierId': courierId,
-        'courierName': courierName,
-        'courierPhone': courierPhone,
-        'vehicleInfo': vehicleInfo,
-        'currentLatitude': currentLatitude,
-        'currentLongitude': currentLongitude,
-        'estimatedDeliveryTime': estimatedDeliveryTime?.toIso8601String(),
-        'minutesRemaining': minutesRemaining,
-        'currentStatus': currentStatus.name,
-      };
-  
-}
 
