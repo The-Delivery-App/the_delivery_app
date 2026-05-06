@@ -1,4 +1,4 @@
-import 'package:serverpod/serverpod.dart';
+import 'package:serverpod/serverpod.dart' hide Order;
 import '../../generated/protocol.dart';
 import '../../data_access/daos/order_dao.dart';
 import '../../models/order_models.dart';
