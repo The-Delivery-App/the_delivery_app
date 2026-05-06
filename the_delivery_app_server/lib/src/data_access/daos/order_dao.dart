@@ -161,7 +161,7 @@ class OrderDAO {
         OrderStatusHistory(
           orderId: orderId,
           status: status,
-          timestamp: time ?? DateTime.now(),
+          time: time ?? DateTime.now(),
         ),
       );
     } catch (e) {
