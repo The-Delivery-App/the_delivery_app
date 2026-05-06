@@ -130,6 +130,30 @@ class UserProfileController extends Endpoint {
     }
   }
 
+  Future<String> getCurrentUser(Session session) async {
+    try {
+      final authInfo = await session.authenticated;
+      if (authInfo == null) {
+        return jsonEncode({'success': false, 'errorMessage': 'Not authenticated'});
+      }
+      final user = await User.db.findFirstRow(
+        session,
+        where: (t) => t.id.equals(authInfo.userId),
+      );
+      if (user == null) {
+        return jsonEncode({'success': false, 'errorMessage': 'User not found'});
+      }
+      return jsonEncode({
+        'success': true,
+        'userId': user.id,
+        'name': user.name,
+        'email': user.email,
+      });
+    } catch (e) {
+      return jsonEncode({'success': false, 'error': '$e'});
+    }
+  }
+
   Future<String> deleteAddress(
     Session session,
     int addressId,
