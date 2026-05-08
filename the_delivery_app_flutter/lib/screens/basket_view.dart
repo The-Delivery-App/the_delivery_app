@@ -8,6 +8,18 @@ class BasketView extends StatelessWidget {
 
   const BasketView({super.key, required this.viewModel});
 
+  List<MapEntry<Food, int>> _groupItems(List<Food> items) {
+    final map = <String, MapEntry<Food, int>>{};
+    for (final food in items) {
+      if (map.containsKey(food.id)) {
+        map[food.id] = MapEntry(food, map[food.id]!.value + 1);
+      } else {
+        map[food.id] = MapEntry(food, 1);
+      }
+    }
+    return map.values.toList();
+  }
+
   Widget _buildItem(Food food) {
     return ListTile(
       title: Text(food.name),
