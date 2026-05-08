@@ -24,14 +24,11 @@ class SpecialDealView extends StatelessWidget {
         leading: food.imageUrl.isNotEmpty
             ? ClipRRect(
                 borderRadius: BorderRadius.circular(6),
-                child: Image.network(
-                  food.imageUrl,
-                  width: 40,
-                  height: 40,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) =>
-                      const Icon(Icons.local_offer, color: Colors.deepOrange),
-                ),
+                child: food.imageUrl.startsWith('http')
+                    ? Image.network(food.imageUrl, width: 40, height: 40, fit: BoxFit.cover,
+                        errorBuilder: (_, _, _) => const Icon(Icons.local_offer, color: Colors.deepOrange))
+                    : Image.asset(food.imageUrl, width: 40, height: 40, fit: BoxFit.cover,
+                        errorBuilder: (_, _, _) => const Icon(Icons.local_offer, color: Colors.deepOrange)),
               )
             : const Icon(Icons.local_offer, color: Colors.deepOrange),
         title: Text(food.name),
