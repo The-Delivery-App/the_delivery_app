@@ -10,6 +10,11 @@ services:
       POSTGRES_PASSWORD: "qCxrveH3c60vgSB9KMWEWyW1usVeIVI9"
     volumes:
       - the_delivery_app_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:6.2.6

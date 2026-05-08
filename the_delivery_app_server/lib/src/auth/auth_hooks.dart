@@ -41,7 +41,7 @@ class AuthHooks {
 
   static Future<User?> getAppUser(Session session) async {
     try {
-      final authUserId = await session.auth.authenticatedUserId;
+      final authUserId = session.authenticated?.userId;
       if (authUserId == null) return null;
 
       return await User.db.findFirstRow(
