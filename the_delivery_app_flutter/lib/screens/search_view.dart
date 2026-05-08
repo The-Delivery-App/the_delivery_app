@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/food.dart';
+import '../models/restaurant.dart';
 import '../state/search_state.dart';
 import 'restaurant_view.dart';
 
@@ -22,6 +23,15 @@ class _SearchViewState extends State<SearchView> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  List<Restaurant> _extractRestaurants(List<Food> results, String query) {
+    final q = query.trim().toLowerCase();
+    final seen = <String>{};
+    return results
+        .where((f) => f.restaurant.name.toLowerCase().contains(q) && seen.add(f.restaurant.id))
+        .map((f) => f.restaurant)
+        .toList();
   }
 
   Widget _buildResultTile(BuildContext context, Food food) {
