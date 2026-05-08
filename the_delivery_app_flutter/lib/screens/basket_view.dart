@@ -148,7 +148,7 @@ class BasketView extends StatelessWidget {
                     _buildPricingRow('Delivery fee',
                         deliveryFee == 0.0 ? 'Free' : '£${deliveryFee.toStringAsFixed(2)}'),
                     const SizedBox(height: 6),
-                    _buildPricingRow('Service fee', '£${serviceFee.toStringAsFixed(2)}'),
+                    _buildPricingRow('Service fee (10%)', '£${serviceFee.toStringAsFixed(2)}'),
                     const Divider(height: 24),
                     _buildPricingRow('Total', '£${total.toStringAsFixed(2)}', bold: true),
                   ],
