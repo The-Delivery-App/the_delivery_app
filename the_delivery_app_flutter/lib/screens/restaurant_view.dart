@@ -125,7 +125,16 @@ class _RestaurantViewState extends State<RestaurantView> {
                 const SizedBox(width: 4),
                 IconButton(
                   icon: const Icon(Icons.add_shopping_cart, color: Colors.deepOrange),
-                  onPressed: () => widget.onAddToBasket!(food),
+                  onPressed: () {
+                    widget.onAddToBasket!(food);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('${food.name} added to basket'),
+                        duration: const Duration(seconds: 2),
+                        backgroundColor: Colors.deepOrange,
+                      ),
+                    );
+                  },
                   tooltip: 'Add to basket',
                 ),
               ],
