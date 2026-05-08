@@ -20,6 +20,16 @@ class BasketView extends StatelessWidget {
     return map.values.toList();
   }
 
+  Widget _placeholder() => ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          width: 56,
+          height: 56,
+          color: Colors.grey[200],
+          child: const Icon(Icons.fastfood, color: Colors.deepOrange),
+        ),
+      );
+
   Widget _buildItem(Food food) {
     return ListTile(
       title: Text(food.name),
