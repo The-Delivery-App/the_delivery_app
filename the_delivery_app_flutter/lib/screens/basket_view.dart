@@ -54,6 +54,16 @@ class BasketView extends StatelessWidget {
     );
   }
 
+  Widget _buildPricingRow(String label, String value, {bool bold = false}) {
+    final style = bold
+        ? const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)
+        : const TextStyle(color: Colors.grey);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [Text(label, style: style), Text(value, style: style)],
+    );
+  }
+
   Widget _buildEmptyState() {
     return const Center(
       child: Column(
