@@ -126,6 +126,54 @@ class FeedView extends StatelessWidget {
     );
   }
 
+  Widget _buildCompactFoodCard(BuildContext context, Food food) {
+    return SizedBox(
+      width: 140,
+      child: Card(
+        margin: const EdgeInsets.only(right: 10, bottom: 8, top: 4),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: onAddToBasket != null ? () {
+            onAddToBasket!(food);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('${food.name} added to basket'),
+              duration: const Duration(seconds: 2),
+              backgroundColor: Colors.deepOrange,
+            ));
+          } : null,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                child: food.imageUrl.isNotEmpty
+                    ? (food.imageUrl.startsWith('http')
+                        ? Image.network(food.imageUrl, width: 140, height: 90, fit: BoxFit.cover,
+                            errorBuilder: (_, _, _) => const SizedBox(height: 90, child: Center(child: Icon(Icons.fastfood, color: Colors.deepOrange))))
+                        : Image.asset(food.imageUrl, width: 140, height: 90, fit: BoxFit.cover,
+                            errorBuilder: (_, _, _) => const SizedBox(height: 90, child: Center(child: Icon(Icons.fastfood, color: Colors.deepOrange)))))
+                    : const SizedBox(height: 90, child: Center(child: Icon(Icons.fastfood, color: Colors.deepOrange))),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(food.name, maxLines: 2, overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
+                    const SizedBox(height: 4),
+                    Text('£${food.price.toStringAsFixed(2)}',
+                        style: const TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold, fontSize: 13)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildRestaurantHeader(BuildContext context, Restaurant restaurant) {
     final hasValidId = int.tryParse(restaurant.id) != null;
     return InkWell(
