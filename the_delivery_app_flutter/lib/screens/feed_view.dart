@@ -238,18 +238,30 @@ class FeedView extends StatelessWidget {
                 }
                 return false;
               },
-              child: ListView.builder(
-                itemCount: state.feedItems.length + (state.isLoadingMore ? 1 : 0),
-                itemBuilder: (context, index) {
-                  if (index == state.feedItems.length) {
-                    return const Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  }
-                  return _buildFoodCard(context, state.feedItems[index]);
-                },
-              ),
+              child: Builder(builder: (context) {
+                final groups = _groupByRestaurant(state.feedItems);
+                final flat = <Object>[];
+                for (final entry in groups) {
+                  flat.add(entry.key);
+                  flat.addAll(entry.value.take(3));
+                }
+                return ListView.builder(
+                  itemCount: flat.length + (state.isLoadingMore ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index == flat.length) {
+                      return const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
+                    final item = flat[index];
+                    if (item is Restaurant) {
+                      return _buildRestaurantHeader(context, item);
+                    }
+                    return _buildFoodCard(context, item as Food);
+                  },
+                );
+              }),
             ),
     );
   }
