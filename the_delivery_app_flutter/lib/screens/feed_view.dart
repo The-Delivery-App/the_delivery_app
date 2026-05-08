@@ -153,7 +153,7 @@ class FeedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appBar = AppBar(
-      title: const Text('Feed'),
+      title: const Text('Home'),
       actions: [
         if (onDeals != null)
           IconButton(
