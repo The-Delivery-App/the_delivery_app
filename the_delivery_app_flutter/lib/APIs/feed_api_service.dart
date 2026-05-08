@@ -14,6 +14,7 @@ class FeedAPIService implements IFoodApiService {
 
   // Items fetched from the last getFeedChunk call, keyed by synthetic string ID.
   final Map<String, _CachedItem> _cache = {};
+  final Map<String, String> _restaurantNameToId = {};
 
   FeedAPIService({required Client client}) : _client = client;
 
@@ -30,8 +31,13 @@ class FeedAPIService implements IFoodApiService {
       100, 0,
       null,
     );
+    for (final r in response.restaurants) {
+      _restaurantNameToId[r.name] = r.id.toString();
+    }
     for (var i = 0; i < response.foodItems.length; i++) {
-      _cache[i.toString()] = _CachedItem(response.foodItems[i]);
+      final item = response.foodItems[i];
+      final restId = _restaurantNameToId[item.restaurantName] ?? '';
+      _cache[i.toString()] = _CachedItem(item, restId);
     }
     return FeedPortionDTO(
       foodIds: List.generate(response.foodItems.length, (i) => i.toString()),
@@ -87,7 +93,8 @@ class FeedAPIService implements IFoodApiService {
 
 class _CachedItem {
   final dynamic _item;
-  _CachedItem(this._item);
+  final String _restaurantId;
+  _CachedItem(this._item, this._restaurantId);
 
   FoodDTO toFoodDTO() {
     return FoodDTO(
@@ -98,7 +105,7 @@ class _CachedItem {
       tags: const [],
       foodThumbnail: (_item.iconUrl as String?) ?? '',
       restaurantThumbnail: (_item.restaurantIconUrl as String?) ?? '',
-      restaurantId: '',
+      restaurantId: _restaurantId,
       restaurantName: _item.restaurantName as String,
       recentOrders: _item.estimatedOrdersAmount as int,
       deliveryTimeMinutes: (_item.estimatedDeliveryTime as num).round(),
