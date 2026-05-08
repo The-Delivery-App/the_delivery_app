@@ -27,105 +27,6 @@ class FeedView extends StatelessWidget {
     return map.values.toList();
   }
 
-  Widget _buildFoodCard(BuildContext context, Food food) {
-    final minutes = food.deliveryTime.inMinutes;
-    final hasValidId = int.tryParse(food.restaurant.id) != null;
-    return GestureDetector(
-      onTap: hasValidId
-          ? () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => RestaurantView(
-                    restaurant: food.restaurant,
-                    onAddToBasket: onAddToBasket,
-                  ),
-                ),
-              );
-            }
-          : null,
-      child: Card(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            food.imageUrl.isNotEmpty
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: food.imageUrl.startsWith('http')
-                        ? Image.network(food.imageUrl, width: 48, height: 48, fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) => const Icon(Icons.fastfood, size: 48, color: Colors.deepOrange))
-                        : Image.asset(food.imageUrl, width: 48, height: 48, fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) => const Icon(Icons.fastfood, size: 48, color: Colors.deepOrange)),
-                  )
-                : const Icon(Icons.fastfood, size: 48, color: Colors.deepOrange),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(food.name,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 15)),
-                  const SizedBox(height: 2),
-                  Text(food.restaurant.name,
-                      style: const TextStyle(
-                          color: Colors.grey, fontSize: 13)),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      const Icon(Icons.star, size: 14, color: Colors.amber),
-                      const SizedBox(width: 2),
-                      Text(food.rating.toStringAsFixed(1),
-                          style: const TextStyle(fontSize: 12)),
-                      const SizedBox(width: 10),
-                      const Icon(Icons.access_time,
-                          size: 14, color: Colors.grey),
-                      const SizedBox(width: 2),
-                      Text('$minutes min',
-                          style: const TextStyle(
-                              fontSize: 12, color: Colors.grey)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  '£${food.price.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                      color: Colors.deepOrange),
-                ),
-                if (onAddToBasket != null)
-                  IconButton(
-                    icon: const Icon(Icons.add_shopping_cart,
-                        color: Colors.deepOrange),
-                    onPressed: () {
-                      onAddToBasket!(food);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('${food.name} added to basket'),
-                          duration: const Duration(seconds: 2),
-                          backgroundColor: Colors.deepOrange,
-                        ),
-                      );
-                    },
-                    tooltip: 'Add to basket',
-                  ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    ),
-    );
-  }
-
   Widget _buildCompactFoodCard(BuildContext context, Food food) {
     return SizedBox(
       width: 140,
@@ -288,25 +189,32 @@ class FeedView extends StatelessWidget {
               },
               child: Builder(builder: (context) {
                 final groups = _groupByRestaurant(state.feedItems);
-                final flat = <Object>[];
-                for (final entry in groups) {
-                  flat.add(entry.key);
-                  flat.addAll(entry.value.take(3));
-                }
                 return ListView.builder(
-                  itemCount: flat.length + (state.isLoadingMore ? 1 : 0),
+                  itemCount: groups.length + (state.isLoadingMore ? 1 : 0),
                   itemBuilder: (context, index) {
-                    if (index == flat.length) {
+                    if (index == groups.length) {
                       return const Padding(
                         padding: EdgeInsets.all(16),
                         child: Center(child: CircularProgressIndicator()),
                       );
                     }
-                    final item = flat[index];
-                    if (item is Restaurant) {
-                      return _buildRestaurantHeader(context, item);
-                    }
-                    return _buildFoodCard(context, item as Food);
+                    final entry = groups[index];
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildRestaurantHeader(context, entry.key),
+                        SizedBox(
+                          height: 200,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            itemCount: entry.value.length,
+                            itemBuilder: (ctx, i) =>
+                                _buildCompactFoodCard(ctx, entry.value[i]),
+                          ),
+                        ),
+                      ],
+                    );
                   },
                 );
               }),
