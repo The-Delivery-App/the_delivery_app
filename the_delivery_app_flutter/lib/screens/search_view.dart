@@ -121,12 +121,34 @@ class _SearchViewState extends State<SearchView> {
         ),
       );
     }
-    return ListView.separated(
-      itemCount: widget.state.results.length,
-      separatorBuilder: (_, _) =>
-          const Divider(height: 1, indent: 16, endIndent: 16),
-      itemBuilder: (context, index) =>
-          _buildResultTile(context, widget.state.results[index]),
+    final restaurants = _extractRestaurants(widget.state.results, widget.state.query);
+    final foods = widget.state.results;
+    final hasRestaurants = restaurants.isNotEmpty;
+    final itemCount = (hasRestaurants ? 1 + restaurants.length : 0) +
+        (foods.isNotEmpty ? 1 + foods.length : 0);
+    return ListView.builder(
+      itemCount: itemCount,
+      itemBuilder: (context, index) {
+        if (hasRestaurants) {
+          if (index == 0) {
+            return const Padding(
+              padding: EdgeInsets.fromLTRB(16, 12, 16, 4),
+              child: Text('Restaurants', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.grey)),
+            );
+          }
+          if (index <= restaurants.length) {
+            return _buildRestaurantTile(context, restaurants[index - 1]);
+          }
+          index -= 1 + restaurants.length;
+        }
+        if (index == 0) {
+          return const Padding(
+            padding: EdgeInsets.fromLTRB(16, 12, 16, 4),
+            child: Text('Food Items', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.grey)),
+          );
+        }
+        return _buildResultTile(context, foods[index - 1]);
+      },
     );
   }
 
