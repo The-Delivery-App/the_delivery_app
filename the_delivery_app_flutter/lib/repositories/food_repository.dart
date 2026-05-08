@@ -165,7 +165,7 @@ class FoodRepository implements IFoodRepository {
       price: dto.price,
       rating: dto.rating,
       tags: dto.tags,
-      imageUrl: dto.foodThumbnail,
+      imageUrl: _normaliseImagePath(dto.foodThumbnail),
       restaurantImageUrl: dto.restaurantThumbnail,
       restaurant: Restaurant(id: dto.restaurantId, name: dto.restaurantName),
       recentOrders: dto.recentOrders,
@@ -178,6 +178,13 @@ class FoodRepository implements IFoodRepository {
       calories: dto.calories,
       isDiscounted: dto.isDiscounted,
     );
+  }
+
+  static String _normaliseImagePath(String path) {
+    if (path.startsWith('http')) return path;
+    const prefix = '../the_delivery_app_flutter/';
+    if (path.startsWith(prefix)) return path.substring(prefix.length);
+    return path;
   }
 
   static int _computeChunkSize(DeviceProfile device) {
