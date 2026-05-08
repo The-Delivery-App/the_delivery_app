@@ -39,14 +39,11 @@ class FeedView extends StatelessWidget {
             food.imageUrl.isNotEmpty
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      food.imageUrl,
-                      width: 48,
-                      height: 48,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, _) =>
-                          const Icon(Icons.fastfood, size: 48, color: Colors.deepOrange),
-                    ),
+                    child: food.imageUrl.startsWith('http')
+                        ? Image.network(food.imageUrl, width: 48, height: 48, fit: BoxFit.cover,
+                            errorBuilder: (_, _, _) => const Icon(Icons.fastfood, size: 48, color: Colors.deepOrange))
+                        : Image.asset(food.imageUrl, width: 48, height: 48, fit: BoxFit.cover,
+                            errorBuilder: (_, _, _) => const Icon(Icons.fastfood, size: 48, color: Colors.deepOrange)),
                   )
                 : const Icon(Icons.fastfood, size: 48, color: Colors.deepOrange),
             const SizedBox(width: 12),
