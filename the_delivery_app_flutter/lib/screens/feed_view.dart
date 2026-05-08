@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/food.dart';
+import '../models/restaurant.dart';
 import '../state/feed_state.dart';
 import 'restaurant_view.dart';
 
@@ -12,6 +13,19 @@ class FeedView extends StatelessWidget {
   final VoidCallback? onDeals;
 
   const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals});
+
+  List<MapEntry<Restaurant, List<Food>>> _groupByRestaurant(List<Food> items) {
+    final map = <String, MapEntry<Restaurant, List<Food>>>{};
+    for (final food in items) {
+      final id = food.restaurant.id;
+      if (map.containsKey(id)) {
+        map[id]!.value.add(food);
+      } else {
+        map[id] = MapEntry(food.restaurant, [food]);
+      }
+    }
+    return map.values.toList();
+  }
 
   Widget _buildFoodCard(BuildContext context, Food food) {
     final minutes = food.deliveryTime.inMinutes;
