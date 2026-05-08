@@ -30,24 +30,59 @@ class BasketView extends StatelessWidget {
         ),
       );
 
-  Widget _buildItem(Food food) {
-    return ListTile(
-      title: Text(food.name),
-      subtitle: Text(food.restaurant.name),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
+  Widget _buildItem(Food food, int qty) {
+    final imageUrl = food.imageUrl;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      child: Row(
         children: [
-          Text(
-            '£${food.price.toStringAsFixed(2)}',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
-              color: Colors.deepOrange,
+          imageUrl.isNotEmpty
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: imageUrl.startsWith('http')
+                      ? Image.network(imageUrl, width: 56, height: 56, fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => _placeholder())
+                      : Image.asset(imageUrl, width: 56, height: 56, fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => _placeholder()),
+                )
+              : _placeholder(),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(food.name, style: const TextStyle(fontWeight: FontWeight.w600)),
+                Text(food.restaurant.name,
+                    style: const TextStyle(color: Colors.grey, fontSize: 12)),
+              ],
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.remove_circle_outline),
-            onPressed: () => viewModel.removeItem(food),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text('£${(food.price * qty).toStringAsFixed(2)}',
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.deepOrange)),
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove_circle_outline, size: 20),
+                    onPressed: () => viewModel.removeItem(food),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text('$qty', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add_circle_outline, size: 20),
+                    onPressed: () => viewModel.addItem(food),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
