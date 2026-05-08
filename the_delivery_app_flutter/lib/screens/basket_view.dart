@@ -120,68 +120,72 @@ class BasketView extends StatelessWidget {
         final state = viewModel.getState();
         final items = state.basket.items;
 
-        final total = items.fold(0.0, (sum, f) => sum + f.price);
+        if (items.isEmpty) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('Basket')),
+            body: _buildEmptyState(),
+          );
+        }
+
+        final grouped = _groupItems(items);
+        final subtotal = items.fold(0.0, (sum, f) => sum + f.price);
+        final deliveryFee = subtotal >= 15.0 ? 0.0 : 2.99;
+        final serviceFee = subtotal * 0.10;
+        final total = subtotal + deliveryFee + serviceFee;
 
         return Scaffold(
           appBar: AppBar(title: const Text('Basket')),
-          body: items.isEmpty
-              ? _buildEmptyState()
-              : ListView.separated(
-                  itemCount: items.length,
-                  separatorBuilder: (_, _) =>
-                      const Divider(height: 1, indent: 16, endIndent: 16),
-                  itemBuilder: (context, index) => _buildItem(items[index]),
+          body: ListView(
+            children: [
+              ...grouped.map((e) => _buildItem(e.key, e.value)),
+              const Divider(height: 1),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    _buildPricingRow('Subtotal', '£${subtotal.toStringAsFixed(2)}'),
+                    const SizedBox(height: 6),
+                    _buildPricingRow('Delivery fee',
+                        deliveryFee == 0.0 ? 'Free' : '£${deliveryFee.toStringAsFixed(2)}'),
+                    const SizedBox(height: 6),
+                    _buildPricingRow('Service fee', '£${serviceFee.toStringAsFixed(2)}'),
+                    const Divider(height: 24),
+                    _buildPricingRow('Total', '£${total.toStringAsFixed(2)}', bold: true),
+                  ],
                 ),
-          bottomNavigationBar: items.isEmpty
-              ? null
-              : SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('${items.length} ${items.length == 1 ? 'item' : 'items'}',
-                            style: const TextStyle(color: Colors.grey)),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              'Total: £${total.toStringAsFixed(2)}',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            const SizedBox(height: 8),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.deepOrange,
-                                foregroundColor: Colors.white,
-                              ),
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (_) => AlertDialog(
-                                    title: const Text('Place Order'),
-                                    content: const Text(
-                                      'To place an order, please sign in and add a delivery address in your account.',
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: const Text('OK'),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              child: const Text('Place Order'),
-                            ),
-                          ],
+              ),
+            ],
+          ),
+          bottomNavigationBar: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepOrange,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size.fromHeight(48),
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: const Text('Place Order'),
+                      content: const Text(
+                        'To place an order, please sign in and add a delivery address in your account.',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('OK'),
                         ),
                       ],
                     ),
-                  ),
-                ),
+                  );
+                },
+                child: const Text('Place Order', style: TextStyle(fontSize: 16)),
+              ),
+            ),
+          ),
         );
       },
     );
