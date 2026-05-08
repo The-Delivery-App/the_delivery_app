@@ -24,20 +24,27 @@ class RestaurantAPIService implements IRestaurantAPIService {
     if (decoded is List) {
       items = decoded;
     } else if (decoded is Map) {
-      final data = decoded['data'] ?? decoded['items'] ?? decoded['foodItems'];
-      items = data is List ? data : [];
+      // Server returns {"success":true, "menu":{"All Items":[...]}}
+      final menu = decoded['menu'];
+      if (menu is Map && menu.isNotEmpty) {
+        items = menu.values.first is List ? menu.values.first as List : [];
+      } else {
+        final data = decoded['data'] ?? decoded['items'] ?? decoded['foodItems'];
+        items = data is List ? data : [];
+      }
     } else {
       return [];
     }
 
     return items.whereType<Map<String, dynamic>>().map((map) {
+      final rawImage = (map['foodThumbnail'] as String?) ?? (map['thumbnail'] as String?) ?? '';
       return Food(
         id: (map['id'] as int?)?.toString() ?? '',
-        name: (map['foodName'] as String?) ?? '',
-        price: (map['foodPrice'] as num? ?? 0).toDouble(),
-        rating: (map['foodRating'] as num? ?? 0).toDouble(),
+        name: (map['foodName'] as String?) ?? (map['name'] as String?) ?? '',
+        price: (map['foodPrice'] as num? ?? map['price'] as num? ?? 0).toDouble(),
+        rating: (map['foodRating'] as num? ?? map['rating'] as num? ?? 0).toDouble(),
         tags: [],
-        imageUrl: (map['foodThumbnail'] as String?) ?? '',
+        imageUrl: _normaliseImagePath(rawImage),
         restaurantImageUrl: '',
         restaurant: app.Restaurant(
           id: (map['restId'] as int? ?? id).toString(),
@@ -51,6 +58,13 @@ class RestaurantAPIService implements IRestaurantAPIService {
         isDiscounted: false,
       );
     }).toList();
+  }
+
+  static String _normaliseImagePath(String path) {
+    if (path.startsWith('http')) return path;
+    const prefix = '../the_delivery_app_flutter/';
+    if (path.startsWith(prefix)) return path.substring(prefix.length);
+    return path;
   }
 
   @override
