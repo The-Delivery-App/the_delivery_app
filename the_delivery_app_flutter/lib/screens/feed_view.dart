@@ -126,6 +126,45 @@ class FeedView extends StatelessWidget {
     );
   }
 
+  Widget _buildRestaurantHeader(BuildContext context, Restaurant restaurant) {
+    final hasValidId = int.tryParse(restaurant.id) != null;
+    return InkWell(
+      onTap: hasValidId
+          ? () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => RestaurantView(
+                    restaurant: restaurant,
+                    onAddToBasket: onAddToBasket,
+                  ),
+                ),
+              )
+          : null,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 20, 16, 6),
+        child: Row(
+          children: [
+            const CircleAvatar(
+              radius: 18,
+              backgroundColor: Colors.deepOrange,
+              child: Icon(Icons.restaurant, color: Colors.white, size: 18),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                restaurant.name,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+            ),
+            const Text('View all', style: TextStyle(fontSize: 12, color: Colors.deepOrange)),
+            const SizedBox(width: 4),
+            const Icon(Icons.chevron_right, color: Colors.deepOrange, size: 18),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildEmpty() {
     return const Center(
       child: Column(
