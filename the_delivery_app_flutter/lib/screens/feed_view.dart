@@ -91,7 +91,16 @@ class FeedView extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.add_shopping_cart,
                         color: Colors.deepOrange),
-                    onPressed: () => onAddToBasket!(food),
+                    onPressed: () {
+                      onAddToBasket!(food);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('${food.name} added to basket'),
+                          duration: const Duration(seconds: 2),
+                          backgroundColor: Colors.deepOrange,
+                        ),
+                      );
+                    },
                     tooltip: 'Add to basket',
                   ),
               ],
