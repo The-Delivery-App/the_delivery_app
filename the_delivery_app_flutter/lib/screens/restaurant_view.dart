@@ -192,7 +192,7 @@ class _RestaurantViewState extends State<RestaurantView> {
             ),
             const SizedBox(height: 16),
             TextButton(
-              onPressed: () => _viewModel.loadMenu(widget.restaurant.id),
+              onPressed: () => _viewModel.loadMenu(widget.restaurant.id, widget.restaurant.name),
               child: const Text('Retry'),
             ),
           ],
