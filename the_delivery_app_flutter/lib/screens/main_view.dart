@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../APIs/feed_api_service.dart';
+import '../APIs/map_api_service.dart';
 import '../APIs/restaurant_api_service.dart';
 import '../main.dart';
 import '../models/restaurant.dart';
@@ -13,6 +14,7 @@ import '../state/map_state.dart';
 import '../storage/local_storage.dart';
 import '../view_models/basket_view_model.dart';
 import '../view_models/feed_view_model.dart';
+import '../view_models/map_view_model.dart';
 import '../view_models/search_view_model.dart';
 import '../view_models/settings_view_model.dart';
 import '../view_models/special_deal_view_model.dart';
@@ -38,6 +40,7 @@ class _MainViewState extends State<MainView> {
   late final FeedViewModel _feedViewModel;
   late final SearchViewModel _searchViewModel;
   late final SpecialDealViewModel _specialDealViewModel;
+  late final MapViewModel _mapViewModel;
   List<Restaurant> _featuredRestaurants = [];
 
   @override
@@ -65,6 +68,8 @@ class _MainViewState extends State<MainView> {
     _specialDealViewModel = SpecialDealViewModel(
       repository: SpecialDealRepository(client: client),
     );
+    _mapViewModel = MapViewModel(apiService: MapAPIService());
+    _mapViewModel.updateLocation();
     _loadFeaturedRestaurants();
     _basketViewModel.loadBasket();
     _feedViewModel.addListener(() {
@@ -80,6 +85,7 @@ class _MainViewState extends State<MainView> {
     _feedViewModel.dispose();
     _searchViewModel.dispose();
     _specialDealViewModel.dispose();
+    _mapViewModel.dispose();
     super.dispose();
   }
 
@@ -135,7 +141,15 @@ class _MainViewState extends State<MainView> {
           ),
         );
       case 2:
-        return MapView(state: MapState(restaurants: _featuredRestaurants));
+        return ListenableBuilder(
+          listenable: _mapViewModel,
+          builder: (_, _) => MapView(
+            state: MapState(
+              restaurants: _featuredRestaurants,
+              currentLocation: _mapViewModel.getState().currentLocation,
+            ),
+          ),
+        );
       case 3:
         return BasketView(viewModel: _basketViewModel);
       case 4:
