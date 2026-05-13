@@ -13,12 +13,12 @@ class RestaurantViewModel extends ChangeNotifier {
 
   RestaurantState getState() => _state;
 
-  Future<void> loadMenu(String restaurantId) async {
+  Future<void> loadMenu(String restaurantId, String restaurantName) async {
     _state = const RestaurantState(menuItems: [], isLoading: true);
     notifyListeners();
 
     try {
-      final items = await _repository.loadMenu(restaurantId);
+      final items = await _repository.loadMenu(restaurantId, restaurantName);
       _state = RestaurantState(menuItems: items, isLoading: false);
     } catch (e) {
       _state = RestaurantState(

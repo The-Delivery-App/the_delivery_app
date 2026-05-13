@@ -34,7 +34,7 @@ class _RestaurantViewState extends State<RestaurantView> {
         apiService: RestaurantAPIService(client: client),
       ),
     );
-    _viewModel.loadMenu(widget.restaurant.id);
+    _viewModel.loadMenu(widget.restaurant.id, widget.restaurant.name);
     _loadDetails();
     _loadReviews();
   }

@@ -10,8 +10,8 @@ class RestaurantRepository implements IRestaurantRepository {
       : _apiService = apiService;
 
   @override
-  Future<List<Food>> loadMenu(String restaurantId) async {
-    return _apiService.loadMenu(restaurantId);
+  Future<List<Food>> loadMenu(String restaurantId, String restaurantName) async {
+    return _apiService.loadMenu(restaurantId, restaurantName);
   }
 
   @override
