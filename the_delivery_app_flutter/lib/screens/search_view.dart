@@ -337,7 +337,6 @@ class _SearchViewState extends State<SearchView> {
       body: Column(
         children: [
           _buildSearchBar(),
-          _buildCategoryFilters(),
           Expanded(child: _buildBody()),
         ],
       ),
