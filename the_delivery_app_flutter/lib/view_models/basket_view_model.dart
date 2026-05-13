@@ -35,4 +35,10 @@ class BasketViewModel extends ChangeNotifier {
     notifyListeners();
     _repository.updateBasket(_state.basket);
   }
+
+  void clearBasket() {
+    _state = const BasketState(basket: Basket(items: []));
+    notifyListeners();
+    _repository.updateBasket(_state.basket);
+  }
 }
