@@ -45,14 +45,36 @@ class MapView extends StatelessWidget {
   }
 
   Widget _buildRestaurantTile(BuildContext context, Restaurant restaurant) {
-    return ListTile(
-      leading: const Icon(Icons.restaurant, color: Colors.deepOrange),
-      title: Text(restaurant.name),
-      trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
           builder: (_) => RestaurantView(restaurant: restaurant, onAddToBasket: onAddToBasket),
+        ),
+      ),
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade200),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 6, offset: const Offset(0, 2))],
+        ),
+        child: Row(
+          children: [
+            const CircleAvatar(
+              radius: 22,
+              backgroundColor: Color(0xFFFFE5DC),
+              child: Icon(Icons.restaurant, color: Colors.deepOrange),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(restaurant.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            ),
+            const Icon(Icons.chevron_right, color: Colors.grey),
+          ],
         ),
       ),
     );
