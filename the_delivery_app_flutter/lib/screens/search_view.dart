@@ -264,63 +264,6 @@ class _SearchViewState extends State<SearchView> {
     );
   }
 
-  Widget _buildResultTile(BuildContext context, Food food) {
-    return ListTile(
-      onTap: int.tryParse(food.restaurant.id) != null
-          ? () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => RestaurantView(
-                    restaurant: food.restaurant,
-                    onAddToBasket: widget.onAddToBasket,
-                  ),
-                ),
-              )
-          : null,
-      leading: food.imageUrl.isNotEmpty
-          ? ClipRRect(
-              borderRadius: BorderRadius.circular(6),
-              child: food.imageUrl.startsWith('http')
-                  ? Image.network(food.imageUrl, width: 40, height: 40, fit: BoxFit.cover,
-                      errorBuilder: (_, _, _) => const Icon(Icons.fastfood, color: Colors.deepOrange))
-                  : Image.asset(food.imageUrl, width: 40, height: 40, fit: BoxFit.cover,
-                      errorBuilder: (_, _, _) => const Icon(Icons.fastfood, color: Colors.deepOrange)),
-            )
-          : const Icon(Icons.fastfood, color: Colors.deepOrange),
-      title: Text(food.name),
-      subtitle: Text(food.restaurant.name),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            '£${food.price.toStringAsFixed(2)}',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
-              color: Colors.deepOrange,
-            ),
-          ),
-          if (widget.onAddToBasket != null) ...[
-            const SizedBox(width: 4),
-            IconButton(
-              icon: const Icon(Icons.add_shopping_cart, color: Colors.deepOrange),
-              onPressed: () {
-                widget.onAddToBasket!(food);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${food.name} added to basket'),
-                    duration: const Duration(seconds: 2),
-                    backgroundColor: Colors.deepOrange,
-                  ),
-                );
-              },
-              tooltip: 'Add to basket',
-            ),
-          ],
-        ],
-      ),
-    );
-  }
 
   Widget _buildBody() {
     if (widget.state.isLoading) {
