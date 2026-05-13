@@ -12,8 +12,9 @@ class FeedView extends StatelessWidget {
   final VoidCallback? onLoadMore;
   final VoidCallback? onDeals;
   final VoidCallback? onSearchTap;
+  final VoidCallback? onSeeMap;
 
-  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals, this.onSearchTap});
+  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals, this.onSearchTap, this.onSeeMap});
 
   Widget _buildHeader() {
     return Padding(
@@ -153,9 +154,9 @@ class FeedView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Near You', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              if (onDeals != null)
+              if (onSeeMap != null)
                 TextButton(
-                  onPressed: onDeals,
+                  onPressed: onSeeMap,
                   child: const Text('See all', style: TextStyle(color: Colors.deepOrange)),
                 ),
             ],
