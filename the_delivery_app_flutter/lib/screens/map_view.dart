@@ -61,11 +61,17 @@ class MapView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Map')),
+      backgroundColor: const Color(0xFFFAF7F2),
+      appBar: AppBar(
+        title: const Text('Map', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: const Color(0xFFFAF7F2),
+        foregroundColor: Colors.black,
+        elevation: 0,
+      ),
       body: Column(
         children: [
           _buildMap(),
-          const Divider(),
+          const SizedBox(height: 8),
           Expanded(
             child: state.restaurants.isEmpty
                 ? const Center(child: Text('No restaurants nearby.'))
