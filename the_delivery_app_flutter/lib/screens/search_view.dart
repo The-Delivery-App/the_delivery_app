@@ -99,14 +99,14 @@ class _SearchViewState extends State<SearchView> {
               borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
               child: imageUrl.isNotEmpty
                   ? (imageUrl.startsWith('http')
-                      ? Image.network(imageUrl, height: 160, width: double.infinity, fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => Container(height: 160, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 48)))
-                      : Image.asset(imageUrl, height: 160, width: double.infinity, fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => Container(height: 160, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 48))))
-                  : Container(height: 160, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 48)),
+                      ? Image.network(imageUrl, height: 100, width: double.infinity, fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(height: 100, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 36)))
+                      : Image.asset(imageUrl, height: 100, width: double.infinity, fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(height: 100, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 36))))
+                  : Container(height: 100, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 36)),
             ),
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -114,22 +114,22 @@ class _SearchViewState extends State<SearchView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Text(restaurant.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+                        child: Text(restaurant.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                       ),
                       const SizedBox(width: 8),
-                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                      const Icon(Icons.star, color: Colors.amber, size: 14),
                       const SizedBox(width: 2),
-                      Text(rating.toStringAsFixed(1), style: const TextStyle(fontWeight: FontWeight.bold)),
+                      Text(rating.toStringAsFixed(1), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                     ],
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(Icons.access_time, color: Colors.grey, size: 14),
-                      Text(' $minutes min', style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                      const Icon(Icons.access_time, color: Colors.grey, size: 12),
+                      Text(' $minutes min', style: const TextStyle(color: Colors.grey, fontSize: 12)),
                       const SizedBox(width: 12),
-                      const Icon(Icons.delivery_dining, color: Colors.grey, size: 14),
-                      const Text(' £1.99 delivery', style: TextStyle(color: Colors.grey, fontSize: 13)),
+                      const Icon(Icons.delivery_dining, color: Colors.grey, size: 12),
+                      const Text(' £1.99 delivery', style: TextStyle(color: Colors.grey, fontSize: 12)),
                     ],
                   ),
                 ],
