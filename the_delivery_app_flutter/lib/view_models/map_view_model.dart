@@ -1,11 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
+import '../APIs/i_map_api_service.dart';
 import '../state/map_state.dart';
 
 class MapViewModel extends ChangeNotifier {
+  final IMapAPIService _apiService;
+  StreamSubscription<dynamic>? _locationSub;
+
   MapState _state = const MapState(restaurants: []);
 
-  MapViewModel();
+  MapViewModel({required IMapAPIService apiService}) : _apiService = apiService;
 
   MapState getState() => _state;
 
