@@ -210,7 +210,7 @@ class _SearchViewState extends State<SearchView> {
           children: [
             Icon(Icons.search, size: 48, color: Colors.grey),
             SizedBox(height: 12),
-            Text('Type to search for food.', style: TextStyle(color: Colors.grey)),
+            Text('Type to search for restaurants or dishes.', style: TextStyle(color: Colors.grey)),
           ],
         ),
       );
