@@ -104,6 +104,7 @@ class FeedView extends StatelessWidget {
     final minutes = foods.first.deliveryTime.inMinutes;
 
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: int.tryParse(restaurant.id) != null
           ? () => Navigator.push(context, MaterialPageRoute(
                 builder: (_) => RestaurantView(restaurant: restaurant, onAddToBasket: onAddToBasket),
