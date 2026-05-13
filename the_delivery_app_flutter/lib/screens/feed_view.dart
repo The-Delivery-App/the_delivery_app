@@ -142,6 +142,38 @@ class FeedView extends StatelessWidget {
     );
   }
 
+  Widget _buildNearYouSection(BuildContext context, List<MapEntry<Restaurant, List<Food>>> groups) {
+    if (groups.isEmpty) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Near You', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              if (onDeals != null)
+                TextButton(
+                  onPressed: onDeals,
+                  child: const Text('See all', style: TextStyle(color: Colors.deepOrange)),
+                ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 195,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: groups.length,
+            itemBuilder: (ctx, i) => _buildNearYouCard(ctx, groups[i].key, groups[i].value),
+          ),
+        ),
+      ],
+    );
+  }
+
   List<MapEntry<Restaurant, List<Food>>> _groupByRestaurant(List<Food> items) {
     final map = <String, MapEntry<Restaurant, List<Food>>>{};
     for (final food in items) {
