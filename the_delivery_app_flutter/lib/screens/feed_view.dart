@@ -15,6 +15,38 @@ class FeedView extends StatelessWidget {
 
   const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals, this.onSearchTap});
 
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      child: Row(
+        children: [
+          const Icon(Icons.location_on, color: Colors.deepOrange, size: 20),
+          const SizedBox(width: 4),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Delivering to', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                Row(
+                  children: [
+                    Text('London, UK', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                    SizedBox(width: 4),
+                    Icon(Icons.keyboard_arrow_down, size: 18),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          CircleAvatar(
+            radius: 18,
+            backgroundColor: Color(0xFFFFE0D0),
+            child: Icon(Icons.person, color: Colors.deepOrange, size: 20),
+          ),
+        ],
+      ),
+    );
+  }
+
   List<MapEntry<Restaurant, List<Food>>> _groupByRestaurant(List<Food> items) {
     final map = <String, MapEntry<Restaurant, List<Food>>>{};
     for (final food in items) {
