@@ -99,7 +99,9 @@ class FeedView extends StatelessWidget {
   }
 
   Widget _buildNearYouCard(BuildContext context, Restaurant restaurant, List<Food> foods) {
-    final imageUrl = foods.first.imageUrl;
+    final imageUrl = foods.first.restaurantImageUrl.isNotEmpty
+        ? foods.first.restaurantImageUrl
+        : foods.first.imageUrl;
     final rating = foods.map((f) => f.rating).reduce((a, b) => a + b) / foods.length;
     final minutes = foods.first.deliveryTime.inMinutes;
 
