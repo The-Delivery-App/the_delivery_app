@@ -55,14 +55,16 @@ class FeedView extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: Colors.grey[100],
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 6, offset: const Offset(0, 2))],
         ),
-        child: const Row(
+        child: Row(
           children: [
-            Icon(Icons.search, color: Colors.grey),
-            SizedBox(width: 8),
-            Text('Search restaurants or dishes...', style: TextStyle(color: Colors.grey)),
+            Icon(Icons.search, color: Colors.grey.shade600),
+            const SizedBox(width: 8),
+            Text('Search restaurants or dishes...', style: TextStyle(color: Colors.grey.shade600)),
           ],
         ),
       ),
