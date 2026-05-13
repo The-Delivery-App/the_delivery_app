@@ -207,29 +207,6 @@ class _SearchViewState extends State<SearchView> {
     );
   }
 
-  Widget _buildRestaurantTile(BuildContext context, Restaurant restaurant) {
-    return ListTile(
-      leading: const CircleAvatar(
-        backgroundColor: Colors.deepOrange,
-        child: Icon(Icons.restaurant, color: Colors.white, size: 20),
-      ),
-      title: Text(restaurant.name, style: const TextStyle(fontWeight: FontWeight.w600)),
-      subtitle: const Text('Restaurant', style: TextStyle(fontSize: 12, color: Colors.grey)),
-      trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-      onTap: int.tryParse(restaurant.id) != null
-          ? () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => RestaurantView(
-                    restaurant: restaurant,
-                    onAddToBasket: widget.onAddToBasket,
-                  ),
-                ),
-              )
-          : null,
-    );
-  }
-
   Widget _buildDishCard(BuildContext context, Food food) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
