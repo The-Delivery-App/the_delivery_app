@@ -382,34 +382,34 @@ class _SearchViewState extends State<SearchView> {
         ),
       );
     }
-    final restaurants = _extractRestaurants(widget.state.results, widget.state.query);
-    final foods = widget.state.results;
-    final hasRestaurants = restaurants.isNotEmpty;
-    final itemCount = (hasRestaurants ? 1 + restaurants.length : 0) +
-        (foods.isNotEmpty ? 1 + foods.length : 0);
-    return ListView.builder(
-      itemCount: itemCount,
-      itemBuilder: (context, index) {
-        if (hasRestaurants) {
-          if (index == 0) {
-            return const Padding(
-              padding: EdgeInsets.fromLTRB(16, 12, 16, 4),
-              child: Text('Restaurants', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.grey)),
-            );
-          }
-          if (index <= restaurants.length) {
-            return _buildRestaurantTile(context, restaurants[index - 1]);
-          }
-          index -= 1 + restaurants.length;
-        }
-        if (index == 0) {
-          return const Padding(
-            padding: EdgeInsets.fromLTRB(16, 12, 16, 4),
-            child: Text('Food Items', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.grey)),
-          );
-        }
-        return _buildResultTile(context, foods[index - 1]);
-      },
+    final foods = widget.state.results.where((f) => _matchesCategory(f, _selectedCategory)).toList();
+    final grouped = <String, MapEntry<Restaurant, List<Food>>>{};
+    for (final food in foods) {
+      if (grouped.containsKey(food.restaurant.id)) {
+        grouped[food.restaurant.id]!.value.add(food);
+      } else {
+        grouped[food.restaurant.id] = MapEntry(food.restaurant, [food]);
+      }
+    }
+    final restaurants = grouped.values.toList();
+
+    return ListView(
+      children: [
+        if (restaurants.isNotEmpty) ...[
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 4),
+            child: Text('Restaurants', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          ),
+          ...restaurants.map((e) => _buildRestaurantCard(context, e.key, e.value)),
+        ],
+        if (foods.isNotEmpty) ...[
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 4),
+            child: Text('Dishes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          ),
+          ...foods.map((f) => _buildDishCard(context, f)),
+        ],
+      ],
     );
   }
 
