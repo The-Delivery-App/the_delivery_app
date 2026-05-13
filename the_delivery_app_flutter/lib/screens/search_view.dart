@@ -102,6 +102,79 @@ class _SearchViewState extends State<SearchView> {
         .toList();
   }
 
+  Widget _buildRestaurantCard(BuildContext context, Restaurant restaurant, List<Food> foods) {
+    final imageUrl = foods.first.restaurantImageUrl.isNotEmpty
+        ? foods.first.restaurantImageUrl
+        : foods.first.imageUrl;
+    final rating = foods.map((f) => f.rating).reduce((a, b) => a + b) / foods.length;
+    final minutes = foods.first.deliveryTime.inMinutes;
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: int.tryParse(restaurant.id) != null
+          ? () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => RestaurantView(restaurant: restaurant, onAddToBasket: widget.onAddToBasket),
+                ),
+              )
+          : null,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6, offset: const Offset(0, 2))],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              child: imageUrl.isNotEmpty
+                  ? (imageUrl.startsWith('http')
+                      ? Image.network(imageUrl, height: 160, width: double.infinity, fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(height: 160, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 48)))
+                      : Image.asset(imageUrl, height: 160, width: double.infinity, fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(height: 160, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 48))))
+                  : Container(height: 160, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 48)),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(restaurant.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+                      ),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                      const SizedBox(width: 2),
+                      Text(rating.toStringAsFixed(1), style: const TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(Icons.access_time, color: Colors.grey, size: 14),
+                      Text(' $minutes min', style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                      const SizedBox(width: 12),
+                      const Icon(Icons.delivery_dining, color: Colors.grey, size: 14),
+                      const Text(' £1.99 delivery', style: TextStyle(color: Colors.grey, fontSize: 13)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildRestaurantTile(BuildContext context, Restaurant restaurant) {
     return ListTile(
       leading: const CircleAvatar(
