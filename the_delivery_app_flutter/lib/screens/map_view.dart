@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../models/food.dart';
 import '../models/restaurant.dart';
 import '../state/map_state.dart';
 import 'restaurant_view.dart';
 
 class MapView extends StatelessWidget {
   final MapState state;
+  final void Function(Food)? onAddToBasket;
 
-  const MapView({super.key, required this.state});
+  const MapView({super.key, required this.state, this.onAddToBasket});
 
   Widget _buildMapPlaceholder() {
     final location = state.currentLocation;
@@ -41,7 +43,7 @@ class MapView extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => RestaurantView(restaurant: restaurant),
+          builder: (_) => RestaurantView(restaurant: restaurant, onAddToBasket: onAddToBasket),
         ),
       ),
     );
