@@ -293,7 +293,7 @@ class _SearchViewState extends State<SearchView> {
         ),
       );
     }
-    final foods = widget.state.results.where((f) => _matchesCategory(f, _selectedCategory)).toList();
+    final foods = widget.state.results;
     final grouped = <String, MapEntry<Restaurant, List<Food>>>{};
     for (final food in foods) {
       if (grouped.containsKey(food.restaurant.id)) {
