@@ -23,7 +23,10 @@ class MapAPIService implements IMapAPIService {
   }
 
   @override
-  Stream<Location> get locationStream async* {
-    // No GPS service connected yet — emits nothing until wired up.
-  }
+  Stream<Location> get locationStream => Geolocator.getPositionStream(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.medium,
+          distanceFilter: 50,
+        ),
+      ).map((pos) => Location(pos.latitude, pos.longitude));
 }
