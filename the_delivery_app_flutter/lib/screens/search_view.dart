@@ -416,30 +416,20 @@ class _SearchViewState extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        title: TextField(
-          controller: _controller,
-          autofocus: true,
-          decoration: InputDecoration(
-            hintText: 'Search food...',
-            border: InputBorder.none,
-            suffixIcon: _controller.text.isNotEmpty
-                ? IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      _controller.clear();
-                      widget.onSearch('');
-                    },
-                  )
-                : null,
-          ),
-          onChanged: (value) {
-            setState(() {});
-            widget.onSearch(value);
-          },
-        ),
+        title: const Text('Search', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+        backgroundColor: const Color(0xFFF5F5F5),
+        elevation: 0,
+        foregroundColor: Colors.black,
       ),
-      body: _buildBody(),
+      body: Column(
+        children: [
+          _buildSearchBar(),
+          _buildCategoryFilters(),
+          Expanded(child: _buildBody()),
+        ],
+      ),
     );
   }
 }
