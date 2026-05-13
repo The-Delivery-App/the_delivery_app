@@ -256,8 +256,12 @@ class _RestaurantViewState extends State<RestaurantView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFAF7F2),
       appBar: AppBar(
         title: Text(widget.restaurant.name),
+        backgroundColor: const Color(0xFFFAF7F2),
+        foregroundColor: Colors.black,
+        elevation: 0,
         actions: [
           IconButton(
             icon: Icon(
