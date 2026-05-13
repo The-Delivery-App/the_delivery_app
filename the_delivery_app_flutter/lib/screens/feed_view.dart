@@ -115,30 +115,42 @@ class FeedView extends StatelessWidget {
       child: Container(
         width: 180,
         margin: const EdgeInsets.only(right: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: const Offset(0, 2))],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
               child: imageUrl.isNotEmpty
                   ? (imageUrl.startsWith('http')
-                      ? Image.network(imageUrl, width: 180, height: 120, fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => Container(width: 180, height: 120, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 40)))
-                      : Image.asset(imageUrl, width: 180, height: 120, fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => Container(width: 180, height: 120, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 40))))
-                  : Container(width: 180, height: 120, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 40)),
+                      ? Image.network(imageUrl, width: 180, height: 110, fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(width: 180, height: 110, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 40)))
+                      : Image.asset(imageUrl, width: 180, height: 110, fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(width: 180, height: 110, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 40))))
+                  : Container(width: 180, height: 110, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 40)),
             ),
-            const SizedBox(height: 8),
-            Text(restaurant.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14), maxLines: 1, overflow: TextOverflow.ellipsis),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                const Icon(Icons.star, size: 14, color: Colors.amber),
-                Text(' ${rating.toStringAsFixed(1)}', style: const TextStyle(fontSize: 12)),
-                const SizedBox(width: 8),
-                const Icon(Icons.access_time, size: 14, color: Colors.grey),
-                Text(' $minutes min', style: const TextStyle(fontSize: 12, color: Colors.grey)),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(restaurant.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14), maxLines: 1, overflow: TextOverflow.ellipsis),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, size: 14, color: Colors.amber),
+                      Text(' ${rating.toStringAsFixed(1)}', style: const TextStyle(fontSize: 12)),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.access_time, size: 14, color: Colors.grey),
+                      Text(' $minutes min', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
