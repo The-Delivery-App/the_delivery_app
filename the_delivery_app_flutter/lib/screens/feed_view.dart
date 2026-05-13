@@ -287,6 +287,7 @@ class FeedView extends StatelessWidget {
       return Scaffold(body: _buildError(state.errorMessage!));
     }
     final groups = _groupByRestaurant(state.feedItems);
+    final nearYou = groups.take(5).toList();
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -303,7 +304,7 @@ class FeedView extends StatelessWidget {
               _buildHeader(),
               _buildSearchBar(context),
               if (onDeals != null) _buildPromoBanner(context),
-              _buildNearYouSection(context, groups),
+              _buildNearYouSection(context, nearYou),
               _buildAllRestaurantsSection(context, groups),
               if (state.isLoadingMore)
                 const Padding(
