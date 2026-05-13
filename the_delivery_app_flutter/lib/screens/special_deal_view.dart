@@ -52,7 +52,13 @@ class SpecialDealView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Special Deals')),
+      backgroundColor: const Color(0xFFFAF7F2),
+      appBar: AppBar(
+        title: const Text('Special Deals'),
+        backgroundColor: const Color(0xFFFAF7F2),
+        foregroundColor: Colors.black,
+        elevation: 0,
+      ),
       body: state.isLoading
           ? const Center(child: CircularProgressIndicator())
           : state.deals.isEmpty
