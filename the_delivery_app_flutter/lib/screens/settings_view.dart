@@ -83,7 +83,13 @@ class _SettingsViewState extends State<SettingsView> {
       builder: (context, _) {
         final settings = widget.viewModel.getState().settings;
         return Scaffold(
-          appBar: AppBar(title: const Text('Settings')),
+          backgroundColor: const Color(0xFFFAF7F2),
+          appBar: AppBar(
+            title: const Text('Settings'),
+            backgroundColor: const Color(0xFFFAF7F2),
+            foregroundColor: Colors.black,
+            elevation: 0,
+          ),
           body: ListView(
             children: [
               _buildSectionHeader('PREFERENCES'),
