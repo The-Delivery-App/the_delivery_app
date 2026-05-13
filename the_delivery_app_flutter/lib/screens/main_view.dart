@@ -165,7 +165,7 @@ class _MainViewState extends State<MainView> {
             selectedItemColor: Colors.deepOrange,
             unselectedItemColor: Colors.grey,
             items: [
-              const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Feed'),
+              const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
               const BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
               const BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
               BottomNavigationBarItem(
