@@ -45,6 +45,54 @@ class _SearchViewState extends State<SearchView> {
     }
   }
 
+  Widget _buildFilterChip(String label) {
+    final isSelected = _selectedCategory == label;
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: GestureDetector(
+        onTap: () => setState(() => _selectedCategory = label),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isSelected ? Colors.deepOrange : Colors.grey[300]!,
+              width: isSelected ? 1.5 : 1,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (isSelected) ...[
+                const Icon(Icons.check, size: 16, color: Colors.deepOrange),
+                const SizedBox(width: 4),
+              ],
+              Text(
+                label,
+                style: TextStyle(
+                  color: isSelected ? Colors.deepOrange : Colors.grey[700],
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryFilters() {
+    return SizedBox(
+      height: 44,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        children: _categories.map(_buildFilterChip).toList(),
+      ),
+    );
+  }
+
   List<Restaurant> _extractRestaurants(List<Food> results, String query) {
     final q = query.trim().toLowerCase();
     final seen = <String>{};
