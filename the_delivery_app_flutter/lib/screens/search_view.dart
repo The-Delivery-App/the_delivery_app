@@ -18,11 +18,31 @@ class SearchView extends StatefulWidget {
 
 class _SearchViewState extends State<SearchView> {
   final TextEditingController _controller = TextEditingController();
+  String _selectedCategory = 'All';
+
+  static const _categories = ['All', 'Burgers', 'Pizza', 'Sushi', 'Healthy'];
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  bool _matchesCategory(Food food, String category) {
+    if (category == 'All') return true;
+    final name = food.name.toLowerCase();
+    switch (category) {
+      case 'Burgers':
+        return name.contains('burger');
+      case 'Pizza':
+        return name.contains('pizza');
+      case 'Sushi':
+        return name.contains('sushi') || name.contains('roll') || name.contains('sashimi');
+      case 'Healthy':
+        return name.contains('salad') || name.contains('bowl') || name.contains('smoothie');
+      default:
+        return true;
+    }
   }
 
   List<Restaurant> _extractRestaurants(List<Food> results, String query) {
