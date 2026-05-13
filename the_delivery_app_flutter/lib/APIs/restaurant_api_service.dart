@@ -13,7 +13,7 @@ class RestaurantAPIService implements IRestaurantAPIService {
   RestaurantAPIService({required Client client}) : _client = client;
 
   @override
-  Future<List<Food>> loadMenu(String restaurantId) async {
+  Future<List<Food>> loadMenu(String restaurantId, String restaurantName) async {
     final id = int.tryParse(restaurantId);
     if (id == null) return [];
 
@@ -48,7 +48,7 @@ class RestaurantAPIService implements IRestaurantAPIService {
         restaurantImageUrl: '',
         restaurant: app.Restaurant(
           id: (map['restId'] as int? ?? id).toString(),
-          name: '',
+          name: restaurantName,
         ),
         recentOrders: (map['estimatedOrders'] as int?) ?? 0,
         deliveryTime: const Duration(minutes: 30),
