@@ -15,10 +15,21 @@ class MapViewModel extends ChangeNotifier {
 
   MapState getState() => _state;
 
-  void updateLocation() {
-    // No GPS service connected yet — location stays null until wired up.
-    _state = MapState(currentLocation: null, restaurants: _state.restaurants);
+  Future<void> updateLocation() async {
+    final location = await _apiService.getCurrentLocation();
+    _state = MapState(currentLocation: location, restaurants: _state.restaurants);
     notifyListeners();
+    _locationSub?.cancel();
+    _locationSub = _apiService.locationStream.listen((loc) {
+      _state = MapState(currentLocation: loc, restaurants: _state.restaurants);
+      notifyListeners();
+    });
+  }
+
+  @override
+  void dispose() {
+    _locationSub?.cancel();
+    super.dispose();
   }
 
   Future<void> loadRestaurantsOnMap() async {
