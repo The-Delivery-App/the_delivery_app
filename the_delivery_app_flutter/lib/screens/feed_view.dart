@@ -225,6 +225,21 @@ class FeedView extends StatelessWidget {
     );
   }
 
+  Widget _buildAllRestaurantsSection(BuildContext context, List<MapEntry<Restaurant, List<Food>>> groups) {
+    if (groups.isEmpty) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.fromLTRB(16, 16, 16, 12),
+          child: Text('All Restaurants', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        ),
+        ...groups.map((e) => _buildRestaurantListTile(context, e.key, e.value)),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
   List<MapEntry<Restaurant, List<Food>>> _groupByRestaurant(List<Food> items) {
     final map = <String, MapEntry<Restaurant, List<Food>>>{};
     for (final food in items) {
