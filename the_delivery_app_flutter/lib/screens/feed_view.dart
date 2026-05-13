@@ -160,7 +160,7 @@ class FeedView extends StatelessWidget {
               if (onSeeMap != null)
                 TextButton(
                   onPressed: onSeeMap,
-                  child: const Text('See all', style: TextStyle(color: Colors.deepOrange)),
+                  child: const Text('Show on map', style: TextStyle(color: Colors.deepOrange)),
                 ),
             ],
           ),
