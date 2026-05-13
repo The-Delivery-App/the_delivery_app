@@ -123,17 +123,6 @@ class _SearchViewState extends State<SearchView> {
     );
   }
 
-  Widget _buildCategoryFilters() {
-    return SizedBox(
-      height: 44,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        children: _categories.map(_buildFilterChip).toList(),
-      ),
-    );
-  }
-
   Widget _buildRestaurantCard(BuildContext context, Restaurant restaurant, List<Food> foods) {
     final imageUrl = foods.first.restaurantImageUrl.isNotEmpty
         ? foods.first.restaurantImageUrl
