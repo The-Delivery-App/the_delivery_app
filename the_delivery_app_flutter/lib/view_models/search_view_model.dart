@@ -35,10 +35,12 @@ class SearchViewModel extends ChangeNotifier {
       return;
     }
 
+    final seenIds = <String>{};
     final localResults = _items.where((food) {
-      return food.name.toLowerCase().contains(q) ||
+      final matches = food.name.toLowerCase().contains(q) ||
           food.restaurant.name.toLowerCase().contains(q) ||
           food.tags.any((tag) => tag.toLowerCase().contains(q));
+      return matches && seenIds.add(food.id);
     }).toList();
 
     final useBackend = q.length >= 3 && _repository != null;
@@ -52,9 +54,11 @@ class SearchViewModel extends ChangeNotifier {
     if (useBackend) {
       _repository.search(query: q, location: _defaultLocation).then((backendResults) {
         if (_state.query != query) return;
+        final seen = <String>{};
+        final unique = backendResults.where((f) => seen.add(f.id)).toList();
         _state = SearchState(
           query: query,
-          results: backendResults.isNotEmpty ? backendResults : localResults,
+          results: unique.isNotEmpty ? unique : localResults,
           isLoading: false,
         );
         notifyListeners();
