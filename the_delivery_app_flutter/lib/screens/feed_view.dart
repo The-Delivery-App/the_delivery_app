@@ -68,6 +68,35 @@ class FeedView extends StatelessWidget {
     );
   }
 
+  Widget _buildPromoBanner(BuildContext context) {
+    return GestureDetector(
+      onTap: onDeals,
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.deepOrange,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: const Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Special Deals', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                  SizedBox(height: 4),
+                  Text('Check out today\'s offers', style: TextStyle(color: Colors.white70, fontSize: 13)),
+                ],
+              ),
+            ),
+            Icon(Icons.local_offer, color: Colors.white, size: 32),
+          ],
+        ),
+      ),
+    );
+  }
+
   List<MapEntry<Restaurant, List<Food>>> _groupByRestaurant(List<Food> items) {
     final map = <String, MapEntry<Restaurant, List<Food>>>{};
     for (final food in items) {
