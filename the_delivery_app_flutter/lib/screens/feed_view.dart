@@ -170,9 +170,17 @@ class FeedView extends StatelessWidget {
             children: [
               const Text('Near You', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               if (onSeeMap != null)
-                TextButton(
+                ElevatedButton.icon(
                   onPressed: onSeeMap,
-                  child: const Text('Show on map', style: TextStyle(color: Colors.deepOrange)),
+                  icon: const Icon(Icons.map, size: 16),
+                  label: const Text('Show on map'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepOrange,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  ),
                 ),
             ],
           ),
