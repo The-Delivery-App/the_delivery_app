@@ -153,7 +153,10 @@ class _MainViewState extends State<MainView> {
           ),
         );
       case 3:
-        return BasketView(viewModel: _basketViewModel);
+        return BasketView(
+          viewModel: _basketViewModel,
+          onBrowseRestaurants: () => setState(() => _selectedIndex = 0),
+        );
       case 4:
         return AccountView(settingsViewModel: _settingsViewModel);
       default:
