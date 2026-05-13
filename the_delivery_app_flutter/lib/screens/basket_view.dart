@@ -23,6 +23,67 @@ class _BasketViewState extends State<BasketView> {
     super.dispose();
   }
 
+  List<MapEntry<Restaurant, List<MapEntry<Food, int>>>> _groupByRestaurant(List<Food> items) {
+    final qtyMap = <String, MapEntry<Food, int>>{};
+    for (final food in items) {
+      if (qtyMap.containsKey(food.id)) {
+        qtyMap[food.id] = MapEntry(food, qtyMap[food.id]!.value + 1);
+      } else {
+        qtyMap[food.id] = MapEntry(food, 1);
+      }
+    }
+    final restMap = <String, MapEntry<Restaurant, List<MapEntry<Food, int>>>>{};
+    for (final entry in qtyMap.values) {
+      final restId = entry.key.restaurant.id;
+      if (restMap.containsKey(restId)) {
+        restMap[restId]!.value.add(entry);
+      } else {
+        restMap[restId] = MapEntry(entry.key.restaurant, [entry]);
+      }
+    }
+    return restMap.values.toList();
+  }
+
+  Widget _buildMultiRestaurantBanner() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF3CD),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFFFE082)),
+      ),
+      child: const Row(
+        children: [
+          Icon(Icons.info_outline, color: Color(0xFFE65100), size: 20),
+          SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'Items from multiple restaurants — all in one order!',
+              style: TextStyle(color: Color(0xFF6D4C41), fontSize: 13),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRestaurantSection(Restaurant restaurant, List<MapEntry<Food, int>> items) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 6),
+          child: Text(
+            restaurant.name.isNotEmpty ? restaurant.name : 'Restaurant',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+        ),
+        ...items.map((e) => _buildItemCard(e.key, e.value)),
+      ],
+    );
+  }
+
   Widget _buildQtyButton(IconData icon, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
