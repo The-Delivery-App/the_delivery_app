@@ -34,6 +34,8 @@ dependencies:
   serverpod_flutter: 3.4.8
   serverpod_auth_idp_flutter: 3.4.8
   geolocator: ^13.0.0
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.0
 
 dev_dependencies:
   flutter_lints: '>=3.0.0 <7.0.0'
