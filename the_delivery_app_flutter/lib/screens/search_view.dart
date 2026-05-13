@@ -82,13 +82,35 @@ class _SearchViewState extends State<SearchView> {
           : const Icon(Icons.fastfood, color: Colors.deepOrange),
       title: Text(food.name),
       subtitle: Text(food.restaurant.name),
-      trailing: Text(
-        '£${food.price.toStringAsFixed(2)}',
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 15,
-          color: Colors.deepOrange,
-        ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '£${food.price.toStringAsFixed(2)}',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+              color: Colors.deepOrange,
+            ),
+          ),
+          if (widget.onAddToBasket != null) ...[
+            const SizedBox(width: 4),
+            IconButton(
+              icon: const Icon(Icons.add_shopping_cart, color: Colors.deepOrange),
+              onPressed: () {
+                widget.onAddToBasket!(food);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${food.name} added to basket'),
+                    duration: const Duration(seconds: 2),
+                    backgroundColor: Colors.deepOrange,
+                  ),
+                );
+              },
+              tooltip: 'Add to basket',
+            ),
+          ],
+        ],
       ),
     );
   }
