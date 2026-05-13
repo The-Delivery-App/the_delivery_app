@@ -296,7 +296,7 @@ class FeedView extends StatelessWidget {
     final groups = _groupByRestaurant(state.feedItems);
     final nearYou = groups.take(5).toList();
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFAF7F2),
       body: SafeArea(
         child: NotificationListener<ScrollNotification>(
           onNotification: (notification) {
