@@ -130,6 +130,7 @@ class _MainViewState extends State<MainView> {
               );
             },
             onSearchTap: () => setState(() => _selectedIndex = 1),
+            onSeeMap: () => setState(() => _selectedIndex = 2),
           ),
         );
       case 1:
