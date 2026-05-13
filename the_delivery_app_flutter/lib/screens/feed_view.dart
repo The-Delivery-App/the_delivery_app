@@ -11,8 +11,9 @@ class FeedView extends StatelessWidget {
   final VoidCallback? onRetry;
   final VoidCallback? onLoadMore;
   final VoidCallback? onDeals;
+  final VoidCallback? onSearchTap;
 
-  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals});
+  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals, this.onSearchTap});
 
   List<MapEntry<Restaurant, List<Food>>> _groupByRestaurant(List<Food> items) {
     final map = <String, MapEntry<Restaurant, List<Food>>>{};
