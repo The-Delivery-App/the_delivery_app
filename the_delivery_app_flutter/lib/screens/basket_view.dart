@@ -231,6 +231,42 @@ class _BasketViewState extends State<BasketView> {
     );
   }
 
+  Widget _priceRow(String label, String value, {bool bold = false}) {
+    final style = bold
+        ? const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)
+        : const TextStyle(color: Colors.grey, fontSize: 13);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [Text(label, style: style), Text(value, style: style)],
+    );
+  }
+
+  Widget _buildPriceBreakdown(double subtotal, double deliveryFee, double serviceFee, double total) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: const Offset(0, 2))],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Price Breakdown', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+          const SizedBox(height: 12),
+          _priceRow('Subtotal', '£${subtotal.toStringAsFixed(2)}'),
+          const SizedBox(height: 6),
+          _priceRow('Delivery fee', deliveryFee == 0.0 ? 'Free' : '£${deliveryFee.toStringAsFixed(2)}'),
+          const SizedBox(height: 6),
+          _priceRow('Service fee', '£${serviceFee.toStringAsFixed(2)}'),
+          const Divider(height: 20),
+          _priceRow('Total', '£${total.toStringAsFixed(2)}', bold: true),
+        ],
+      ),
+    );
+  }
+
   Widget _buildEmptyState() {
     return const Center(
       child: Column(
