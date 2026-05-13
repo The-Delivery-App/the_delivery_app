@@ -134,15 +134,6 @@ class _SearchViewState extends State<SearchView> {
     );
   }
 
-  List<Restaurant> _extractRestaurants(List<Food> results, String query) {
-    final q = query.trim().toLowerCase();
-    final seen = <String>{};
-    return results
-        .where((f) => f.restaurant.name.toLowerCase().contains(q) && seen.add(f.restaurant.id))
-        .map((f) => f.restaurant)
-        .toList();
-  }
-
   Widget _buildRestaurantCard(BuildContext context, Restaurant restaurant, List<Food> foods) {
     final imageUrl = foods.first.restaurantImageUrl.isNotEmpty
         ? foods.first.restaurantImageUrl
