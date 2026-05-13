@@ -97,6 +97,51 @@ class FeedView extends StatelessWidget {
     );
   }
 
+  Widget _buildNearYouCard(BuildContext context, Restaurant restaurant, List<Food> foods) {
+    final imageUrl = foods.first.imageUrl;
+    final rating = foods.map((f) => f.rating).reduce((a, b) => a + b) / foods.length;
+    final minutes = foods.first.deliveryTime.inMinutes;
+
+    return GestureDetector(
+      onTap: int.tryParse(restaurant.id) != null
+          ? () => Navigator.push(context, MaterialPageRoute(
+                builder: (_) => RestaurantView(restaurant: restaurant, onAddToBasket: onAddToBasket),
+              ))
+          : null,
+      child: Container(
+        width: 180,
+        margin: const EdgeInsets.only(right: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: imageUrl.isNotEmpty
+                  ? (imageUrl.startsWith('http')
+                      ? Image.network(imageUrl, width: 180, height: 120, fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(width: 180, height: 120, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 40)))
+                      : Image.asset(imageUrl, width: 180, height: 120, fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(width: 180, height: 120, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 40))))
+                  : Container(width: 180, height: 120, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange, size: 40)),
+            ),
+            const SizedBox(height: 8),
+            Text(restaurant.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14), maxLines: 1, overflow: TextOverflow.ellipsis),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                const Icon(Icons.star, size: 14, color: Colors.amber),
+                Text(' ${rating.toStringAsFixed(1)}', style: const TextStyle(fontSize: 12)),
+                const SizedBox(width: 8),
+                const Icon(Icons.access_time, size: 14, color: Colors.grey),
+                Text(' $minutes min', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   List<MapEntry<Restaurant, List<Food>>> _groupByRestaurant(List<Food> items) {
     final map = <String, MapEntry<Restaurant, List<Food>>>{};
     for (final food in items) {
