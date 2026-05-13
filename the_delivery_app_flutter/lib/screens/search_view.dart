@@ -44,7 +44,7 @@ class _SearchViewState extends State<SearchView> {
               controller: _controller,
               autofocus: true,
               decoration: const InputDecoration(
-                hintText: 'Search food...',
+                hintText: 'Search restaurants or dishes...',
                 border: InputBorder.none,
               ),
               onChanged: (value) {
