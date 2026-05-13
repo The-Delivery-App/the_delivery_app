@@ -1,102 +1,26 @@
 import 'package:flutter/material.dart';
 
 import '../models/food.dart';
+import '../models/restaurant.dart';
 import '../view_models/basket_view_model.dart';
 
-class BasketView extends StatelessWidget {
+class BasketView extends StatefulWidget {
   final BasketViewModel viewModel;
 
   const BasketView({super.key, required this.viewModel});
 
-  List<MapEntry<Food, int>> _groupItems(List<Food> items) {
-    final map = <String, MapEntry<Food, int>>{};
-    for (final food in items) {
-      if (map.containsKey(food.id)) {
-        map[food.id] = MapEntry(food, map[food.id]!.value + 1);
-      } else {
-        map[food.id] = MapEntry(food, 1);
-      }
-    }
-    return map.values.toList();
-  }
+  @override
+  State<BasketView> createState() => _BasketViewState();
+}
 
-  Widget _placeholder() => ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          width: 56,
-          height: 56,
-          color: Colors.grey[200],
-          child: const Icon(Icons.fastfood, color: Colors.deepOrange),
-        ),
-      );
+class _BasketViewState extends State<BasketView> {
+  bool _splitEnabled = false;
+  final _emailController = TextEditingController();
 
-  Widget _buildItem(Food food, int qty) {
-    final imageUrl = food.imageUrl;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: Row(
-        children: [
-          imageUrl.isNotEmpty
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: imageUrl.startsWith('http')
-                      ? Image.network(imageUrl, width: 56, height: 56, fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => _placeholder())
-                      : Image.asset(imageUrl, width: 56, height: 56, fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => _placeholder()),
-                )
-              : _placeholder(),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(food.name, style: const TextStyle(fontWeight: FontWeight.w600)),
-                Text(food.restaurant.name,
-                    style: const TextStyle(color: Colors.grey, fontSize: 12)),
-              ],
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text('£${(food.price * qty).toStringAsFixed(2)}',
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.deepOrange)),
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.remove_circle_outline, size: 20),
-                    onPressed: () => viewModel.removeItem(food),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text('$qty', style: const TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.add_circle_outline, size: 20),
-                    onPressed: () => viewModel.addItem(food),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPricingRow(String label, String value, {bool bold = false}) {
-    final style = bold
-        ? const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)
-        : const TextStyle(color: Colors.grey);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [Text(label, style: style), Text(value, style: style)],
-    );
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
   }
 
   Widget _buildEmptyState() {
@@ -115,78 +39,16 @@ class BasketView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: viewModel,
+      listenable: widget.viewModel,
       builder: (context, _) {
-        final state = viewModel.getState();
-        final items = state.basket.items;
-
+        final items = widget.viewModel.getState().basket.items;
         if (items.isEmpty) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Basket')),
+            appBar: AppBar(title: const Text('Your Cart')),
             body: _buildEmptyState(),
           );
         }
-
-        final grouped = _groupItems(items);
-        final subtotal = items.fold(0.0, (sum, f) => sum + f.price);
-        final deliveryFee = subtotal >= 15.0 ? 0.0 : 2.99;
-        final serviceFee = subtotal * 0.10;
-        final total = subtotal + deliveryFee + serviceFee;
-
-        return Scaffold(
-          appBar: AppBar(title: const Text('Basket')),
-          body: ListView(
-            children: [
-              ...grouped.map((e) => _buildItem(e.key, e.value)),
-              const Divider(height: 1),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    _buildPricingRow('Subtotal', '£${subtotal.toStringAsFixed(2)}'),
-                    const SizedBox(height: 6),
-                    _buildPricingRow('Delivery fee',
-                        deliveryFee == 0.0 ? 'Free' : '£${deliveryFee.toStringAsFixed(2)}'),
-                    const SizedBox(height: 6),
-                    _buildPricingRow('Service fee (10%)', '£${serviceFee.toStringAsFixed(2)}'),
-                    const Divider(height: 24),
-                    _buildPricingRow('Total', '£${total.toStringAsFixed(2)}', bold: true),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          bottomNavigationBar: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepOrange,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size.fromHeight(48),
-                ),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                      title: const Text('Place Order'),
-                      content: const Text(
-                        'To place an order, please sign in and add a delivery address in your account.',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                child: const Text('Place Order', style: TextStyle(fontSize: 16)),
-              ),
-            ),
-          ),
-        );
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
       },
     );
   }
