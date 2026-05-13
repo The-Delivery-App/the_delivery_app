@@ -198,6 +198,63 @@ class _SearchViewState extends State<SearchView> {
     );
   }
 
+  Widget _buildDishCard(BuildContext context, Food food) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: const Offset(0, 2))],
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: food.imageUrl.isNotEmpty
+                ? (food.imageUrl.startsWith('http')
+                    ? Image.network(food.imageUrl, width: 60, height: 60, fit: BoxFit.cover,
+                        errorBuilder: (_, _, _) => Container(width: 60, height: 60, color: Colors.grey[200], child: const Icon(Icons.fastfood, color: Colors.deepOrange)))
+                    : Image.asset(food.imageUrl, width: 60, height: 60, fit: BoxFit.cover,
+                        errorBuilder: (_, _, _) => Container(width: 60, height: 60, color: Colors.grey[200], child: const Icon(Icons.fastfood, color: Colors.deepOrange))))
+                : Container(width: 60, height: 60, color: Colors.grey[200], child: const Icon(Icons.fastfood, color: Colors.deepOrange)),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(food.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                const SizedBox(height: 4),
+                Text(food.restaurant.name, style: const TextStyle(color: Colors.grey, fontSize: 13)),
+              ],
+            ),
+          ),
+          Text(
+            '£${food.price.toStringAsFixed(2)}',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          if (widget.onAddToBasket != null) ...[
+            const SizedBox(width: 4),
+            IconButton(
+              icon: const Icon(Icons.add_shopping_cart, color: Colors.deepOrange),
+              onPressed: () {
+                widget.onAddToBasket!(food);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${food.name} added to basket'),
+                    duration: const Duration(seconds: 2),
+                    backgroundColor: Colors.deepOrange,
+                  ),
+                );
+              },
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
   Widget _buildResultTile(BuildContext context, Food food) {
     return ListTile(
       onTap: int.tryParse(food.restaurant.id) != null
