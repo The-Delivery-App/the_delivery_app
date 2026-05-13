@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../APIs/feed_api_service.dart';
+import '../models/food.dart';
 import '../APIs/map_api_service.dart';
 import '../APIs/restaurant_api_service.dart';
 import '../main.dart';
@@ -99,6 +100,44 @@ class _MainViewState extends State<MainView> {
     } catch (_) {}
   }
 
+  void _onAddToBasket(Food food) {
+    final items = _basketViewModel.getState().basket.items;
+    if (items.isEmpty) {
+      _basketViewModel.addItem(food);
+      return;
+    }
+    final existingRestaurantId = items.first.restaurant.id;
+    if (existingRestaurantId == food.restaurant.id) {
+      _basketViewModel.addItem(food);
+      return;
+    }
+    final existingName = items.first.restaurant.name;
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Start new basket?'),
+        content: Text(
+          'Your basket has items from $existingName. '
+          'Do you want to clear it and add from ${food.restaurant.name}?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _basketViewModel.clearBasket();
+              _basketViewModel.addItem(food);
+            },
+            child: const Text('Clear basket', style: TextStyle(color: Colors.deepOrange)),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _onTabTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -112,7 +151,7 @@ class _MainViewState extends State<MainView> {
           listenable: _feedViewModel,
           builder: (_, _) => FeedView(
             state: _feedViewModel.getState(),
-            onAddToBasket: _basketViewModel.addItem,
+            onAddToBasket: _onAddToBasket,
             onRetry: _feedViewModel.loadFeed,
             onLoadMore: _feedViewModel.loadMore,
             onDeals: () {
@@ -138,7 +177,7 @@ class _MainViewState extends State<MainView> {
           builder: (_, _) => SearchView(
             state: _searchViewModel.getState(),
             onSearch: _searchViewModel.search,
-            onAddToBasket: _basketViewModel.addItem,
+            onAddToBasket: _onAddToBasket,
           ),
         );
       case 2:
@@ -149,6 +188,7 @@ class _MainViewState extends State<MainView> {
               restaurants: _featuredRestaurants,
               currentLocation: _mapViewModel.getState().currentLocation,
             ),
+            onAddToBasket: _onAddToBasket,
           ),
         );
       case 3:
