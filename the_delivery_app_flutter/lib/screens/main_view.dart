@@ -129,6 +129,7 @@ class _MainViewState extends State<MainView> {
                 ),
               );
             },
+            onSearchTap: () => setState(() => _selectedIndex = 1),
           ),
         );
       case 1:
