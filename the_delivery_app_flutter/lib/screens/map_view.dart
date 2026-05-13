@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../models/food.dart';
 import '../models/restaurant.dart';
@@ -11,26 +13,33 @@ class MapView extends StatelessWidget {
 
   const MapView({super.key, required this.state, this.onAddToBasket});
 
-  Widget _buildMapPlaceholder() {
+  Widget _buildMap() {
     final location = state.currentLocation;
-    final locationText = location == null
-        ? 'Location not available'
-        : 'Lat: ${location.latitude.toStringAsFixed(4)}, '
-            'Lng: ${location.longitude.toStringAsFixed(4)}';
+    final center = location != null
+        ? LatLng(location.latitude, location.longitude)
+        : const LatLng(51.5074, -0.1278);
 
-    return Container(
-      height: 260,
-      color: Colors.grey[200],
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.map, size: 60, color: Colors.grey),
-            const SizedBox(height: 8),
-            Text(locationText,
-                style: const TextStyle(fontSize: 12, color: Colors.grey)),
-          ],
-        ),
+    return SizedBox(
+      height: 300,
+      child: FlutterMap(
+        options: MapOptions(initialCenter: center, initialZoom: 14),
+        children: [
+          TileLayer(
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            userAgentPackageName: 'com.example.the_delivery_app',
+          ),
+          if (location != null)
+            MarkerLayer(
+              markers: [
+                Marker(
+                  point: LatLng(location.latitude, location.longitude),
+                  width: 40,
+                  height: 40,
+                  child: const Icon(Icons.my_location, color: Colors.blue, size: 32),
+                ),
+              ],
+            ),
+        ],
       ),
     );
   }
@@ -55,7 +64,7 @@ class MapView extends StatelessWidget {
       appBar: AppBar(title: const Text('Map')),
       body: Column(
         children: [
-          _buildMapPlaceholder(),
+          _buildMap(),
           const Divider(),
           Expanded(
             child: state.restaurants.isEmpty
