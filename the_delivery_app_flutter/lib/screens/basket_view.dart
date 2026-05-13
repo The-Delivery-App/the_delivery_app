@@ -269,13 +269,32 @@ class _BasketViewState extends State<BasketView> {
   }
 
   Widget _buildEmptyState() {
-    return const Center(
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.shopping_basket_outlined, size: 48, color: Colors.grey),
-          SizedBox(height: 12),
-          Text('Your basket is empty.', style: TextStyle(color: Colors.grey)),
+          const Icon(Icons.shopping_basket_outlined, size: 64, color: Colors.grey),
+          const SizedBox(height: 16),
+          const Text(
+            'Your cart is empty',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Add items from a restaurant to get started',
+            style: TextStyle(color: Colors.grey, fontSize: 13),
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton(
+            onPressed: widget.onBrowseRestaurants,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.deepOrange,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            ),
+            child: const Text('Browse Restaurants', style: TextStyle(fontSize: 15)),
+          ),
         ],
       ),
     );
