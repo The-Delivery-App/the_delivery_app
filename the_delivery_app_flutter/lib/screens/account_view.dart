@@ -107,7 +107,13 @@ class _AccountViewState extends State<AccountView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Account')),
+      backgroundColor: const Color(0xFFFAF7F2),
+      appBar: AppBar(
+        title: const Text('Account'),
+        backgroundColor: const Color(0xFFFAF7F2),
+        foregroundColor: Colors.black,
+        elevation: 0,
+      ),
       body: _isSignedIn
           ? _buildSignedIn(context)
           : Center(child: SignInWidget(client: client, onAuthenticated: () {})),
