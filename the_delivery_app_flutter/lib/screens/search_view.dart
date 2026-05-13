@@ -228,6 +228,7 @@ class _SearchViewState extends State<SearchView> {
       );
     }
     final foods = widget.state.results;
+    final query = widget.state.query.trim().toLowerCase();
     final grouped = <String, MapEntry<Restaurant, List<Food>>>{};
     for (final food in foods) {
       if (grouped.containsKey(food.restaurant.id)) {
@@ -236,7 +237,9 @@ class _SearchViewState extends State<SearchView> {
         grouped[food.restaurant.id] = MapEntry(food.restaurant, [food]);
       }
     }
-    final restaurants = grouped.values.toList();
+    final restaurants = grouped.values
+        .where((e) => e.key.name.toLowerCase().contains(query))
+        .toList();
 
     return ListView(
       children: [
