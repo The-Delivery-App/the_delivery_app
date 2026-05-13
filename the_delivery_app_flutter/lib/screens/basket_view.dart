@@ -6,8 +6,9 @@ import '../view_models/basket_view_model.dart';
 
 class BasketView extends StatefulWidget {
   final BasketViewModel viewModel;
+  final VoidCallback? onBrowseRestaurants;
 
-  const BasketView({super.key, required this.viewModel});
+  const BasketView({super.key, required this.viewModel, this.onBrowseRestaurants});
 
   @override
   State<BasketView> createState() => _BasketViewState();
