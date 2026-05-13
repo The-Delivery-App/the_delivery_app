@@ -18,9 +18,6 @@ class SearchView extends StatefulWidget {
 
 class _SearchViewState extends State<SearchView> {
   final TextEditingController _controller = TextEditingController();
-  String _selectedCategory = 'All';
-
-  static const _categories = ['All', 'Burgers', 'Pizza', 'Sushi', 'Healthy'];
 
   @override
   void dispose() {
