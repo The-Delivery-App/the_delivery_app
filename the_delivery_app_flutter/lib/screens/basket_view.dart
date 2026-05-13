@@ -286,13 +286,79 @@ class _BasketViewState extends State<BasketView> {
       listenable: widget.viewModel,
       builder: (context, _) {
         final items = widget.viewModel.getState().basket.items;
+
         if (items.isEmpty) {
           return Scaffold(
             appBar: AppBar(title: const Text('Your Cart')),
             body: _buildEmptyState(),
           );
         }
-        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+
+        final grouped = _groupByRestaurant(items);
+        final hasMultiple = grouped.length > 1;
+        final subtotal = items.fold(0.0, (sum, f) => sum + f.price);
+        final deliveryFee = subtotal >= 15.0 ? 0.0 : 2.99;
+        final serviceFee = subtotal * 0.10;
+        final total = subtotal + deliveryFee + serviceFee;
+
+        return Scaffold(
+          backgroundColor: const Color(0xFFF5F5F5),
+          appBar: AppBar(
+            title: const Text('Your Cart'),
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            elevation: 0,
+            actions: [
+              TextButton(
+                onPressed: () => widget.viewModel.clearBasket(),
+                child: const Text('Clear', style: TextStyle(color: Colors.deepOrange)),
+              ),
+            ],
+          ),
+          body: ListView(
+            children: [
+              if (hasMultiple) _buildMultiRestaurantBanner(),
+              ...grouped.map((e) => _buildRestaurantSection(e.key, e.value)),
+              _buildSplitPayment(total),
+              _buildPriceBreakdown(subtotal, deliveryFee, serviceFee, total),
+              const SizedBox(height: 16),
+            ],
+          ),
+          bottomNavigationBar: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepOrange,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size.fromHeight(52),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: const Text('Place Order'),
+                      content: const Text(
+                        'To place an order, please sign in and add a delivery address in your account.',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                child: Text(
+                  'Proceed to Checkout · £${total.toStringAsFixed(2)}',
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ),
+        );
       },
     );
   }
