@@ -20,10 +20,13 @@ class MapViewModel extends ChangeNotifier {
     _state = MapState(currentLocation: location, restaurants: _state.restaurants);
     notifyListeners();
     _locationSub?.cancel();
-    _locationSub = _apiService.locationStream.listen((loc) {
-      _state = MapState(currentLocation: loc, restaurants: _state.restaurants);
-      notifyListeners();
-    });
+    _locationSub = _apiService.locationStream.listen(
+      (loc) {
+        _state = MapState(currentLocation: loc, restaurants: _state.restaurants);
+        notifyListeners();
+      },
+      onError: (_) {},
+    );
   }
 
   @override
