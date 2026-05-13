@@ -184,6 +184,12 @@ class _MainViewState extends State<MainView> {
             onTap: _onTabTapped,
             selectedItemColor: Colors.deepOrange,
             unselectedItemColor: Colors.grey,
+            backgroundColor: Colors.white,
+            type: BottomNavigationBarType.fixed,
+            elevation: 12,
+            showUnselectedLabels: true,
+            selectedFontSize: 12,
+            unselectedFontSize: 11,
             items: [
               const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
               const BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
