@@ -174,6 +174,63 @@ class _BasketViewState extends State<BasketView> {
     );
   }
 
+  Widget _buildSplitPayment(double total) {
+    final splitAmount = total / 2;
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: const Offset(0, 2))],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.people_alt_outlined, color: Colors.deepOrange, size: 22),
+              const SizedBox(width: 10),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Split Payment', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                    Text('Share the cost with a friend', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                  ],
+                ),
+              ),
+              Switch(
+                value: _splitEnabled,
+                onChanged: (v) => setState(() => _splitEnabled = v),
+                activeThumbColor: Colors.deepOrange,
+              ),
+            ],
+          ),
+          if (_splitEnabled) ...[
+            const SizedBox(height: 12),
+            TextField(
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.email_outlined, color: Colors.grey),
+                hintText: "Friend's email address",
+                hintStyle: const TextStyle(color: Colors.grey),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                contentPadding: const EdgeInsets.symmetric(vertical: 10),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Each person pays £${splitAmount.toStringAsFixed(2)}',
+              style: const TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.w600),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
   Widget _buildEmptyState() {
     return const Center(
       child: Column(
