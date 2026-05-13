@@ -45,6 +45,47 @@ class _SearchViewState extends State<SearchView> {
     }
   }
 
+  Widget _buildSearchBar() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: const Offset(0, 2))],
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.search, color: Colors.grey),
+          const SizedBox(width: 8),
+          Expanded(
+            child: TextField(
+              controller: _controller,
+              autofocus: true,
+              decoration: const InputDecoration(
+                hintText: 'Search food...',
+                border: InputBorder.none,
+              ),
+              onChanged: (value) {
+                setState(() {});
+                widget.onSearch(value);
+              },
+            ),
+          ),
+          if (_controller.text.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.close, color: Colors.grey),
+              onPressed: () {
+                _controller.clear();
+                widget.onSearch('');
+                setState(() {});
+              },
+            ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildFilterChip(String label) {
     final isSelected = _selectedCategory == label;
     return Padding(
