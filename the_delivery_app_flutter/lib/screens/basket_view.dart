@@ -322,7 +322,7 @@ class _BasketViewState extends State<BasketView> {
         final total = subtotal + deliveryFee + serviceFee;
 
         return Scaffold(
-          backgroundColor: const Color(0xFFF5F5F5),
+          backgroundColor: const Color(0xFFFAF7F2),
           appBar: AppBar(
             title: const Text('Your Cart'),
             backgroundColor: Colors.white,
