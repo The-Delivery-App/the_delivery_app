@@ -166,7 +166,7 @@ class FoodRepository implements IFoodRepository {
       rating: dto.rating,
       tags: dto.tags,
       imageUrl: _normaliseImagePath(dto.foodThumbnail),
-      restaurantImageUrl: dto.restaurantThumbnail,
+      restaurantImageUrl: _normaliseImagePath(dto.restaurantThumbnail),
       restaurant: Restaurant(id: dto.restaurantId, name: dto.restaurantName),
       recentOrders: dto.recentOrders,
       deliveryTime: Duration(minutes: dto.deliveryTimeMinutes),
