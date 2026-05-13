@@ -174,6 +174,57 @@ class FeedView extends StatelessWidget {
     );
   }
 
+  Widget _buildRestaurantListTile(BuildContext context, Restaurant restaurant, List<Food> foods) {
+    final imageUrl = foods.first.imageUrl;
+    final rating = foods.map((f) => f.rating).reduce((a, b) => a + b) / foods.length;
+    final minutes = foods.first.deliveryTime.inMinutes;
+
+    return GestureDetector(
+      onTap: int.tryParse(restaurant.id) != null
+          ? () => Navigator.push(context, MaterialPageRoute(
+                builder: (_) => RestaurantView(restaurant: restaurant, onAddToBasket: onAddToBasket),
+              ))
+          : null,
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: imageUrl.isNotEmpty
+                  ? (imageUrl.startsWith('http')
+                      ? Image.network(imageUrl, width: 70, height: 70, fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(width: 70, height: 70, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange)))
+                      : Image.asset(imageUrl, width: 70, height: 70, fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(width: 70, height: 70, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange))))
+                  : Container(width: 70, height: 70, color: Colors.grey[200], child: const Icon(Icons.restaurant, color: Colors.deepOrange)),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(restaurant.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, size: 14, color: Colors.amber),
+                      Text(' ${rating.toStringAsFixed(1)}', style: const TextStyle(fontSize: 12)),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.access_time, size: 14, color: Colors.grey),
+                      Text(' $minutes min', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right, color: Colors.grey),
+          ],
+        ),
+      ),
+    );
+  }
+
   List<MapEntry<Restaurant, List<Food>>> _groupByRestaurant(List<Food> items) {
     final map = <String, MapEntry<Restaurant, List<Food>>>{};
     for (final food in items) {
