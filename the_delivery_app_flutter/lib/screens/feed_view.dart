@@ -122,11 +122,11 @@ class FeedView extends StatelessWidget {
   }
 
   Widget _buildNearYouCard(BuildContext context, Restaurant restaurant, List<Food> foods) {
-    final imageUrl = foods.first.restaurantImageUrl.isNotEmpty
-        ? foods.first.restaurantImageUrl
-        : foods.first.imageUrl;
-    final rating = foods.map((f) => f.rating).reduce((a, b) => a + b) / foods.length;
-    final minutes = foods.first.deliveryTime.inMinutes;
+    final imageUrl = foods.isEmpty
+        ? ''
+        : (foods.first.restaurantImageUrl.isNotEmpty ? foods.first.restaurantImageUrl : foods.first.imageUrl);
+    final rating = foods.isEmpty ? 0.0 : foods.map((f) => f.rating).reduce((a, b) => a + b) / foods.length;
+    final minutes = foods.isEmpty ? 30 : foods.first.deliveryTime.inMinutes;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -329,34 +329,34 @@ class FeedView extends StatelessWidget {
     return map.values.toList();
   }
 
-  List<MapEntry<Restaurant, List<Food>>> _sortByDistance(
-    List<MapEntry<Restaurant, List<Food>>> groups,
+  List<MapEntry<Restaurant, List<Food>>> _nearYouFromFeatured(
+    List<MapEntry<Restaurant, List<Food>>> feedGroups,
   ) {
-    if (userLat == null || userLng == null || featuredRestaurants.isEmpty) {
-      return groups;
-    }
-    double? distanceFor(Restaurant r) {
-      final match = featuredRestaurants.firstWhere(
-        (f) => f.name == r.name,
-        orElse: () => const Restaurant(id: '', name: ''),
-      );
-      if (match.latitude == null || match.longitude == null) return null;
-      final dLat = match.latitude! - userLat!;
-      final dLng = match.longitude! - userLng!;
-      return dLat * dLat + dLng * dLng;
-    }
-
-    final sorted = List<MapEntry<Restaurant, List<Food>>>.from(groups);
-    sorted.sort((a, b) {
-      final da = distanceFor(a.key);
-      final db = distanceFor(b.key);
+    if (userLat == null || userLng == null) return [];
+    final sortedFeatured = List<Restaurant>.from(featuredRestaurants);
+    sortedFeatured.sort((a, b) {
+      double? distFor(Restaurant r) {
+        if (r.latitude == null || r.longitude == null) return null;
+        final dLat = r.latitude! - userLat!;
+        final dLng = r.longitude! - userLng!;
+        return dLat * dLat + dLng * dLng;
+      }
+      final da = distFor(a);
+      final db = distFor(b);
       if (da == null && db == null) return 0;
       if (da == null) return 1;
       if (db == null) return -1;
       return da.compareTo(db);
     });
-    return sorted;
+    return sortedFeatured.take(5).map((restaurant) {
+      final match = feedGroups.firstWhere(
+        (g) => g.key.name == restaurant.name,
+        orElse: () => MapEntry(restaurant, <Food>[]),
+      );
+      return MapEntry(restaurant, match.value);
+    }).toList();
   }
+
 
   Widget _buildError(String message) {
     return Center(
@@ -393,7 +393,7 @@ class FeedView extends StatelessWidget {
     }
     final groups = _groupByRestaurant(state.feedItems);
     final canRank = userLat != null && userLng != null && featuredRestaurants.isNotEmpty;
-    final nearYou = canRank ? _sortByDistance(groups).take(5).toList() : <MapEntry<Restaurant, List<Food>>>[];
+    final nearYou = canRank ? _nearYouFromFeatured(groups) : <MapEntry<Restaurant, List<Food>>>[];
     return Scaffold(
       backgroundColor: const Color(0xFFFAF7F2),
       body: SafeArea(
