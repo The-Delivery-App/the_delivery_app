@@ -54,19 +54,17 @@ class _CheckoutViewState extends State<CheckoutView> {
   }
 
   Future<void> _placeOrder() async {
+    if (_selectedAddressId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a delivery address.')),
+      );
+      return;
+    }
     setState(() => _isPlacing = true);
 
     final userRaw = await client.userProfileController.getCurrentUser();
     final userId = jsonDecode(userRaw)['userId'] as int;
-
-    final addressRaw = await client.userProfileController.addAddress(jsonEncode({
-      'userId': userId,
-      'addressLine1': _addressLine1Controller.text,
-      'city': _cityController.text,
-      'postcode': _postcodeController.text,
-      'country': _countryController.text,
-    }));
-    final addressId = jsonDecode(addressRaw)['addressId'] as int;
+    final addressId = _selectedAddressId!;
 
     final items = widget.basketViewModel.getState().basket.items;
     final restaurantId = int.parse(items.first.restaurant.id);
