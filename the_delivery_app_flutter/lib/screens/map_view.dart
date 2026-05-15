@@ -26,6 +26,28 @@ class _MapViewState extends State<MapView> {
   final MapController _mapController = MapController();
   List<LatLng> _routePoints = [];
 
+  Future<void> _loadRoute(double destLat, double destLng) async {
+    final fromLat = widget.addressLat;
+    final fromLng = widget.addressLng;
+    if (fromLat == null || fromLng == null) return;
+    try {
+      final url = Uri.parse(
+        'https://router.project-osrm.org/route/v1/foot/$fromLng,$fromLat;$destLng,$destLat?overview=full&geometries=geojson',
+      );
+      final response = await http.get(url);
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      final routes = data['routes'] as List<dynamic>?;
+      if (routes == null || routes.isEmpty) return;
+      final coords = routes.first['geometry']['coordinates'] as List<dynamic>;
+      final points = coords.map((c) {
+        final pair = c as List<dynamic>;
+        return LatLng(pair[1] as double, pair[0] as double);
+      }).toList();
+      if (!mounted) return;
+      setState(() => _routePoints = points);
+    } catch (_) {}
+  }
+
   Widget _buildMap() {
     final location = widget.state.currentLocation;
     final addressLat = widget.addressLat;
