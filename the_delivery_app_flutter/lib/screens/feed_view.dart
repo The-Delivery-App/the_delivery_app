@@ -182,11 +182,22 @@ class FeedView extends StatelessWidget {
     );
   }
 
-  Widget _buildNearYouSection(BuildContext context, List<MapEntry<Restaurant, List<Food>>> groups) {
+  Widget _buildNearYouSection(BuildContext context, List<MapEntry<Restaurant, List<Food>>> groups, {bool isRanking = false}) {
     if (groups.isEmpty) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (isRanking)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            child: Row(
+              children: [
+                SizedBox(width: 12, height: 12, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.deepOrange)),
+                const SizedBox(width: 8),
+                Text('Finding the closest restaurants...', style: TextStyle(fontSize: 12, color: Colors.grey.shade700)),
+              ],
+            ),
+          ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
           child: Row(
@@ -374,7 +385,8 @@ class FeedView extends StatelessWidget {
       return Scaffold(body: _buildError(state.errorMessage!));
     }
     final groups = _groupByRestaurant(state.feedItems);
-    final nearYou = _sortByDistance(groups).take(5).toList();
+    final canRank = userLat != null && userLng != null && featuredRestaurants.isNotEmpty;
+    final nearYou = canRank ? _sortByDistance(groups).take(5).toList() : groups.take(5).toList();
     return Scaffold(
       backgroundColor: const Color(0xFFFAF7F2),
       body: SafeArea(
@@ -391,7 +403,7 @@ class FeedView extends StatelessWidget {
               _buildHeader(),
               _buildSearchBar(context),
               if (onDeals != null) _buildPromoBanner(context),
-              _buildNearYouSection(context, nearYou),
+              _buildNearYouSection(context, nearYou, isRanking: !canRank),
               _buildAllRestaurantsSection(context, groups),
               if (state.isLoadingMore)
                 const Padding(
