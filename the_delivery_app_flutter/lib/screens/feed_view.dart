@@ -23,21 +23,31 @@ class FeedView extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Row(
         children: [
-          const Icon(Icons.location_on, color: Colors.deepOrange, size: 20),
-          const SizedBox(width: 4),
-          const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Delivering to', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                Row(
-                  children: [
-                    Text('London, UK', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                    SizedBox(width: 4),
-                    Icon(Icons.keyboard_arrow_down, size: 18),
-                  ],
-                ),
-              ],
+          Expanded(
+            child: GestureDetector(
+              onTap: onAddressTap,
+              behavior: HitTestBehavior.opaque,
+              child: const Row(
+                children: [
+                  Icon(Icons.location_on, color: Colors.deepOrange, size: 20),
+                  SizedBox(width: 4),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Delivering to', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                        Row(
+                          children: [
+                            Text('London, UK', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                            SizedBox(width: 4),
+                            Icon(Icons.keyboard_arrow_down, size: 18),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           GestureDetector(
