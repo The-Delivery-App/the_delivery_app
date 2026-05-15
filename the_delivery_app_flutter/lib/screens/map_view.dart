@@ -28,17 +28,25 @@ class MapView extends StatelessWidget {
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: 'com.example.the_delivery_app',
           ),
-          if (location != null)
-            MarkerLayer(
-              markers: [
+          MarkerLayer(
+            markers: [
+              for (final r in state.restaurants)
+                if (r.latitude != null && r.longitude != null)
+                  Marker(
+                    point: LatLng(r.latitude!, r.longitude!),
+                    width: 40,
+                    height: 40,
+                    child: const Icon(Icons.location_on, color: Colors.deepOrange, size: 36),
+                  ),
+              if (location != null)
                 Marker(
                   point: LatLng(location.latitude, location.longitude),
                   width: 40,
                   height: 40,
                   child: const Icon(Icons.my_location, color: Colors.blue, size: 32),
                 ),
-              ],
-            ),
+            ],
+          ),
         ],
       ),
     );
