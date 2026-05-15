@@ -19,6 +19,7 @@ class _CheckoutViewState extends State<CheckoutView> {
   final _cityController = TextEditingController();
   final _postcodeController = TextEditingController();
   final _countryController = TextEditingController(text: 'UK');
+  bool _isPlacing = false;
 
   @override
   void dispose() {
