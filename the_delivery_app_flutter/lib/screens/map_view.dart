@@ -71,6 +71,16 @@ class _MapViewState extends State<MapView> {
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: 'com.example.the_delivery_app',
           ),
+          if (_routePoints.isNotEmpty)
+            PolylineLayer(
+              polylines: [
+                Polyline(
+                  points: _routePoints,
+                  strokeWidth: 4,
+                  color: Colors.deepOrange,
+                ),
+              ],
+            ),
           MarkerLayer(
             markers: [
               for (final r in widget.state.restaurants)
