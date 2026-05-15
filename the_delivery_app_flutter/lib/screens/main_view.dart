@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '../APIs/feed_api_service.dart';
 import '../APIs/map_api_service.dart';
@@ -46,6 +47,8 @@ class _MainViewState extends State<MainView> {
   late final MapViewModel _mapViewModel;
   List<Restaurant> _featuredRestaurants = [];
   String _addressLabel = 'London, UK';
+  double? _addressLat;
+  double? _addressLng;
 
   @override
   void initState() {
@@ -113,6 +116,23 @@ class _MainViewState extends State<MainView> {
       if (!mounted) return;
       setState(() {
         _addressLabel = '${defaultAddr['addressLine1']}, ${defaultAddr['city']}';
+      });
+      _geocodeAddress(defaultAddr);
+    } catch (_) {}
+  }
+
+  Future<void> _geocodeAddress(Map<String, dynamic> address) async {
+    try {
+      final query = '${address['addressLine1']}, ${address['city']}, ${address['postcode']}';
+      final url = Uri.parse('https://nominatim.openstreetmap.org/search?q=${Uri.encodeComponent(query)}&format=json&limit=1');
+      final response = await http.get(url, headers: {'User-Agent': 'TheDeliveryApp/1.0'});
+      final data = jsonDecode(response.body) as List;
+      if (data.isEmpty) return;
+      final result = data.first as Map<String, dynamic>;
+      if (!mounted) return;
+      setState(() {
+        _addressLat = double.parse(result['lat'] as String);
+        _addressLng = double.parse(result['lon'] as String);
       });
     } catch (_) {}
   }
@@ -185,6 +205,8 @@ class _MainViewState extends State<MainView> {
               currentLocation: _mapViewModel.getState().currentLocation,
             ),
             onAddToBasket: _basketViewModel.addItem,
+            addressLat: _addressLat,
+            addressLng: _addressLng,
           ),
         );
       case 3:
