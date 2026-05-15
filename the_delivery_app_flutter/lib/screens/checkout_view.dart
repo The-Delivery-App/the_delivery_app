@@ -24,6 +24,12 @@ class _CheckoutViewState extends State<CheckoutView> {
   int? _selectedAddressId;
 
   @override
+  void initState() {
+    super.initState();
+    _loadAddresses();
+  }
+
+  @override
   void dispose() {
     _addressLine1Controller.dispose();
     _cityController.dispose();
