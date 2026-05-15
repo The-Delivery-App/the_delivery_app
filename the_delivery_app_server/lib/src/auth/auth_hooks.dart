@@ -39,15 +39,34 @@ class AuthHooks {
     }
   }
 
+  static int _uuidToInt(String uuid) {
+    final hex = uuid.replaceAll('-', '').substring(0, 8);
+    final value = int.parse(hex, radix: 16);
+    return value & 0x7FFFFFFF;
+  }
+
   static Future<User?> getAppUser(Session session) async {
     try {
-      final authUserId = session.authenticated?.userId;
-      if (authUserId == null) return null;
+      final auth = session.authenticated;
+      if (auth == null) return null;
+      final authUserId = _uuidToInt(auth.userIdentifier);
 
-      return await User.db.findFirstRow(
+      var user = await User.db.findFirstRow(
         session,
         where: (t) => t.authUserId.equals(authUserId),
       );
+
+      user ??= await User.db.insertRow(
+        session,
+        User(
+          authUserId: authUserId,
+          email: '',
+          name: 'User',
+          createdAt: DateTime.now(),
+        ),
+      );
+
+      return user;
     } catch (e) {
       session.log('Error getting app user: $e');
       return null;
