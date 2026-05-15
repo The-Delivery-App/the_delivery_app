@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../main.dart';
+
 class AddressesView extends StatefulWidget {
   const AddressesView({super.key});
 
