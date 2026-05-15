@@ -145,7 +145,8 @@ class _MapViewState extends State<MapView> {
               final lat = restaurant.latitude;
               final lng = restaurant.longitude;
               if (lat != null && lng != null) {
-                _mapController.move(LatLng(lat, lng), 16);
+                _mapController.move(LatLng(lat, lng), 15);
+                _loadRoute(lat, lng);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('${restaurant.name} has no location data'), duration: const Duration(seconds: 2)),
