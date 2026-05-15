@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../APIs/feed_api_service.dart';
@@ -43,6 +45,7 @@ class _MainViewState extends State<MainView> {
   late final SpecialDealViewModel _specialDealViewModel;
   late final MapViewModel _mapViewModel;
   List<Restaurant> _featuredRestaurants = [];
+  String _addressLabel = 'London, UK';
 
   @override
   void initState() {
@@ -72,6 +75,7 @@ class _MainViewState extends State<MainView> {
     _mapViewModel = MapViewModel(apiService: MapAPIService());
     _mapViewModel.updateLocation();
     _loadFeaturedRestaurants();
+    _loadDefaultAddress();
     _basketViewModel.loadBasket();
     _feedViewModel.addListener(() {
       _searchViewModel.loadItems(_feedViewModel.getState().feedItems);
@@ -88,6 +92,29 @@ class _MainViewState extends State<MainView> {
     _specialDealViewModel.dispose();
     _mapViewModel.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadDefaultAddress() async {
+    try {
+      final userRaw = await client.userProfileController.getCurrentUser();
+      final userData = jsonDecode(userRaw);
+      if (userData['success'] != true) return;
+      final userId = userData['userId'] as int;
+      final profileRaw = await client.userProfileController.getProfile(userId);
+      final profile = jsonDecode(profileRaw);
+      final addresses = (profile['user']?['addresses'] as List<dynamic>? ?? [])
+          .whereType<Map<String, dynamic>>()
+          .toList();
+      if (addresses.isEmpty) return;
+      final defaultAddr = addresses.firstWhere(
+        (a) => a['isDefault'] == true,
+        orElse: () => addresses.first,
+      );
+      if (!mounted) return;
+      setState(() {
+        _addressLabel = '${defaultAddr['addressLine1']}, ${defaultAddr['city']}';
+      });
+    } catch (_) {}
   }
 
   Future<void> _loadFeaturedRestaurants() async {
@@ -136,7 +163,8 @@ class _MainViewState extends State<MainView> {
             onAddressTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const AddressesView()),
-            ),
+            ).then((_) => _loadDefaultAddress()),
+            addressLabel: _addressLabel,
           ),
         );
       case 1:
