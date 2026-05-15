@@ -7,14 +7,21 @@ import '../models/restaurant.dart';
 import '../state/map_state.dart';
 import 'restaurant_view.dart';
 
-class MapView extends StatelessWidget {
+class MapView extends StatefulWidget {
   final MapState state;
   final void Function(Food)? onAddToBasket;
 
   const MapView({super.key, required this.state, this.onAddToBasket});
 
+  @override
+  State<MapView> createState() => _MapViewState();
+}
+
+class _MapViewState extends State<MapView> {
+  final MapController _mapController = MapController();
+
   Widget _buildMap() {
-    final location = state.currentLocation;
+    final location = widget.state.currentLocation;
     final center = location != null
         ? LatLng(location.latitude, location.longitude)
         : const LatLng(51.5074, -0.1278);
@@ -22,6 +29,7 @@ class MapView extends StatelessWidget {
     return SizedBox(
       height: 300,
       child: FlutterMap(
+        mapController: _mapController,
         options: MapOptions(initialCenter: center, initialZoom: 14),
         children: [
           TileLayer(
@@ -30,7 +38,7 @@ class MapView extends StatelessWidget {
           ),
           MarkerLayer(
             markers: [
-              for (final r in state.restaurants)
+              for (final r in widget.state.restaurants)
                 if (r.latitude != null && r.longitude != null)
                   Marker(
                     point: LatLng(r.latitude!, r.longitude!),
@@ -58,7 +66,7 @@ class MapView extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => RestaurantView(restaurant: restaurant, onAddToBasket: onAddToBasket),
+          builder: (_) => RestaurantView(restaurant: restaurant, onAddToBasket: widget.onAddToBasket),
         ),
       ),
       child: Container(
@@ -103,12 +111,12 @@ class MapView extends StatelessWidget {
           _buildMap(),
           const SizedBox(height: 8),
           Expanded(
-            child: state.restaurants.isEmpty
+            child: widget.state.restaurants.isEmpty
                 ? const Center(child: Text('No restaurants nearby.'))
                 : ListView.builder(
-                    itemCount: state.restaurants.length,
+                    itemCount: widget.state.restaurants.length,
                     itemBuilder: (context, index) =>
-                        _buildRestaurantTile(context, state.restaurants[index]),
+                        _buildRestaurantTile(context, widget.state.restaurants[index]),
                   ),
           ),
         ],
