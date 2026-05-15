@@ -37,6 +37,11 @@ class _AddressesViewState extends State<AddressesView> {
     });
   }
 
+  Future<void> _deleteAddress(int addressId) async {
+    await client.userProfileController.deleteAddress(addressId);
+    _loadAddresses();
+  }
+
   Widget _buildAddressTile(Map<String, dynamic> address) {
     final line1 = address['addressLine1'] as String? ?? '';
     final city = address['city'] as String? ?? '';
