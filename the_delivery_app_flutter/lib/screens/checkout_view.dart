@@ -15,10 +15,6 @@ class CheckoutView extends StatefulWidget {
 }
 
 class _CheckoutViewState extends State<CheckoutView> {
-  final _addressLine1Controller = TextEditingController();
-  final _cityController = TextEditingController();
-  final _postcodeController = TextEditingController();
-  final _countryController = TextEditingController(text: 'UK');
   bool _isPlacing = false;
   List<Map<String, dynamic>> _addresses = [];
   int? _selectedAddressId;
@@ -27,15 +23,6 @@ class _CheckoutViewState extends State<CheckoutView> {
   void initState() {
     super.initState();
     _loadAddresses();
-  }
-
-  @override
-  void dispose() {
-    _addressLine1Controller.dispose();
-    _cityController.dispose();
-    _postcodeController.dispose();
-    _countryController.dispose();
-    super.dispose();
   }
 
   Future<void> _loadAddresses() async {
