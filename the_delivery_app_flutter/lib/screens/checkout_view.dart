@@ -20,6 +20,8 @@ class _CheckoutViewState extends State<CheckoutView> {
   final _postcodeController = TextEditingController();
   final _countryController = TextEditingController(text: 'UK');
   bool _isPlacing = false;
+  List<Map<String, dynamic>> _addresses = [];
+  int? _selectedAddressId;
 
   @override
   void dispose() {
