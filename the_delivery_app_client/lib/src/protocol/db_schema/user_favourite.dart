@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -35,9 +34,8 @@ abstract class UserFavourite implements _i1.SerializableModel {
       userId: jsonSerialization['userId'] as int,
       restaurantId: jsonSerialization['restaurantId'] as int?,
       foodItemId: jsonSerialization['foodItemId'] as int?,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      createdAt:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 
@@ -67,7 +65,6 @@ abstract class UserFavourite implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'UserFavourite',
       if (id != null) 'id': id,
       'userId': userId,
       if (restaurantId != null) 'restaurantId': restaurantId,
@@ -92,12 +89,12 @@ class _UserFavouriteImpl extends UserFavourite {
     int? foodItemId,
     required DateTime createdAt,
   }) : super._(
-         id: id,
-         userId: userId,
-         restaurantId: restaurantId,
-         foodItemId: foodItemId,
-         createdAt: createdAt,
-       );
+          id: id,
+          userId: userId,
+          restaurantId: restaurantId,
+          foodItemId: foodItemId,
+          createdAt: createdAt,
+        );
 
   /// Returns a shallow copy of this [UserFavourite]
   /// with some or all fields replaced by the given arguments.

@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -36,7 +35,7 @@ abstract class Restaurant
       restName: jsonSerialization['restName'] as String,
       logoThumb: jsonSerialization['logoThumb'] as String?,
       estimatedDeliveryTime:
-          (jsonSerialization['estimatedDeliveryTime'] as num?)?.toDouble(),
+          (jsonSerialization['estimatedDeliveryTime'] as num).toDouble(),
       cuisine: jsonSerialization['cuisine'] as String?,
     );
   }
@@ -72,7 +71,6 @@ abstract class Restaurant
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'Restaurant',
       if (id != null) 'id': id,
       'restName': restName,
       if (logoThumb != null) 'logoThumb': logoThumb,
@@ -84,7 +82,6 @@ abstract class Restaurant
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'Restaurant',
       if (id != null) 'id': id,
       'restName': restName,
       if (logoThumb != null) 'logoThumb': logoThumb,
@@ -133,12 +130,12 @@ class _RestaurantImpl extends Restaurant {
     double? estimatedDeliveryTime,
     String? cuisine,
   }) : super._(
-         id: id,
-         restName: restName,
-         logoThumb: logoThumb,
-         estimatedDeliveryTime: estimatedDeliveryTime,
-         cuisine: cuisine,
-       );
+          id: id,
+          restName: restName,
+          logoThumb: logoThumb,
+          estimatedDeliveryTime: estimatedDeliveryTime,
+          cuisine: cuisine,
+        );
 
   /// Returns a shallow copy of this [Restaurant]
   /// with some or all fields replaced by the given arguments.
@@ -162,34 +159,8 @@ class _RestaurantImpl extends Restaurant {
   }
 }
 
-class RestaurantUpdateTable extends _i1.UpdateTable<RestaurantTable> {
-  RestaurantUpdateTable(super.table);
-
-  _i1.ColumnValue<String, String> restName(String value) => _i1.ColumnValue(
-    table.restName,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> logoThumb(String? value) => _i1.ColumnValue(
-    table.logoThumb,
-    value,
-  );
-
-  _i1.ColumnValue<double, double> estimatedDeliveryTime(double value) =>
-      _i1.ColumnValue(
-        table.estimatedDeliveryTime,
-        value,
-      );
-
-  _i1.ColumnValue<String, String> cuisine(String? value) => _i1.ColumnValue(
-    table.cuisine,
-    value,
-  );
-}
-
 class RestaurantTable extends _i1.Table<int?> {
   RestaurantTable({super.tableRelation}) : super(tableName: 'restaurant') {
-    updateTable = RestaurantUpdateTable(this);
     restName = _i1.ColumnString(
       'restName',
       this,
@@ -209,8 +180,6 @@ class RestaurantTable extends _i1.Table<int?> {
     );
   }
 
-  late final RestaurantUpdateTable updateTable;
-
   late final _i1.ColumnString restName;
 
   late final _i1.ColumnString logoThumb;
@@ -221,12 +190,12 @@ class RestaurantTable extends _i1.Table<int?> {
 
   @override
   List<_i1.Column> get columns => [
-    id,
-    restName,
-    logoThumb,
-    estimatedDeliveryTime,
-    cuisine,
-  ];
+        id,
+        restName,
+        logoThumb,
+        estimatedDeliveryTime,
+        cuisine,
+      ];
 }
 
 class RestaurantInclude extends _i1.IncludeObject {
@@ -285,7 +254,7 @@ class RestaurantRepository {
   /// );
   /// ```
   Future<List<Restaurant>> find(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<RestaurantTable>? where,
     int? limit,
     int? offset,
@@ -293,8 +262,6 @@ class RestaurantRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<RestaurantTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<Restaurant>(
       where: where?.call(Restaurant.t),
@@ -304,8 +271,6 @@ class RestaurantRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -327,15 +292,13 @@ class RestaurantRepository {
   /// );
   /// ```
   Future<Restaurant?> findFirstRow(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<RestaurantTable>? where,
     int? offset,
     _i1.OrderByBuilder<RestaurantTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<RestaurantTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<Restaurant>(
       where: where?.call(Restaurant.t),
@@ -344,24 +307,18 @@ class RestaurantRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [Restaurant] by its [id] or null if no such row exists.
   Future<Restaurant?> findById(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<Restaurant>(
       id,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -371,20 +328,14 @@ class RestaurantRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
-  ///
-  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
-  /// rows are silently skipped, and only the successfully inserted rows are
-  /// returned.
   Future<List<Restaurant>> insert(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<Restaurant> rows, {
     _i1.Transaction? transaction,
-    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<Restaurant>(
       rows,
       transaction: transaction,
-      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -392,7 +343,7 @@ class RestaurantRepository {
   ///
   /// The returned [Restaurant] will have its `id` field set.
   Future<Restaurant> insertRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     Restaurant row, {
     _i1.Transaction? transaction,
   }) async {
@@ -408,7 +359,7 @@ class RestaurantRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<Restaurant>> update(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<Restaurant> rows, {
     _i1.ColumnSelections<RestaurantTable>? columns,
     _i1.Transaction? transaction,
@@ -424,7 +375,7 @@ class RestaurantRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<Restaurant> updateRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     Restaurant row, {
     _i1.ColumnSelections<RestaurantTable>? columns,
     _i1.Transaction? transaction,
@@ -436,51 +387,11 @@ class RestaurantRepository {
     );
   }
 
-  /// Updates a single [Restaurant] by its [id] with the specified [columnValues].
-  /// Returns the updated row or null if no row with the given id exists.
-  Future<Restaurant?> updateById(
-    _i1.DatabaseSession session,
-    int id, {
-    required _i1.ColumnValueListBuilder<RestaurantUpdateTable> columnValues,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateById<Restaurant>(
-      id,
-      columnValues: columnValues(Restaurant.t.updateTable),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates all [Restaurant]s matching the [where] expression with the specified [columnValues].
-  /// Returns the list of updated rows.
-  Future<List<Restaurant>> updateWhere(
-    _i1.DatabaseSession session, {
-    required _i1.ColumnValueListBuilder<RestaurantUpdateTable> columnValues,
-    required _i1.WhereExpressionBuilder<RestaurantTable> where,
-    int? limit,
-    int? offset,
-    _i1.OrderByBuilder<RestaurantTable>? orderBy,
-    _i1.OrderByListBuilder<RestaurantTable>? orderByList,
-    bool orderDescending = false,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateWhere<Restaurant>(
-      columnValues: columnValues(Restaurant.t.updateTable),
-      where: where(Restaurant.t),
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy?.call(Restaurant.t),
-      orderByList: orderByList?.call(Restaurant.t),
-      orderDescending: orderDescending,
-      transaction: transaction,
-    );
-  }
-
   /// Deletes all [Restaurant]s in the list and returns the deleted rows.
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<Restaurant>> delete(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<Restaurant> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -492,7 +403,7 @@ class RestaurantRepository {
 
   /// Deletes a single [Restaurant].
   Future<Restaurant> deleteRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     Restaurant row, {
     _i1.Transaction? transaction,
   }) async {
@@ -504,7 +415,7 @@ class RestaurantRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<Restaurant>> deleteWhere(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     required _i1.WhereExpressionBuilder<RestaurantTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -517,7 +428,7 @@ class RestaurantRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<RestaurantTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -525,22 +436,6 @@ class RestaurantRepository {
     return session.db.count<Restaurant>(
       where: where?.call(Restaurant.t),
       limit: limit,
-      transaction: transaction,
-    );
-  }
-
-  /// Acquires row-level locks on [Restaurant] rows matching the [where] expression.
-  Future<void> lockRows(
-    _i1.DatabaseSession session, {
-    required _i1.WhereExpressionBuilder<RestaurantTable> where,
-    required _i1.LockMode lockMode,
-    required _i1.Transaction transaction,
-    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
-  }) async {
-    return session.db.lockRows<Restaurant>(
-      where: where(Restaurant.t),
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

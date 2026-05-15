@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -74,31 +73,27 @@ abstract class Order implements _i1.SerializableModel {
       totalAmount: (jsonSerialization['totalAmount'] as num).toDouble(),
       idempotencyKey: jsonSerialization['idempotencyKey'] as String,
       currentStatus: _i2.OrderStatus.fromJson(
-        (jsonSerialization['currentStatus'] as String),
-      ),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+          (jsonSerialization['currentStatus'] as String)),
+      createdAt:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       updatedAt: jsonSerialization['updatedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
       estimatedDeliveryTime: jsonSerialization['estimatedDeliveryTime'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['estimatedDeliveryTime'],
-            ),
+              jsonSerialization['estimatedDeliveryTime']),
       actualDeliveryTime: jsonSerialization['actualDeliveryTime'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['actualDeliveryTime'],
-            ),
-      isSplit: _i1.BoolJsonExtension.fromJson(jsonSerialization['isSplit']),
+              jsonSerialization['actualDeliveryTime']),
+      isSplit: jsonSerialization['isSplit'] as bool,
       deliveryInstructions:
           jsonSerialization['deliveryInstructions'] as String?,
-      courierLatitude: (jsonSerialization['courierLatitude'] as num?)
-          ?.toDouble(),
-      courierLongitude: (jsonSerialization['courierLongitude'] as num?)
-          ?.toDouble(),
+      courierLatitude:
+          (jsonSerialization['courierLatitude'] as num?)?.toDouble(),
+      courierLongitude:
+          (jsonSerialization['courierLongitude'] as num?)?.toDouble(),
     );
   }
 
@@ -173,7 +168,6 @@ abstract class Order implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'Order',
       if (id != null) 'id': id,
       'userId': userId,
       'restaurantId': restaurantId,
@@ -231,27 +225,27 @@ class _OrderImpl extends Order {
     double? courierLatitude,
     double? courierLongitude,
   }) : super._(
-         id: id,
-         userId: userId,
-         restaurantId: restaurantId,
-         deliveryAddressId: deliveryAddressId,
-         courierId: courierId,
-         subtotal: subtotal,
-         deliveryFee: deliveryFee,
-         serviceFee: serviceFee,
-         discount: discount,
-         totalAmount: totalAmount,
-         idempotencyKey: idempotencyKey,
-         currentStatus: currentStatus,
-         createdAt: createdAt,
-         updatedAt: updatedAt,
-         estimatedDeliveryTime: estimatedDeliveryTime,
-         actualDeliveryTime: actualDeliveryTime,
-         isSplit: isSplit,
-         deliveryInstructions: deliveryInstructions,
-         courierLatitude: courierLatitude,
-         courierLongitude: courierLongitude,
-       );
+          id: id,
+          userId: userId,
+          restaurantId: restaurantId,
+          deliveryAddressId: deliveryAddressId,
+          courierId: courierId,
+          subtotal: subtotal,
+          deliveryFee: deliveryFee,
+          serviceFee: serviceFee,
+          discount: discount,
+          totalAmount: totalAmount,
+          idempotencyKey: idempotencyKey,
+          currentStatus: currentStatus,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
+          estimatedDeliveryTime: estimatedDeliveryTime,
+          actualDeliveryTime: actualDeliveryTime,
+          isSplit: isSplit,
+          deliveryInstructions: deliveryInstructions,
+          courierLatitude: courierLatitude,
+          courierLongitude: courierLongitude,
+        );
 
   /// Returns a shallow copy of this [Order]
   /// with some or all fields replaced by the given arguments.
@@ -304,9 +298,8 @@ class _OrderImpl extends Order {
       deliveryInstructions: deliveryInstructions is String?
           ? deliveryInstructions
           : this.deliveryInstructions,
-      courierLatitude: courierLatitude is double?
-          ? courierLatitude
-          : this.courierLatitude,
+      courierLatitude:
+          courierLatitude is double? ? courierLatitude : this.courierLatitude,
       courierLongitude: courierLongitude is double?
           ? courierLongitude
           : this.courierLongitude,

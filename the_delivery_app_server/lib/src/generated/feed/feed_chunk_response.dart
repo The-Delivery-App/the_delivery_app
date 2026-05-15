@@ -7,13 +7,11 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../feed/food_item_response.dart' as _i2;
 import '../feed/restaurant_response.dart' as _i3;
-import 'package:the_delivery_app_server/src/generated/protocol.dart' as _i4;
 
 abstract class FeedChunkResponse
     implements _i1.SerializableModel, _i1.ProtocolSerialization {
@@ -39,13 +37,15 @@ abstract class FeedChunkResponse
 
   factory FeedChunkResponse.fromJson(Map<String, dynamic> jsonSerialization) {
     return FeedChunkResponse(
-      success: _i1.BoolJsonExtension.fromJson(jsonSerialization['success']),
-      foodItems: _i4.Protocol().deserialize<List<_i2.FoodItemResponse>>(
-        jsonSerialization['foodItems'],
-      ),
-      restaurants: _i4.Protocol().deserialize<List<_i3.RestaurantResponse>>(
-        jsonSerialization['restaurants'],
-      ),
+      success: jsonSerialization['success'] as bool,
+      foodItems: (jsonSerialization['foodItems'] as List)
+          .map(
+              (e) => _i2.FoodItemResponse.fromJson((e as Map<String, dynamic>)))
+          .toList(),
+      restaurants: (jsonSerialization['restaurants'] as List)
+          .map((e) =>
+              _i3.RestaurantResponse.fromJson((e as Map<String, dynamic>)))
+          .toList(),
       totalItemsAvailable: jsonSerialization['totalItemsAvailable'] as int,
       fetchedCount: jsonSerialization['fetchedCount'] as int,
       errorMessage: jsonSerialization['errorMessage'] as String?,
@@ -82,7 +82,6 @@ abstract class FeedChunkResponse
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'FeedChunkResponse',
       'success': success,
       'foodItems': foodItems.toJson(valueToJson: (v) => v.toJson()),
       'restaurants': restaurants.toJson(valueToJson: (v) => v.toJson()),
@@ -96,12 +95,10 @@ abstract class FeedChunkResponse
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'FeedChunkResponse',
       'success': success,
       'foodItems': foodItems.toJson(valueToJson: (v) => v.toJsonForProtocol()),
-      'restaurants': restaurants.toJson(
-        valueToJson: (v) => v.toJsonForProtocol(),
-      ),
+      'restaurants':
+          restaurants.toJson(valueToJson: (v) => v.toJsonForProtocol()),
       'totalItemsAvailable': totalItemsAvailable,
       'fetchedCount': fetchedCount,
       if (errorMessage != null) 'errorMessage': errorMessage,
@@ -127,14 +124,14 @@ class _FeedChunkResponseImpl extends FeedChunkResponse {
     String? errorMessage,
     String? errorCode,
   }) : super._(
-         success: success,
-         foodItems: foodItems,
-         restaurants: restaurants,
-         totalItemsAvailable: totalItemsAvailable,
-         fetchedCount: fetchedCount,
-         errorMessage: errorMessage,
-         errorCode: errorCode,
-       );
+          success: success,
+          foodItems: foodItems,
+          restaurants: restaurants,
+          totalItemsAvailable: totalItemsAvailable,
+          fetchedCount: fetchedCount,
+          errorMessage: errorMessage,
+          errorCode: errorCode,
+        );
 
   /// Returns a shallow copy of this [FeedChunkResponse]
   /// with some or all fields replaced by the given arguments.

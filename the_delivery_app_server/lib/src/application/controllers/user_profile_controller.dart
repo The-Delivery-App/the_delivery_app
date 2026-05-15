@@ -54,6 +54,7 @@ class UserProfileController extends Endpoint {
           'addresses': addresses.map((a) => {
             'id': a.id,
             'isDefault': a.isDefault,
+            'label': a.label,
             'addressLine1': a.addressLine1,
             'addressLine2': a.addressLine2,
             'city': a.city,
@@ -130,6 +131,7 @@ class UserProfileController extends Endpoint {
         Address(
           userId: userId,
           isDefault: isDefault,
+          label: data['label'] as String?,
           country: data['country'] as String,
           city: data['city'] as String,
           postcode: data['postcode'] as String,
@@ -143,6 +145,30 @@ class UserProfileController extends Endpoint {
         'message': 'Address added',
         'addressId': address.id,
       });
+    } catch (e) {
+      return jsonEncode({'success': false, 'error': '$e'});
+    }
+  }
+
+  Future<String> updateAddress(
+    Session session,
+    String requestJson,
+  ) async {
+    try {
+      final data = jsonDecode(requestJson) as Map<String, dynamic>;
+      final addressId = data['addressId'] as int;
+      final address = await Address.db.findById(session, addressId);
+      if (address == null) {
+        return jsonEncode({'success': false, 'errorMessage': 'Address not found'});
+      }
+      address.label = data['label'] as String?;
+      address.addressLine1 = data['addressLine1'] as String;
+      address.addressLine2 = data['addressLine2'] as String?;
+      address.city = data['city'] as String;
+      address.postcode = data['postcode'] as String;
+      address.country = data['country'] as String;
+      await Address.db.updateRow(session, address);
+      return jsonEncode({'success': true});
     } catch (e) {
       return jsonEncode({'success': false, 'error': '$e'});
     }

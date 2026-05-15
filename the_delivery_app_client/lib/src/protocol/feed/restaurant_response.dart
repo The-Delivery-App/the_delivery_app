@@ -7,11 +7,9 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'package:the_delivery_app_client/src/protocol/protocol.dart' as _i2;
 
 abstract class RestaurantResponse implements _i1.SerializableModel {
   RestaurantResponse._({
@@ -35,13 +33,11 @@ abstract class RestaurantResponse implements _i1.SerializableModel {
       id: jsonSerialization['id'] as int,
       name: jsonSerialization['name'] as String,
       iconUrl: jsonSerialization['iconUrl'] as String?,
-      estimatedDeliveryTime: (jsonSerialization['estimatedDeliveryTime'] as num)
-          .toDouble(),
-      cuisine: jsonSerialization['cuisine'] == null
-          ? null
-          : _i2.Protocol().deserialize<List<String>>(
-              jsonSerialization['cuisine'],
-            ),
+      estimatedDeliveryTime:
+          (jsonSerialization['estimatedDeliveryTime'] as num).toDouble(),
+      cuisine: (jsonSerialization['cuisine'] as List?)
+          ?.map((e) => e as String)
+          .toList(),
     );
   }
 
@@ -68,7 +64,6 @@ abstract class RestaurantResponse implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'RestaurantResponse',
       'id': id,
       'name': name,
       if (iconUrl != null) 'iconUrl': iconUrl,
@@ -93,12 +88,12 @@ class _RestaurantResponseImpl extends RestaurantResponse {
     required double estimatedDeliveryTime,
     List<String>? cuisine,
   }) : super._(
-         id: id,
-         name: name,
-         iconUrl: iconUrl,
-         estimatedDeliveryTime: estimatedDeliveryTime,
-         cuisine: cuisine,
-       );
+          id: id,
+          name: name,
+          iconUrl: iconUrl,
+          estimatedDeliveryTime: estimatedDeliveryTime,
+          cuisine: cuisine,
+        );
 
   /// Returns a shallow copy of this [RestaurantResponse]
   /// with some or all fields replaced by the given arguments.

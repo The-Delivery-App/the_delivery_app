@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -43,9 +42,8 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       email: jsonSerialization['email'] as String,
       phone: jsonSerialization['phone'] as String?,
       avatarUrl: jsonSerialization['avatarUrl'] as String?,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      createdAt:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       updatedAt: jsonSerialization['updatedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
@@ -92,7 +90,6 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'User',
       if (id != null) 'id': id,
       'authUserId': authUserId,
       'name': name,
@@ -107,7 +104,6 @@ abstract class User implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'User',
       if (id != null) 'id': id,
       'authUserId': authUserId,
       'name': name,
@@ -162,15 +158,15 @@ class _UserImpl extends User {
     required DateTime createdAt,
     DateTime? updatedAt,
   }) : super._(
-         id: id,
-         authUserId: authUserId,
-         name: name,
-         email: email,
-         phone: phone,
-         avatarUrl: avatarUrl,
-         createdAt: createdAt,
-         updatedAt: updatedAt,
-       );
+          id: id,
+          authUserId: authUserId,
+          name: name,
+          email: email,
+          phone: phone,
+          avatarUrl: avatarUrl,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
+        );
 
   /// Returns a shallow copy of this [User]
   /// with some or all fields replaced by the given arguments.
@@ -199,50 +195,8 @@ class _UserImpl extends User {
   }
 }
 
-class UserUpdateTable extends _i1.UpdateTable<UserTable> {
-  UserUpdateTable(super.table);
-
-  _i1.ColumnValue<int, int> authUserId(int value) => _i1.ColumnValue(
-    table.authUserId,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> name(String value) => _i1.ColumnValue(
-    table.name,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> email(String value) => _i1.ColumnValue(
-    table.email,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> phone(String? value) => _i1.ColumnValue(
-    table.phone,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> avatarUrl(String? value) => _i1.ColumnValue(
-    table.avatarUrl,
-    value,
-  );
-
-  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
-      _i1.ColumnValue(
-        table.createdAt,
-        value,
-      );
-
-  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime? value) =>
-      _i1.ColumnValue(
-        table.updatedAt,
-        value,
-      );
-}
-
 class UserTable extends _i1.Table<int?> {
   UserTable({super.tableRelation}) : super(tableName: 'user') {
-    updateTable = UserUpdateTable(this);
     authUserId = _i1.ColumnInt(
       'authUserId',
       this,
@@ -273,8 +227,6 @@ class UserTable extends _i1.Table<int?> {
     );
   }
 
-  late final UserUpdateTable updateTable;
-
   late final _i1.ColumnInt authUserId;
 
   late final _i1.ColumnString name;
@@ -291,15 +243,15 @@ class UserTable extends _i1.Table<int?> {
 
   @override
   List<_i1.Column> get columns => [
-    id,
-    authUserId,
-    name,
-    email,
-    phone,
-    avatarUrl,
-    createdAt,
-    updatedAt,
-  ];
+        id,
+        authUserId,
+        name,
+        email,
+        phone,
+        avatarUrl,
+        createdAt,
+        updatedAt,
+      ];
 }
 
 class UserInclude extends _i1.IncludeObject {
@@ -358,7 +310,7 @@ class UserRepository {
   /// );
   /// ```
   Future<List<User>> find(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<UserTable>? where,
     int? limit,
     int? offset,
@@ -366,8 +318,6 @@ class UserRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<UserTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<User>(
       where: where?.call(User.t),
@@ -377,8 +327,6 @@ class UserRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -400,15 +348,13 @@ class UserRepository {
   /// );
   /// ```
   Future<User?> findFirstRow(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<UserTable>? where,
     int? offset,
     _i1.OrderByBuilder<UserTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<UserTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<User>(
       where: where?.call(User.t),
@@ -417,24 +363,18 @@ class UserRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [User] by its [id] or null if no such row exists.
   Future<User?> findById(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<User>(
       id,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -444,20 +384,14 @@ class UserRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
-  ///
-  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
-  /// rows are silently skipped, and only the successfully inserted rows are
-  /// returned.
   Future<List<User>> insert(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<User> rows, {
     _i1.Transaction? transaction,
-    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<User>(
       rows,
       transaction: transaction,
-      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -465,7 +399,7 @@ class UserRepository {
   ///
   /// The returned [User] will have its `id` field set.
   Future<User> insertRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     User row, {
     _i1.Transaction? transaction,
   }) async {
@@ -481,7 +415,7 @@ class UserRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<User>> update(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<User> rows, {
     _i1.ColumnSelections<UserTable>? columns,
     _i1.Transaction? transaction,
@@ -497,7 +431,7 @@ class UserRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<User> updateRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     User row, {
     _i1.ColumnSelections<UserTable>? columns,
     _i1.Transaction? transaction,
@@ -509,51 +443,11 @@ class UserRepository {
     );
   }
 
-  /// Updates a single [User] by its [id] with the specified [columnValues].
-  /// Returns the updated row or null if no row with the given id exists.
-  Future<User?> updateById(
-    _i1.DatabaseSession session,
-    int id, {
-    required _i1.ColumnValueListBuilder<UserUpdateTable> columnValues,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateById<User>(
-      id,
-      columnValues: columnValues(User.t.updateTable),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates all [User]s matching the [where] expression with the specified [columnValues].
-  /// Returns the list of updated rows.
-  Future<List<User>> updateWhere(
-    _i1.DatabaseSession session, {
-    required _i1.ColumnValueListBuilder<UserUpdateTable> columnValues,
-    required _i1.WhereExpressionBuilder<UserTable> where,
-    int? limit,
-    int? offset,
-    _i1.OrderByBuilder<UserTable>? orderBy,
-    _i1.OrderByListBuilder<UserTable>? orderByList,
-    bool orderDescending = false,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateWhere<User>(
-      columnValues: columnValues(User.t.updateTable),
-      where: where(User.t),
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy?.call(User.t),
-      orderByList: orderByList?.call(User.t),
-      orderDescending: orderDescending,
-      transaction: transaction,
-    );
-  }
-
   /// Deletes all [User]s in the list and returns the deleted rows.
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<User>> delete(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<User> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -565,7 +459,7 @@ class UserRepository {
 
   /// Deletes a single [User].
   Future<User> deleteRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     User row, {
     _i1.Transaction? transaction,
   }) async {
@@ -577,7 +471,7 @@ class UserRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<User>> deleteWhere(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     required _i1.WhereExpressionBuilder<UserTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -590,7 +484,7 @@ class UserRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<UserTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -598,22 +492,6 @@ class UserRepository {
     return session.db.count<User>(
       where: where?.call(User.t),
       limit: limit,
-      transaction: transaction,
-    );
-  }
-
-  /// Acquires row-level locks on [User] rows matching the [where] expression.
-  Future<void> lockRows(
-    _i1.DatabaseSession session, {
-    required _i1.WhereExpressionBuilder<UserTable> where,
-    required _i1.LockMode lockMode,
-    required _i1.Transaction transaction,
-    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
-  }) async {
-    return session.db.lockRows<User>(
-      where: where(User.t),
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

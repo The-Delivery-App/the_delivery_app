@@ -33,6 +33,7 @@ userProfileController:
   - getProfile:
   - updateProfile:
   - addAddress:
+  - updateAddress:
   - deleteAddress:
 emailIdp:
   - login:

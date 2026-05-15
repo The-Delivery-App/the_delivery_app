@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -27,10 +26,9 @@ abstract class FilteredFeedResponse
   }) = _FilteredFeedResponseImpl;
 
   factory FilteredFeedResponse.fromJson(
-    Map<String, dynamic> jsonSerialization,
-  ) {
+      Map<String, dynamic> jsonSerialization) {
     return FilteredFeedResponse(
-      success: _i1.BoolJsonExtension.fromJson(jsonSerialization['success']),
+      success: jsonSerialization['success'] as bool,
       itemCount: jsonSerialization['itemCount'] as int,
       message: jsonSerialization['message'] as String,
     );
@@ -53,7 +51,6 @@ abstract class FilteredFeedResponse
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'FilteredFeedResponse',
       'success': success,
       'itemCount': itemCount,
       'message': message,
@@ -63,7 +60,6 @@ abstract class FilteredFeedResponse
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'FilteredFeedResponse',
       'success': success,
       'itemCount': itemCount,
       'message': message,
@@ -82,10 +78,10 @@ class _FilteredFeedResponseImpl extends FilteredFeedResponse {
     required int itemCount,
     required String message,
   }) : super._(
-         success: success,
-         itemCount: itemCount,
-         message: message,
-       );
+          success: success,
+          itemCount: itemCount,
+          message: message,
+        );
 
   /// Returns a shallow copy of this [FilteredFeedResponse]
   /// with some or all fields replaced by the given arguments.

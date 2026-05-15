@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -66,7 +65,6 @@ abstract class OrderStatusHistory
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'OrderStatusHistory',
       if (id != null) 'id': id,
       'orderId': orderId,
       'status': status.toJson(),
@@ -77,7 +75,6 @@ abstract class OrderStatusHistory
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'OrderStatusHistory',
       if (id != null) 'id': id,
       'orderId': orderId,
       'status': status.toJson(),
@@ -124,11 +121,11 @@ class _OrderStatusHistoryImpl extends OrderStatusHistory {
     required _i2.OrderStatus status,
     required DateTime time,
   }) : super._(
-         id: id,
-         orderId: orderId,
-         status: status,
-         time: time,
-       );
+          id: id,
+          orderId: orderId,
+          status: status,
+          time: time,
+        );
 
   /// Returns a shallow copy of this [OrderStatusHistory]
   /// with some or all fields replaced by the given arguments.
@@ -149,32 +146,9 @@ class _OrderStatusHistoryImpl extends OrderStatusHistory {
   }
 }
 
-class OrderStatusHistoryUpdateTable
-    extends _i1.UpdateTable<OrderStatusHistoryTable> {
-  OrderStatusHistoryUpdateTable(super.table);
-
-  _i1.ColumnValue<int, int> orderId(int value) => _i1.ColumnValue(
-    table.orderId,
-    value,
-  );
-
-  _i1.ColumnValue<_i2.OrderStatus, _i2.OrderStatus> status(
-    _i2.OrderStatus value,
-  ) => _i1.ColumnValue(
-    table.status,
-    value,
-  );
-
-  _i1.ColumnValue<DateTime, DateTime> time(DateTime value) => _i1.ColumnValue(
-    table.time,
-    value,
-  );
-}
-
 class OrderStatusHistoryTable extends _i1.Table<int?> {
   OrderStatusHistoryTable({super.tableRelation})
-    : super(tableName: 'order_status_history') {
-    updateTable = OrderStatusHistoryUpdateTable(this);
+      : super(tableName: 'order_status_history') {
     orderId = _i1.ColumnInt(
       'orderId',
       this,
@@ -190,8 +164,6 @@ class OrderStatusHistoryTable extends _i1.Table<int?> {
     );
   }
 
-  late final OrderStatusHistoryUpdateTable updateTable;
-
   late final _i1.ColumnInt orderId;
 
   late final _i1.ColumnEnum<_i2.OrderStatus> status;
@@ -200,11 +172,11 @@ class OrderStatusHistoryTable extends _i1.Table<int?> {
 
   @override
   List<_i1.Column> get columns => [
-    id,
-    orderId,
-    status,
-    time,
-  ];
+        id,
+        orderId,
+        status,
+        time,
+      ];
 }
 
 class OrderStatusHistoryInclude extends _i1.IncludeObject {
@@ -263,7 +235,7 @@ class OrderStatusHistoryRepository {
   /// );
   /// ```
   Future<List<OrderStatusHistory>> find(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<OrderStatusHistoryTable>? where,
     int? limit,
     int? offset,
@@ -271,8 +243,6 @@ class OrderStatusHistoryRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<OrderStatusHistoryTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<OrderStatusHistory>(
       where: where?.call(OrderStatusHistory.t),
@@ -282,8 +252,6 @@ class OrderStatusHistoryRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -305,15 +273,13 @@ class OrderStatusHistoryRepository {
   /// );
   /// ```
   Future<OrderStatusHistory?> findFirstRow(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<OrderStatusHistoryTable>? where,
     int? offset,
     _i1.OrderByBuilder<OrderStatusHistoryTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<OrderStatusHistoryTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<OrderStatusHistory>(
       where: where?.call(OrderStatusHistory.t),
@@ -322,24 +288,18 @@ class OrderStatusHistoryRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [OrderStatusHistory] by its [id] or null if no such row exists.
   Future<OrderStatusHistory?> findById(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<OrderStatusHistory>(
       id,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -349,20 +309,14 @@ class OrderStatusHistoryRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
-  ///
-  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
-  /// rows are silently skipped, and only the successfully inserted rows are
-  /// returned.
   Future<List<OrderStatusHistory>> insert(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<OrderStatusHistory> rows, {
     _i1.Transaction? transaction,
-    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<OrderStatusHistory>(
       rows,
       transaction: transaction,
-      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -370,7 +324,7 @@ class OrderStatusHistoryRepository {
   ///
   /// The returned [OrderStatusHistory] will have its `id` field set.
   Future<OrderStatusHistory> insertRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     OrderStatusHistory row, {
     _i1.Transaction? transaction,
   }) async {
@@ -386,7 +340,7 @@ class OrderStatusHistoryRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<OrderStatusHistory>> update(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<OrderStatusHistory> rows, {
     _i1.ColumnSelections<OrderStatusHistoryTable>? columns,
     _i1.Transaction? transaction,
@@ -402,7 +356,7 @@ class OrderStatusHistoryRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<OrderStatusHistory> updateRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     OrderStatusHistory row, {
     _i1.ColumnSelections<OrderStatusHistoryTable>? columns,
     _i1.Transaction? transaction,
@@ -414,53 +368,11 @@ class OrderStatusHistoryRepository {
     );
   }
 
-  /// Updates a single [OrderStatusHistory] by its [id] with the specified [columnValues].
-  /// Returns the updated row or null if no row with the given id exists.
-  Future<OrderStatusHistory?> updateById(
-    _i1.DatabaseSession session,
-    int id, {
-    required _i1.ColumnValueListBuilder<OrderStatusHistoryUpdateTable>
-    columnValues,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateById<OrderStatusHistory>(
-      id,
-      columnValues: columnValues(OrderStatusHistory.t.updateTable),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates all [OrderStatusHistory]s matching the [where] expression with the specified [columnValues].
-  /// Returns the list of updated rows.
-  Future<List<OrderStatusHistory>> updateWhere(
-    _i1.DatabaseSession session, {
-    required _i1.ColumnValueListBuilder<OrderStatusHistoryUpdateTable>
-    columnValues,
-    required _i1.WhereExpressionBuilder<OrderStatusHistoryTable> where,
-    int? limit,
-    int? offset,
-    _i1.OrderByBuilder<OrderStatusHistoryTable>? orderBy,
-    _i1.OrderByListBuilder<OrderStatusHistoryTable>? orderByList,
-    bool orderDescending = false,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateWhere<OrderStatusHistory>(
-      columnValues: columnValues(OrderStatusHistory.t.updateTable),
-      where: where(OrderStatusHistory.t),
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy?.call(OrderStatusHistory.t),
-      orderByList: orderByList?.call(OrderStatusHistory.t),
-      orderDescending: orderDescending,
-      transaction: transaction,
-    );
-  }
-
   /// Deletes all [OrderStatusHistory]s in the list and returns the deleted rows.
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<OrderStatusHistory>> delete(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<OrderStatusHistory> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -472,7 +384,7 @@ class OrderStatusHistoryRepository {
 
   /// Deletes a single [OrderStatusHistory].
   Future<OrderStatusHistory> deleteRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     OrderStatusHistory row, {
     _i1.Transaction? transaction,
   }) async {
@@ -484,7 +396,7 @@ class OrderStatusHistoryRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<OrderStatusHistory>> deleteWhere(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     required _i1.WhereExpressionBuilder<OrderStatusHistoryTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -497,7 +409,7 @@ class OrderStatusHistoryRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<OrderStatusHistoryTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -505,22 +417,6 @@ class OrderStatusHistoryRepository {
     return session.db.count<OrderStatusHistory>(
       where: where?.call(OrderStatusHistory.t),
       limit: limit,
-      transaction: transaction,
-    );
-  }
-
-  /// Acquires row-level locks on [OrderStatusHistory] rows matching the [where] expression.
-  Future<void> lockRows(
-    _i1.DatabaseSession session, {
-    required _i1.WhereExpressionBuilder<OrderStatusHistoryTable> where,
-    required _i1.LockMode lockMode,
-    required _i1.Transaction transaction,
-    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
-  }) async {
-    return session.db.lockRows<OrderStatusHistory>(
-      where: where(OrderStatusHistory.t),
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -59,7 +58,6 @@ abstract class FoodTag
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'FoodTag',
       if (id != null) 'id': id,
       'tagId': tagId,
       'foodId': foodId,
@@ -69,7 +67,6 @@ abstract class FoodTag
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'FoodTag',
       if (id != null) 'id': id,
       'tagId': tagId,
       'foodId': foodId,
@@ -114,10 +111,10 @@ class _FoodTagImpl extends FoodTag {
     required int tagId,
     required int foodId,
   }) : super._(
-         id: id,
-         tagId: tagId,
-         foodId: foodId,
-       );
+          id: id,
+          tagId: tagId,
+          foodId: foodId,
+        );
 
   /// Returns a shallow copy of this [FoodTag]
   /// with some or all fields replaced by the given arguments.
@@ -136,23 +133,8 @@ class _FoodTagImpl extends FoodTag {
   }
 }
 
-class FoodTagUpdateTable extends _i1.UpdateTable<FoodTagTable> {
-  FoodTagUpdateTable(super.table);
-
-  _i1.ColumnValue<int, int> tagId(int value) => _i1.ColumnValue(
-    table.tagId,
-    value,
-  );
-
-  _i1.ColumnValue<int, int> foodId(int value) => _i1.ColumnValue(
-    table.foodId,
-    value,
-  );
-}
-
 class FoodTagTable extends _i1.Table<int?> {
   FoodTagTable({super.tableRelation}) : super(tableName: 'food_tag') {
-    updateTable = FoodTagUpdateTable(this);
     tagId = _i1.ColumnInt(
       'tagId',
       this,
@@ -163,18 +145,16 @@ class FoodTagTable extends _i1.Table<int?> {
     );
   }
 
-  late final FoodTagUpdateTable updateTable;
-
   late final _i1.ColumnInt tagId;
 
   late final _i1.ColumnInt foodId;
 
   @override
   List<_i1.Column> get columns => [
-    id,
-    tagId,
-    foodId,
-  ];
+        id,
+        tagId,
+        foodId,
+      ];
 }
 
 class FoodTagInclude extends _i1.IncludeObject {
@@ -233,7 +213,7 @@ class FoodTagRepository {
   /// );
   /// ```
   Future<List<FoodTag>> find(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<FoodTagTable>? where,
     int? limit,
     int? offset,
@@ -241,8 +221,6 @@ class FoodTagRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<FoodTagTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<FoodTag>(
       where: where?.call(FoodTag.t),
@@ -252,8 +230,6 @@ class FoodTagRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -275,15 +251,13 @@ class FoodTagRepository {
   /// );
   /// ```
   Future<FoodTag?> findFirstRow(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<FoodTagTable>? where,
     int? offset,
     _i1.OrderByBuilder<FoodTagTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<FoodTagTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<FoodTag>(
       where: where?.call(FoodTag.t),
@@ -292,24 +266,18 @@ class FoodTagRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [FoodTag] by its [id] or null if no such row exists.
   Future<FoodTag?> findById(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<FoodTag>(
       id,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -319,20 +287,14 @@ class FoodTagRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
-  ///
-  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
-  /// rows are silently skipped, and only the successfully inserted rows are
-  /// returned.
   Future<List<FoodTag>> insert(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<FoodTag> rows, {
     _i1.Transaction? transaction,
-    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<FoodTag>(
       rows,
       transaction: transaction,
-      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -340,7 +302,7 @@ class FoodTagRepository {
   ///
   /// The returned [FoodTag] will have its `id` field set.
   Future<FoodTag> insertRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     FoodTag row, {
     _i1.Transaction? transaction,
   }) async {
@@ -356,7 +318,7 @@ class FoodTagRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<FoodTag>> update(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<FoodTag> rows, {
     _i1.ColumnSelections<FoodTagTable>? columns,
     _i1.Transaction? transaction,
@@ -372,7 +334,7 @@ class FoodTagRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<FoodTag> updateRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     FoodTag row, {
     _i1.ColumnSelections<FoodTagTable>? columns,
     _i1.Transaction? transaction,
@@ -384,51 +346,11 @@ class FoodTagRepository {
     );
   }
 
-  /// Updates a single [FoodTag] by its [id] with the specified [columnValues].
-  /// Returns the updated row or null if no row with the given id exists.
-  Future<FoodTag?> updateById(
-    _i1.DatabaseSession session,
-    int id, {
-    required _i1.ColumnValueListBuilder<FoodTagUpdateTable> columnValues,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateById<FoodTag>(
-      id,
-      columnValues: columnValues(FoodTag.t.updateTable),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates all [FoodTag]s matching the [where] expression with the specified [columnValues].
-  /// Returns the list of updated rows.
-  Future<List<FoodTag>> updateWhere(
-    _i1.DatabaseSession session, {
-    required _i1.ColumnValueListBuilder<FoodTagUpdateTable> columnValues,
-    required _i1.WhereExpressionBuilder<FoodTagTable> where,
-    int? limit,
-    int? offset,
-    _i1.OrderByBuilder<FoodTagTable>? orderBy,
-    _i1.OrderByListBuilder<FoodTagTable>? orderByList,
-    bool orderDescending = false,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateWhere<FoodTag>(
-      columnValues: columnValues(FoodTag.t.updateTable),
-      where: where(FoodTag.t),
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy?.call(FoodTag.t),
-      orderByList: orderByList?.call(FoodTag.t),
-      orderDescending: orderDescending,
-      transaction: transaction,
-    );
-  }
-
   /// Deletes all [FoodTag]s in the list and returns the deleted rows.
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<FoodTag>> delete(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<FoodTag> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -440,7 +362,7 @@ class FoodTagRepository {
 
   /// Deletes a single [FoodTag].
   Future<FoodTag> deleteRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     FoodTag row, {
     _i1.Transaction? transaction,
   }) async {
@@ -452,7 +374,7 @@ class FoodTagRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<FoodTag>> deleteWhere(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     required _i1.WhereExpressionBuilder<FoodTagTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -465,7 +387,7 @@ class FoodTagRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<FoodTagTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -473,22 +395,6 @@ class FoodTagRepository {
     return session.db.count<FoodTag>(
       where: where?.call(FoodTag.t),
       limit: limit,
-      transaction: transaction,
-    );
-  }
-
-  /// Acquires row-level locks on [FoodTag] rows matching the [where] expression.
-  Future<void> lockRows(
-    _i1.DatabaseSession session, {
-    required _i1.WhereExpressionBuilder<FoodTagTable> where,
-    required _i1.LockMode lockMode,
-    required _i1.Transaction transaction,
-    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
-  }) async {
-    return session.db.lockRows<FoodTag>(
-      where: where(FoodTag.t),
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -65,7 +64,6 @@ abstract class BasketFood
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'BasketFood',
       if (id != null) 'id': id,
       'basketId': basketId,
       'foodId': foodId,
@@ -76,7 +74,6 @@ abstract class BasketFood
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'BasketFood',
       if (id != null) 'id': id,
       'basketId': basketId,
       'foodId': foodId,
@@ -123,11 +120,11 @@ class _BasketFoodImpl extends BasketFood {
     required int foodId,
     required int qty,
   }) : super._(
-         id: id,
-         basketId: basketId,
-         foodId: foodId,
-         qty: qty,
-       );
+          id: id,
+          basketId: basketId,
+          foodId: foodId,
+          qty: qty,
+        );
 
   /// Returns a shallow copy of this [BasketFood]
   /// with some or all fields replaced by the given arguments.
@@ -148,28 +145,8 @@ class _BasketFoodImpl extends BasketFood {
   }
 }
 
-class BasketFoodUpdateTable extends _i1.UpdateTable<BasketFoodTable> {
-  BasketFoodUpdateTable(super.table);
-
-  _i1.ColumnValue<int, int> basketId(int value) => _i1.ColumnValue(
-    table.basketId,
-    value,
-  );
-
-  _i1.ColumnValue<int, int> foodId(int value) => _i1.ColumnValue(
-    table.foodId,
-    value,
-  );
-
-  _i1.ColumnValue<int, int> qty(int value) => _i1.ColumnValue(
-    table.qty,
-    value,
-  );
-}
-
 class BasketFoodTable extends _i1.Table<int?> {
   BasketFoodTable({super.tableRelation}) : super(tableName: 'basket_food') {
-    updateTable = BasketFoodUpdateTable(this);
     basketId = _i1.ColumnInt(
       'basketId',
       this,
@@ -184,8 +161,6 @@ class BasketFoodTable extends _i1.Table<int?> {
     );
   }
 
-  late final BasketFoodUpdateTable updateTable;
-
   late final _i1.ColumnInt basketId;
 
   late final _i1.ColumnInt foodId;
@@ -194,11 +169,11 @@ class BasketFoodTable extends _i1.Table<int?> {
 
   @override
   List<_i1.Column> get columns => [
-    id,
-    basketId,
-    foodId,
-    qty,
-  ];
+        id,
+        basketId,
+        foodId,
+        qty,
+      ];
 }
 
 class BasketFoodInclude extends _i1.IncludeObject {
@@ -257,7 +232,7 @@ class BasketFoodRepository {
   /// );
   /// ```
   Future<List<BasketFood>> find(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<BasketFoodTable>? where,
     int? limit,
     int? offset,
@@ -265,8 +240,6 @@ class BasketFoodRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<BasketFoodTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<BasketFood>(
       where: where?.call(BasketFood.t),
@@ -276,8 +249,6 @@ class BasketFoodRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -299,15 +270,13 @@ class BasketFoodRepository {
   /// );
   /// ```
   Future<BasketFood?> findFirstRow(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<BasketFoodTable>? where,
     int? offset,
     _i1.OrderByBuilder<BasketFoodTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<BasketFoodTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<BasketFood>(
       where: where?.call(BasketFood.t),
@@ -316,24 +285,18 @@ class BasketFoodRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [BasketFood] by its [id] or null if no such row exists.
   Future<BasketFood?> findById(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<BasketFood>(
       id,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -343,20 +306,14 @@ class BasketFoodRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
-  ///
-  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
-  /// rows are silently skipped, and only the successfully inserted rows are
-  /// returned.
   Future<List<BasketFood>> insert(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<BasketFood> rows, {
     _i1.Transaction? transaction,
-    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<BasketFood>(
       rows,
       transaction: transaction,
-      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -364,7 +321,7 @@ class BasketFoodRepository {
   ///
   /// The returned [BasketFood] will have its `id` field set.
   Future<BasketFood> insertRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     BasketFood row, {
     _i1.Transaction? transaction,
   }) async {
@@ -380,7 +337,7 @@ class BasketFoodRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<BasketFood>> update(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<BasketFood> rows, {
     _i1.ColumnSelections<BasketFoodTable>? columns,
     _i1.Transaction? transaction,
@@ -396,7 +353,7 @@ class BasketFoodRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<BasketFood> updateRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     BasketFood row, {
     _i1.ColumnSelections<BasketFoodTable>? columns,
     _i1.Transaction? transaction,
@@ -408,51 +365,11 @@ class BasketFoodRepository {
     );
   }
 
-  /// Updates a single [BasketFood] by its [id] with the specified [columnValues].
-  /// Returns the updated row or null if no row with the given id exists.
-  Future<BasketFood?> updateById(
-    _i1.DatabaseSession session,
-    int id, {
-    required _i1.ColumnValueListBuilder<BasketFoodUpdateTable> columnValues,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateById<BasketFood>(
-      id,
-      columnValues: columnValues(BasketFood.t.updateTable),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates all [BasketFood]s matching the [where] expression with the specified [columnValues].
-  /// Returns the list of updated rows.
-  Future<List<BasketFood>> updateWhere(
-    _i1.DatabaseSession session, {
-    required _i1.ColumnValueListBuilder<BasketFoodUpdateTable> columnValues,
-    required _i1.WhereExpressionBuilder<BasketFoodTable> where,
-    int? limit,
-    int? offset,
-    _i1.OrderByBuilder<BasketFoodTable>? orderBy,
-    _i1.OrderByListBuilder<BasketFoodTable>? orderByList,
-    bool orderDescending = false,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateWhere<BasketFood>(
-      columnValues: columnValues(BasketFood.t.updateTable),
-      where: where(BasketFood.t),
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy?.call(BasketFood.t),
-      orderByList: orderByList?.call(BasketFood.t),
-      orderDescending: orderDescending,
-      transaction: transaction,
-    );
-  }
-
   /// Deletes all [BasketFood]s in the list and returns the deleted rows.
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<BasketFood>> delete(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<BasketFood> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -464,7 +381,7 @@ class BasketFoodRepository {
 
   /// Deletes a single [BasketFood].
   Future<BasketFood> deleteRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     BasketFood row, {
     _i1.Transaction? transaction,
   }) async {
@@ -476,7 +393,7 @@ class BasketFoodRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<BasketFood>> deleteWhere(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     required _i1.WhereExpressionBuilder<BasketFoodTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -489,7 +406,7 @@ class BasketFoodRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<BasketFoodTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -497,22 +414,6 @@ class BasketFoodRepository {
     return session.db.count<BasketFood>(
       where: where?.call(BasketFood.t),
       limit: limit,
-      transaction: transaction,
-    );
-  }
-
-  /// Acquires row-level locks on [BasketFood] rows matching the [where] expression.
-  Future<void> lockRows(
-    _i1.DatabaseSession session, {
-    required _i1.WhereExpressionBuilder<BasketFoodTable> where,
-    required _i1.LockMode lockMode,
-    required _i1.Transaction transaction,
-    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
-  }) async {
-    return session.db.lockRows<BasketFood>(
-      where: where(BasketFood.t),
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

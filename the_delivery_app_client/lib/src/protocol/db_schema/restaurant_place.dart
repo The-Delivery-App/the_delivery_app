@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -95,7 +94,6 @@ abstract class RestaurantPlace implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'RestaurantPlace',
       if (id != null) 'id': id,
       'restId': restId,
       if (name != null) 'name': name,
@@ -130,17 +128,17 @@ class _RestaurantPlaceImpl extends RestaurantPlace {
     required double latitude,
     required double longitude,
   }) : super._(
-         id: id,
-         restId: restId,
-         name: name,
-         city: city,
-         country: country,
-         postcode: postcode,
-         addressLine1: addressLine1,
-         addressLine2: addressLine2,
-         latitude: latitude,
-         longitude: longitude,
-       );
+          id: id,
+          restId: restId,
+          name: name,
+          city: city,
+          country: country,
+          postcode: postcode,
+          addressLine1: addressLine1,
+          addressLine2: addressLine2,
+          latitude: latitude,
+          longitude: longitude,
+        );
 
   /// Returns a shallow copy of this [RestaurantPlace]
   /// with some or all fields replaced by the given arguments.

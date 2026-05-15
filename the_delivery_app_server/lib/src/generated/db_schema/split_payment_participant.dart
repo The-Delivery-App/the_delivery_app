@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -39,28 +38,23 @@ abstract class SplitPaymentParticipant
   }) = _SplitPaymentParticipantImpl;
 
   factory SplitPaymentParticipant.fromJson(
-    Map<String, dynamic> jsonSerialization,
-  ) {
+      Map<String, dynamic> jsonSerialization) {
     return SplitPaymentParticipant(
       id: jsonSerialization['id'] as int?,
       orderId: jsonSerialization['orderId'] as int,
       userId: jsonSerialization['userId'] as int,
       paymentId: jsonSerialization['paymentId'] as int?,
       amountDue: (jsonSerialization['amountDue'] as num).toDouble(),
-      hasPaid: jsonSerialization['hasPaid'] == null
-          ? null
-          : _i1.BoolJsonExtension.fromJson(jsonSerialization['hasPaid']),
+      hasPaid: jsonSerialization['hasPaid'] as bool,
       paidAt: jsonSerialization['paidAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['paidAt']),
-      invitedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['invitedAt'],
-      ),
+      invitedAt:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['invitedAt']),
       reminderSentAt: jsonSerialization['reminderSentAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['reminderSentAt'],
-            ),
+              jsonSerialization['reminderSentAt']),
     );
   }
 
@@ -107,7 +101,6 @@ abstract class SplitPaymentParticipant
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'SplitPaymentParticipant',
       if (id != null) 'id': id,
       'orderId': orderId,
       'userId': userId,
@@ -123,7 +116,6 @@ abstract class SplitPaymentParticipant
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'SplitPaymentParticipant',
       if (id != null) 'id': id,
       'orderId': orderId,
       'userId': userId,
@@ -180,16 +172,16 @@ class _SplitPaymentParticipantImpl extends SplitPaymentParticipant {
     required DateTime invitedAt,
     DateTime? reminderSentAt,
   }) : super._(
-         id: id,
-         orderId: orderId,
-         userId: userId,
-         paymentId: paymentId,
-         amountDue: amountDue,
-         hasPaid: hasPaid,
-         paidAt: paidAt,
-         invitedAt: invitedAt,
-         reminderSentAt: reminderSentAt,
-       );
+          id: id,
+          orderId: orderId,
+          userId: userId,
+          paymentId: paymentId,
+          amountDue: amountDue,
+          hasPaid: hasPaid,
+          paidAt: paidAt,
+          invitedAt: invitedAt,
+          reminderSentAt: reminderSentAt,
+        );
 
   /// Returns a shallow copy of this [SplitPaymentParticipant]
   /// with some or all fields replaced by the given arguments.
@@ -215,65 +207,15 @@ class _SplitPaymentParticipantImpl extends SplitPaymentParticipant {
       hasPaid: hasPaid ?? this.hasPaid,
       paidAt: paidAt is DateTime? ? paidAt : this.paidAt,
       invitedAt: invitedAt ?? this.invitedAt,
-      reminderSentAt: reminderSentAt is DateTime?
-          ? reminderSentAt
-          : this.reminderSentAt,
+      reminderSentAt:
+          reminderSentAt is DateTime? ? reminderSentAt : this.reminderSentAt,
     );
   }
 }
 
-class SplitPaymentParticipantUpdateTable
-    extends _i1.UpdateTable<SplitPaymentParticipantTable> {
-  SplitPaymentParticipantUpdateTable(super.table);
-
-  _i1.ColumnValue<int, int> orderId(int value) => _i1.ColumnValue(
-    table.orderId,
-    value,
-  );
-
-  _i1.ColumnValue<int, int> userId(int value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
-
-  _i1.ColumnValue<int, int> paymentId(int? value) => _i1.ColumnValue(
-    table.paymentId,
-    value,
-  );
-
-  _i1.ColumnValue<double, double> amountDue(double value) => _i1.ColumnValue(
-    table.amountDue,
-    value,
-  );
-
-  _i1.ColumnValue<bool, bool> hasPaid(bool value) => _i1.ColumnValue(
-    table.hasPaid,
-    value,
-  );
-
-  _i1.ColumnValue<DateTime, DateTime> paidAt(DateTime? value) =>
-      _i1.ColumnValue(
-        table.paidAt,
-        value,
-      );
-
-  _i1.ColumnValue<DateTime, DateTime> invitedAt(DateTime value) =>
-      _i1.ColumnValue(
-        table.invitedAt,
-        value,
-      );
-
-  _i1.ColumnValue<DateTime, DateTime> reminderSentAt(DateTime? value) =>
-      _i1.ColumnValue(
-        table.reminderSentAt,
-        value,
-      );
-}
-
 class SplitPaymentParticipantTable extends _i1.Table<int?> {
   SplitPaymentParticipantTable({super.tableRelation})
-    : super(tableName: 'split_payment_participant') {
-    updateTable = SplitPaymentParticipantUpdateTable(this);
+      : super(tableName: 'split_payment_participant') {
     orderId = _i1.ColumnInt(
       'orderId',
       this,
@@ -309,8 +251,6 @@ class SplitPaymentParticipantTable extends _i1.Table<int?> {
     );
   }
 
-  late final SplitPaymentParticipantUpdateTable updateTable;
-
   late final _i1.ColumnInt orderId;
 
   late final _i1.ColumnInt userId;
@@ -329,16 +269,16 @@ class SplitPaymentParticipantTable extends _i1.Table<int?> {
 
   @override
   List<_i1.Column> get columns => [
-    id,
-    orderId,
-    userId,
-    paymentId,
-    amountDue,
-    hasPaid,
-    paidAt,
-    invitedAt,
-    reminderSentAt,
-  ];
+        id,
+        orderId,
+        userId,
+        paymentId,
+        amountDue,
+        hasPaid,
+        paidAt,
+        invitedAt,
+        reminderSentAt,
+      ];
 }
 
 class SplitPaymentParticipantInclude extends _i1.IncludeObject {
@@ -397,7 +337,7 @@ class SplitPaymentParticipantRepository {
   /// );
   /// ```
   Future<List<SplitPaymentParticipant>> find(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<SplitPaymentParticipantTable>? where,
     int? limit,
     int? offset,
@@ -405,8 +345,6 @@ class SplitPaymentParticipantRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<SplitPaymentParticipantTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<SplitPaymentParticipant>(
       where: where?.call(SplitPaymentParticipant.t),
@@ -416,8 +354,6 @@ class SplitPaymentParticipantRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -439,15 +375,13 @@ class SplitPaymentParticipantRepository {
   /// );
   /// ```
   Future<SplitPaymentParticipant?> findFirstRow(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<SplitPaymentParticipantTable>? where,
     int? offset,
     _i1.OrderByBuilder<SplitPaymentParticipantTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<SplitPaymentParticipantTable>? orderByList,
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<SplitPaymentParticipant>(
       where: where?.call(SplitPaymentParticipant.t),
@@ -456,24 +390,18 @@ class SplitPaymentParticipantRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [SplitPaymentParticipant] by its [id] or null if no such row exists.
   Future<SplitPaymentParticipant?> findById(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<SplitPaymentParticipant>(
       id,
       transaction: transaction,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -483,20 +411,14 @@ class SplitPaymentParticipantRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
-  ///
-  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
-  /// rows are silently skipped, and only the successfully inserted rows are
-  /// returned.
   Future<List<SplitPaymentParticipant>> insert(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<SplitPaymentParticipant> rows, {
     _i1.Transaction? transaction,
-    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<SplitPaymentParticipant>(
       rows,
       transaction: transaction,
-      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -504,7 +426,7 @@ class SplitPaymentParticipantRepository {
   ///
   /// The returned [SplitPaymentParticipant] will have its `id` field set.
   Future<SplitPaymentParticipant> insertRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     SplitPaymentParticipant row, {
     _i1.Transaction? transaction,
   }) async {
@@ -520,7 +442,7 @@ class SplitPaymentParticipantRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<SplitPaymentParticipant>> update(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<SplitPaymentParticipant> rows, {
     _i1.ColumnSelections<SplitPaymentParticipantTable>? columns,
     _i1.Transaction? transaction,
@@ -536,7 +458,7 @@ class SplitPaymentParticipantRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<SplitPaymentParticipant> updateRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     SplitPaymentParticipant row, {
     _i1.ColumnSelections<SplitPaymentParticipantTable>? columns,
     _i1.Transaction? transaction,
@@ -548,53 +470,11 @@ class SplitPaymentParticipantRepository {
     );
   }
 
-  /// Updates a single [SplitPaymentParticipant] by its [id] with the specified [columnValues].
-  /// Returns the updated row or null if no row with the given id exists.
-  Future<SplitPaymentParticipant?> updateById(
-    _i1.DatabaseSession session,
-    int id, {
-    required _i1.ColumnValueListBuilder<SplitPaymentParticipantUpdateTable>
-    columnValues,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateById<SplitPaymentParticipant>(
-      id,
-      columnValues: columnValues(SplitPaymentParticipant.t.updateTable),
-      transaction: transaction,
-    );
-  }
-
-  /// Updates all [SplitPaymentParticipant]s matching the [where] expression with the specified [columnValues].
-  /// Returns the list of updated rows.
-  Future<List<SplitPaymentParticipant>> updateWhere(
-    _i1.DatabaseSession session, {
-    required _i1.ColumnValueListBuilder<SplitPaymentParticipantUpdateTable>
-    columnValues,
-    required _i1.WhereExpressionBuilder<SplitPaymentParticipantTable> where,
-    int? limit,
-    int? offset,
-    _i1.OrderByBuilder<SplitPaymentParticipantTable>? orderBy,
-    _i1.OrderByListBuilder<SplitPaymentParticipantTable>? orderByList,
-    bool orderDescending = false,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.updateWhere<SplitPaymentParticipant>(
-      columnValues: columnValues(SplitPaymentParticipant.t.updateTable),
-      where: where(SplitPaymentParticipant.t),
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy?.call(SplitPaymentParticipant.t),
-      orderByList: orderByList?.call(SplitPaymentParticipant.t),
-      orderDescending: orderDescending,
-      transaction: transaction,
-    );
-  }
-
   /// Deletes all [SplitPaymentParticipant]s in the list and returns the deleted rows.
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<SplitPaymentParticipant>> delete(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     List<SplitPaymentParticipant> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -606,7 +486,7 @@ class SplitPaymentParticipantRepository {
 
   /// Deletes a single [SplitPaymentParticipant].
   Future<SplitPaymentParticipant> deleteRow(
-    _i1.DatabaseSession session,
+    _i1.Session session,
     SplitPaymentParticipant row, {
     _i1.Transaction? transaction,
   }) async {
@@ -618,7 +498,7 @@ class SplitPaymentParticipantRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<SplitPaymentParticipant>> deleteWhere(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     required _i1.WhereExpressionBuilder<SplitPaymentParticipantTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -631,7 +511,7 @@ class SplitPaymentParticipantRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.DatabaseSession session, {
+    _i1.Session session, {
     _i1.WhereExpressionBuilder<SplitPaymentParticipantTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -639,22 +519,6 @@ class SplitPaymentParticipantRepository {
     return session.db.count<SplitPaymentParticipant>(
       where: where?.call(SplitPaymentParticipant.t),
       limit: limit,
-      transaction: transaction,
-    );
-  }
-
-  /// Acquires row-level locks on [SplitPaymentParticipant] rows matching the [where] expression.
-  Future<void> lockRows(
-    _i1.DatabaseSession session, {
-    required _i1.WhereExpressionBuilder<SplitPaymentParticipantTable> where,
-    required _i1.LockMode lockMode,
-    required _i1.Transaction transaction,
-    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
-  }) async {
-    return session.db.lockRows<SplitPaymentParticipant>(
-      where: where(SplitPaymentParticipant.t),
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
