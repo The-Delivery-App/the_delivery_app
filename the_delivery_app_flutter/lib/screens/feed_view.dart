@@ -16,8 +16,11 @@ class FeedView extends StatelessWidget {
   final VoidCallback? onProfileTap;
   final VoidCallback? onAddressTap;
   final String addressLabel;
+  final List<Restaurant> featuredRestaurants;
+  final double? userLat;
+  final double? userLng;
 
-  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals, this.onSearchTap, this.onSeeMap, this.onProfileTap, this.onAddressTap, this.addressLabel = 'London, UK'});
+  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals, this.onSearchTap, this.onSeeMap, this.onProfileTap, this.onAddressTap, this.addressLabel = 'London, UK', this.featuredRestaurants = const [], this.userLat, this.userLng});
 
   Widget _buildHeader() {
     return Padding(
@@ -308,6 +311,35 @@ class FeedView extends StatelessWidget {
     return map.values.toList();
   }
 
+  List<MapEntry<Restaurant, List<Food>>> _sortByDistance(
+    List<MapEntry<Restaurant, List<Food>>> groups,
+  ) {
+    if (userLat == null || userLng == null || featuredRestaurants.isEmpty) {
+      return groups;
+    }
+    double? distanceFor(Restaurant r) {
+      final match = featuredRestaurants.firstWhere(
+        (f) => f.name == r.name,
+        orElse: () => const Restaurant(id: '', name: ''),
+      );
+      if (match.latitude == null || match.longitude == null) return null;
+      final dLat = match.latitude! - userLat!;
+      final dLng = match.longitude! - userLng!;
+      return dLat * dLat + dLng * dLng;
+    }
+
+    final sorted = List<MapEntry<Restaurant, List<Food>>>.from(groups);
+    sorted.sort((a, b) {
+      final da = distanceFor(a.key);
+      final db = distanceFor(b.key);
+      if (da == null && db == null) return 0;
+      if (da == null) return 1;
+      if (db == null) return -1;
+      return da.compareTo(db);
+    });
+    return sorted;
+  }
+
   Widget _buildError(String message) {
     return Center(
       child: Padding(
@@ -342,7 +374,7 @@ class FeedView extends StatelessWidget {
       return Scaffold(body: _buildError(state.errorMessage!));
     }
     final groups = _groupByRestaurant(state.feedItems);
-    final nearYou = groups.take(5).toList();
+    final nearYou = _sortByDistance(groups).take(5).toList();
     return Scaffold(
       backgroundColor: const Color(0xFFFAF7F2),
       body: SafeArea(
