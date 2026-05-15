@@ -129,6 +129,11 @@ class _AddressesViewState extends State<AddressesView> {
         foregroundColor: Colors.black,
         elevation: 0,
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.deepOrange,
+        onPressed: _showAddDialog,
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _addresses.isEmpty
