@@ -13,8 +13,9 @@ class FeedView extends StatelessWidget {
   final VoidCallback? onDeals;
   final VoidCallback? onSearchTap;
   final VoidCallback? onSeeMap;
+  final VoidCallback? onProfileTap;
 
-  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals, this.onSearchTap, this.onSeeMap});
+  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals, this.onSearchTap, this.onSeeMap, this.onProfileTap});
 
   Widget _buildHeader() {
     return Padding(
