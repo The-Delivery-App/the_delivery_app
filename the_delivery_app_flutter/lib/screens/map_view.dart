@@ -99,9 +99,17 @@ class _MapViewState extends State<MapView> {
           IconButton(
             icon: const Icon(Icons.map, color: Colors.deepOrange),
             tooltip: 'Show on map',
-            onPressed: restaurant.latitude != null && restaurant.longitude != null
-                ? () => _mapController.move(LatLng(restaurant.latitude!, restaurant.longitude!), 16)
-                : null,
+            onPressed: () {
+              final lat = restaurant.latitude;
+              final lng = restaurant.longitude;
+              if (lat != null && lng != null) {
+                _mapController.move(LatLng(lat, lng), 16);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('${restaurant.name} has no location data'), duration: const Duration(seconds: 2)),
+                );
+              }
+            },
           ),
         ],
       ),
