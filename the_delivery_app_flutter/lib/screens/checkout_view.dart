@@ -119,7 +119,11 @@ class _CheckoutViewState extends State<CheckoutView> {
         elevation: 0,
       ),
       body: ListView(
-        children: [_buildOrderSummary()],
+        children: [
+          _buildOrderSummary(),
+          _buildAddressForm(),
+          const SizedBox(height: 16),
+        ],
       ),
     );
   }
