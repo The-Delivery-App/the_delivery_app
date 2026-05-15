@@ -80,7 +80,13 @@ class _AddressesViewState extends State<AddressesView> {
         foregroundColor: Colors.black,
         elevation: 0,
       ),
-      body: const SizedBox.shrink(),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _addresses.isEmpty
+              ? const Center(child: Text('No addresses saved yet.'))
+              : ListView(
+                  children: _addresses.map(_buildAddressTile).toList(),
+                ),
     );
   }
 }
