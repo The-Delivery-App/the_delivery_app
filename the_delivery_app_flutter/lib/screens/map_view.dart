@@ -132,8 +132,31 @@ class _MapViewState extends State<MapView> {
     );
   }
 
+  List<Restaurant> _sortedRestaurants() {
+    final list = List<Restaurant>.from(widget.state.restaurants);
+    final lat = widget.addressLat;
+    final lng = widget.addressLng;
+    if (lat == null || lng == null) return list;
+    double? distFor(Restaurant r) {
+      if (r.latitude == null || r.longitude == null) return null;
+      final dLat = r.latitude! - lat;
+      final dLng = r.longitude! - lng;
+      return dLat * dLat + dLng * dLng;
+    }
+    list.sort((a, b) {
+      final da = distFor(a);
+      final db = distFor(b);
+      if (da == null && db == null) return 0;
+      if (da == null) return 1;
+      if (db == null) return -1;
+      return da.compareTo(db);
+    });
+    return list;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final sorted = _sortedRestaurants();
     return Scaffold(
       backgroundColor: const Color(0xFFFAF7F2),
       appBar: AppBar(
@@ -147,12 +170,12 @@ class _MapViewState extends State<MapView> {
           _buildMap(),
           const SizedBox(height: 8),
           Expanded(
-            child: widget.state.restaurants.isEmpty
+            child: sorted.isEmpty
                 ? const Center(child: Text('No restaurants nearby.'))
                 : ListView.builder(
-                    itemCount: widget.state.restaurants.length,
+                    itemCount: sorted.length,
                     itemBuilder: (context, index) =>
-                        _buildRestaurantTile(context, widget.state.restaurants[index]),
+                        _buildRestaurantTile(context, sorted[index]),
                   ),
           ),
         ],
