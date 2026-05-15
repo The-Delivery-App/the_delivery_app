@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -37,23 +38,28 @@ abstract class SplitPaymentParticipant implements _i1.SerializableModel {
   }) = _SplitPaymentParticipantImpl;
 
   factory SplitPaymentParticipant.fromJson(
-      Map<String, dynamic> jsonSerialization) {
+    Map<String, dynamic> jsonSerialization,
+  ) {
     return SplitPaymentParticipant(
       id: jsonSerialization['id'] as int?,
       orderId: jsonSerialization['orderId'] as int,
       userId: jsonSerialization['userId'] as int,
       paymentId: jsonSerialization['paymentId'] as int?,
       amountDue: (jsonSerialization['amountDue'] as num).toDouble(),
-      hasPaid: jsonSerialization['hasPaid'] as bool,
+      hasPaid: jsonSerialization['hasPaid'] == null
+          ? null
+          : _i1.BoolJsonExtension.fromJson(jsonSerialization['hasPaid']),
       paidAt: jsonSerialization['paidAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['paidAt']),
-      invitedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['invitedAt']),
+      invitedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['invitedAt'],
+      ),
       reminderSentAt: jsonSerialization['reminderSentAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['reminderSentAt']),
+              jsonSerialization['reminderSentAt'],
+            ),
     );
   }
 
@@ -95,6 +101,7 @@ abstract class SplitPaymentParticipant implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'SplitPaymentParticipant',
       if (id != null) 'id': id,
       'orderId': orderId,
       'userId': userId,
@@ -127,16 +134,16 @@ class _SplitPaymentParticipantImpl extends SplitPaymentParticipant {
     required DateTime invitedAt,
     DateTime? reminderSentAt,
   }) : super._(
-          id: id,
-          orderId: orderId,
-          userId: userId,
-          paymentId: paymentId,
-          amountDue: amountDue,
-          hasPaid: hasPaid,
-          paidAt: paidAt,
-          invitedAt: invitedAt,
-          reminderSentAt: reminderSentAt,
-        );
+         id: id,
+         orderId: orderId,
+         userId: userId,
+         paymentId: paymentId,
+         amountDue: amountDue,
+         hasPaid: hasPaid,
+         paidAt: paidAt,
+         invitedAt: invitedAt,
+         reminderSentAt: reminderSentAt,
+       );
 
   /// Returns a shallow copy of this [SplitPaymentParticipant]
   /// with some or all fields replaced by the given arguments.
@@ -162,8 +169,9 @@ class _SplitPaymentParticipantImpl extends SplitPaymentParticipant {
       hasPaid: hasPaid ?? this.hasPaid,
       paidAt: paidAt is DateTime? ? paidAt : this.paidAt,
       invitedAt: invitedAt ?? this.invitedAt,
-      reminderSentAt:
-          reminderSentAt is DateTime? ? reminderSentAt : this.reminderSentAt,
+      reminderSentAt: reminderSentAt is DateTime?
+          ? reminderSentAt
+          : this.reminderSentAt,
     );
   }
 }

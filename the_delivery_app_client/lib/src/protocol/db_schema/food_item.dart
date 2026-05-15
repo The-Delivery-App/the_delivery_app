@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -48,9 +49,10 @@ abstract class FoodItem implements _i1.SerializableModel {
       foodThumbnail: jsonSerialization['foodThumbnail'] as String?,
       description: jsonSerialization['description'] as String?,
       nutritionCals: jsonSerialization['nutritionCals'] as int?,
-      estimatedOrders: jsonSerialization['estimatedOrders'] as int,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      estimatedOrders: jsonSerialization['estimatedOrders'] as int?,
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
@@ -95,6 +97,7 @@ abstract class FoodItem implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'FoodItem',
       if (id != null) 'id': id,
       'restId': restId,
       'foodName': foodName,
@@ -129,17 +132,17 @@ class _FoodItemImpl extends FoodItem {
     int? estimatedOrders,
     required DateTime createdAt,
   }) : super._(
-          id: id,
-          restId: restId,
-          foodName: foodName,
-          foodPrice: foodPrice,
-          foodRating: foodRating,
-          foodThumbnail: foodThumbnail,
-          description: description,
-          nutritionCals: nutritionCals,
-          estimatedOrders: estimatedOrders,
-          createdAt: createdAt,
-        );
+         id: id,
+         restId: restId,
+         foodName: foodName,
+         foodPrice: foodPrice,
+         foodRating: foodRating,
+         foodThumbnail: foodThumbnail,
+         description: description,
+         nutritionCals: nutritionCals,
+         estimatedOrders: estimatedOrders,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [FoodItem]
   /// with some or all fields replaced by the given arguments.
@@ -163,8 +166,9 @@ class _FoodItemImpl extends FoodItem {
       foodName: foodName ?? this.foodName,
       foodPrice: foodPrice ?? this.foodPrice,
       foodRating: foodRating ?? this.foodRating,
-      foodThumbnail:
-          foodThumbnail is String? ? foodThumbnail : this.foodThumbnail,
+      foodThumbnail: foodThumbnail is String?
+          ? foodThumbnail
+          : this.foodThumbnail,
       description: description is String? ? description : this.description,
       nutritionCals: nutritionCals is int? ? nutritionCals : this.nutritionCals,
       estimatedOrders: estimatedOrders ?? this.estimatedOrders,

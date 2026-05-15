@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -42,8 +43,9 @@ abstract class User implements _i1.SerializableModel {
       email: jsonSerialization['email'] as String,
       phone: jsonSerialization['phone'] as String?,
       avatarUrl: jsonSerialization['avatarUrl'] as String?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
       updatedAt: jsonSerialization['updatedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
@@ -85,6 +87,7 @@ abstract class User implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'User',
       if (id != null) 'id': id,
       'authUserId': authUserId,
       'name': name,
@@ -115,15 +118,15 @@ class _UserImpl extends User {
     required DateTime createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          authUserId: authUserId,
-          name: name,
-          email: email,
-          phone: phone,
-          avatarUrl: avatarUrl,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         authUserId: authUserId,
+         name: name,
+         email: email,
+         phone: phone,
+         avatarUrl: avatarUrl,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [User]
   /// with some or all fields replaced by the given arguments.

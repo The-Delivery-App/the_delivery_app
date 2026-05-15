@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -70,6 +71,7 @@ abstract class SpecialDeals
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'SpecialDeals',
       if (id != null) 'id': id,
       'placeId': placeId,
       if (thumbnail != null) 'thumbnail': thumbnail,
@@ -81,6 +83,7 @@ abstract class SpecialDeals
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'SpecialDeals',
       if (id != null) 'id': id,
       'placeId': placeId,
       if (thumbnail != null) 'thumbnail': thumbnail,
@@ -129,12 +132,12 @@ class _SpecialDealsImpl extends SpecialDeals {
     required String description,
     required double discountAmount,
   }) : super._(
-          id: id,
-          placeId: placeId,
-          thumbnail: thumbnail,
-          description: description,
-          discountAmount: discountAmount,
-        );
+         id: id,
+         placeId: placeId,
+         thumbnail: thumbnail,
+         description: description,
+         discountAmount: discountAmount,
+       );
 
   /// Returns a shallow copy of this [SpecialDeals]
   /// with some or all fields replaced by the given arguments.
@@ -157,8 +160,34 @@ class _SpecialDealsImpl extends SpecialDeals {
   }
 }
 
+class SpecialDealsUpdateTable extends _i1.UpdateTable<SpecialDealsTable> {
+  SpecialDealsUpdateTable(super.table);
+
+  _i1.ColumnValue<int, int> placeId(int value) => _i1.ColumnValue(
+    table.placeId,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> thumbnail(String? value) => _i1.ColumnValue(
+    table.thumbnail,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> description(String value) => _i1.ColumnValue(
+    table.description,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> discountAmount(double value) =>
+      _i1.ColumnValue(
+        table.discountAmount,
+        value,
+      );
+}
+
 class SpecialDealsTable extends _i1.Table<int?> {
   SpecialDealsTable({super.tableRelation}) : super(tableName: 'special_deals') {
+    updateTable = SpecialDealsUpdateTable(this);
     placeId = _i1.ColumnInt(
       'placeId',
       this,
@@ -177,6 +206,8 @@ class SpecialDealsTable extends _i1.Table<int?> {
     );
   }
 
+  late final SpecialDealsUpdateTable updateTable;
+
   late final _i1.ColumnInt placeId;
 
   late final _i1.ColumnString thumbnail;
@@ -187,12 +218,12 @@ class SpecialDealsTable extends _i1.Table<int?> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        placeId,
-        thumbnail,
-        description,
-        discountAmount,
-      ];
+    id,
+    placeId,
+    thumbnail,
+    description,
+    discountAmount,
+  ];
 }
 
 class SpecialDealsInclude extends _i1.IncludeObject {
@@ -251,7 +282,7 @@ class SpecialDealsRepository {
   /// );
   /// ```
   Future<List<SpecialDeals>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<SpecialDealsTable>? where,
     int? limit,
     int? offset,
@@ -259,6 +290,8 @@ class SpecialDealsRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<SpecialDealsTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<SpecialDeals>(
       where: where?.call(SpecialDeals.t),
@@ -268,6 +301,8 @@ class SpecialDealsRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -289,13 +324,15 @@ class SpecialDealsRepository {
   /// );
   /// ```
   Future<SpecialDeals?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<SpecialDealsTable>? where,
     int? offset,
     _i1.OrderByBuilder<SpecialDealsTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<SpecialDealsTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<SpecialDeals>(
       where: where?.call(SpecialDeals.t),
@@ -304,18 +341,24 @@ class SpecialDealsRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [SpecialDeals] by its [id] or null if no such row exists.
   Future<SpecialDeals?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<SpecialDeals>(
       id,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -325,14 +368,20 @@ class SpecialDealsRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<SpecialDeals>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<SpecialDeals> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<SpecialDeals>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -340,7 +389,7 @@ class SpecialDealsRepository {
   ///
   /// The returned [SpecialDeals] will have its `id` field set.
   Future<SpecialDeals> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     SpecialDeals row, {
     _i1.Transaction? transaction,
   }) async {
@@ -356,7 +405,7 @@ class SpecialDealsRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<SpecialDeals>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<SpecialDeals> rows, {
     _i1.ColumnSelections<SpecialDealsTable>? columns,
     _i1.Transaction? transaction,
@@ -372,7 +421,7 @@ class SpecialDealsRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<SpecialDeals> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     SpecialDeals row, {
     _i1.ColumnSelections<SpecialDealsTable>? columns,
     _i1.Transaction? transaction,
@@ -384,11 +433,51 @@ class SpecialDealsRepository {
     );
   }
 
+  /// Updates a single [SpecialDeals] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<SpecialDeals?> updateById(
+    _i1.DatabaseSession session,
+    int id, {
+    required _i1.ColumnValueListBuilder<SpecialDealsUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<SpecialDeals>(
+      id,
+      columnValues: columnValues(SpecialDeals.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [SpecialDeals]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<SpecialDeals>> updateWhere(
+    _i1.DatabaseSession session, {
+    required _i1.ColumnValueListBuilder<SpecialDealsUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<SpecialDealsTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<SpecialDealsTable>? orderBy,
+    _i1.OrderByListBuilder<SpecialDealsTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<SpecialDeals>(
+      columnValues: columnValues(SpecialDeals.t.updateTable),
+      where: where(SpecialDeals.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(SpecialDeals.t),
+      orderByList: orderByList?.call(SpecialDeals.t),
+      orderDescending: orderDescending,
+      transaction: transaction,
+    );
+  }
+
   /// Deletes all [SpecialDeals]s in the list and returns the deleted rows.
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<SpecialDeals>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<SpecialDeals> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -400,7 +489,7 @@ class SpecialDealsRepository {
 
   /// Deletes a single [SpecialDeals].
   Future<SpecialDeals> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     SpecialDeals row, {
     _i1.Transaction? transaction,
   }) async {
@@ -412,7 +501,7 @@ class SpecialDealsRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<SpecialDeals>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<SpecialDealsTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -425,7 +514,7 @@ class SpecialDealsRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<SpecialDealsTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -433,6 +522,22 @@ class SpecialDealsRepository {
     return session.db.count<SpecialDeals>(
       where: where?.call(SpecialDeals.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [SpecialDeals] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<SpecialDealsTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<SpecialDeals>(
+      where: where(SpecialDeals.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

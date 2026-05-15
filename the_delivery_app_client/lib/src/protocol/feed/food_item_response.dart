@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -46,8 +47,8 @@ abstract class FoodItemResponse implements _i1.SerializableModel {
       price: (jsonSerialization['price'] as num).toDouble(),
       rating: (jsonSerialization['rating'] as num).toDouble(),
       estimatedOrdersAmount: jsonSerialization['estimatedOrdersAmount'] as int,
-      estimatedDeliveryTime:
-          (jsonSerialization['estimatedDeliveryTime'] as num).toDouble(),
+      estimatedDeliveryTime: (jsonSerialization['estimatedDeliveryTime'] as num)
+          .toDouble(),
       distanceKm: (jsonSerialization['distanceKm'] as num?)?.toDouble(),
       restaurantName: jsonSerialization['restaurantName'] as String,
       restaurantIconUrl: jsonSerialization['restaurantIconUrl'] as String?,
@@ -92,6 +93,7 @@ abstract class FoodItemResponse implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'FoodItemResponse',
       if (id != null) 'id': id,
       'name': name,
       if (iconUrl != null) 'iconUrl': iconUrl,
@@ -126,17 +128,17 @@ class _FoodItemResponseImpl extends FoodItemResponse {
     required String restaurantName,
     String? restaurantIconUrl,
   }) : super._(
-          id: id,
-          name: name,
-          iconUrl: iconUrl,
-          price: price,
-          rating: rating,
-          estimatedOrdersAmount: estimatedOrdersAmount,
-          estimatedDeliveryTime: estimatedDeliveryTime,
-          distanceKm: distanceKm,
-          restaurantName: restaurantName,
-          restaurantIconUrl: restaurantIconUrl,
-        );
+         id: id,
+         name: name,
+         iconUrl: iconUrl,
+         price: price,
+         rating: rating,
+         estimatedOrdersAmount: estimatedOrdersAmount,
+         estimatedDeliveryTime: estimatedDeliveryTime,
+         distanceKm: distanceKm,
+         restaurantName: restaurantName,
+         restaurantIconUrl: restaurantIconUrl,
+       );
 
   /// Returns a shallow copy of this [FoodItemResponse]
   /// with some or all fields replaced by the given arguments.

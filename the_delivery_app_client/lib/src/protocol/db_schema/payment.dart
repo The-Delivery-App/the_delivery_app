@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -54,18 +55,20 @@ abstract class Payment implements _i1.SerializableModel {
       orderId: jsonSerialization['orderId'] as int,
       userId: jsonSerialization['userId'] as int,
       amount: (jsonSerialization['amount'] as num).toDouble(),
-      currency: jsonSerialization['currency'] as String,
+      currency: jsonSerialization['currency'] as String?,
       paymentMethod: jsonSerialization['paymentMethod'] as String,
       transactionId: jsonSerialization['transactionId'] as String?,
       providerName: jsonSerialization['providerName'] as String,
       providerMetadata: jsonSerialization['providerMetadata'] as String?,
       status: jsonSerialization['status'] as String,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
       processedAt: jsonSerialization['processedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['processedAt']),
+              jsonSerialization['processedAt'],
+            ),
       refundedAmount: (jsonSerialization['refundedAmount'] as num?)?.toDouble(),
       refundedAt: jsonSerialization['refundedAt'] == null
           ? null
@@ -130,6 +133,7 @@ abstract class Payment implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Payment',
       if (id != null) 'id': id,
       'orderId': orderId,
       'userId': userId,
@@ -174,22 +178,22 @@ class _PaymentImpl extends Payment {
     DateTime? refundedAt,
     String? refundReason,
   }) : super._(
-          id: id,
-          orderId: orderId,
-          userId: userId,
-          amount: amount,
-          currency: currency,
-          paymentMethod: paymentMethod,
-          transactionId: transactionId,
-          providerName: providerName,
-          providerMetadata: providerMetadata,
-          status: status,
-          createdAt: createdAt,
-          processedAt: processedAt,
-          refundedAmount: refundedAmount,
-          refundedAt: refundedAt,
-          refundReason: refundReason,
-        );
+         id: id,
+         orderId: orderId,
+         userId: userId,
+         amount: amount,
+         currency: currency,
+         paymentMethod: paymentMethod,
+         transactionId: transactionId,
+         providerName: providerName,
+         providerMetadata: providerMetadata,
+         status: status,
+         createdAt: createdAt,
+         processedAt: processedAt,
+         refundedAmount: refundedAmount,
+         refundedAt: refundedAt,
+         refundReason: refundReason,
+       );
 
   /// Returns a shallow copy of this [Payment]
   /// with some or all fields replaced by the given arguments.
@@ -219,8 +223,9 @@ class _PaymentImpl extends Payment {
       amount: amount ?? this.amount,
       currency: currency ?? this.currency,
       paymentMethod: paymentMethod ?? this.paymentMethod,
-      transactionId:
-          transactionId is String? ? transactionId : this.transactionId,
+      transactionId: transactionId is String?
+          ? transactionId
+          : this.transactionId,
       providerName: providerName ?? this.providerName,
       providerMetadata: providerMetadata is String?
           ? providerMetadata
@@ -228,8 +233,9 @@ class _PaymentImpl extends Payment {
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       processedAt: processedAt is DateTime? ? processedAt : this.processedAt,
-      refundedAmount:
-          refundedAmount is double? ? refundedAmount : this.refundedAmount,
+      refundedAmount: refundedAmount is double?
+          ? refundedAmount
+          : this.refundedAmount,
       refundedAt: refundedAt is DateTime? ? refundedAt : this.refundedAt,
       refundReason: refundReason is String? ? refundReason : this.refundReason,
     );
