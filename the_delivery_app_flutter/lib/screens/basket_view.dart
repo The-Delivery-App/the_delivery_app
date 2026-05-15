@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/food.dart';
 import '../models/restaurant.dart';
 import '../view_models/basket_view_model.dart';
+import 'checkout_view.dart';
 
 class BasketView extends StatefulWidget {
   final BasketViewModel viewModel;
@@ -355,19 +356,10 @@ class _BasketViewState extends State<BasketView> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 ),
                 onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                      title: const Text('Place Order'),
-                      content: const Text(
-                        'To place an order, please sign in and add a delivery address in your account.',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('OK'),
-                        ),
-                      ],
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => CheckoutView(basketViewModel: widget.viewModel),
                     ),
                   );
                 },
