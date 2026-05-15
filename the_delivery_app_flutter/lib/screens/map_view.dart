@@ -61,42 +61,49 @@ class _MapViewState extends State<MapView> {
   }
 
   Widget _buildRestaurantTile(BuildContext context, Restaurant restaurant) {
-    return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => RestaurantView(restaurant: restaurant, onAddToBasket: widget.onAddToBasket),
-        ),
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 6, offset: const Offset(0, 2))],
       ),
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade200),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 6, offset: const Offset(0, 2))],
-        ),
-        child: Row(
-          children: [
-            const CircleAvatar(
-              radius: 22,
-              backgroundColor: Color(0xFFFFE5DC),
-              child: Icon(Icons.restaurant, color: Colors.deepOrange),
+      child: Row(
+        children: [
+          Expanded(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => RestaurantView(restaurant: restaurant, onAddToBasket: widget.onAddToBasket),
+                ),
+              ),
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 22,
+                    backgroundColor: Color(0xFFFFE5DC),
+                    child: Icon(Icons.restaurant, color: Colors.deepOrange),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(restaurant.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(restaurant.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-            ),
-            IconButton(
-              icon: const Icon(Icons.map, color: Colors.deepOrange),
-              tooltip: 'Show on map',
-              onPressed: restaurant.latitude != null && restaurant.longitude != null
-                  ? () => _mapController.move(LatLng(restaurant.latitude!, restaurant.longitude!), 16)
-                  : null,
-            ),
-          ],
-        ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.map, color: Colors.deepOrange),
+            tooltip: 'Show on map',
+            onPressed: restaurant.latitude != null && restaurant.longitude != null
+                ? () => _mapController.move(LatLng(restaurant.latitude!, restaurant.longitude!), 16)
+                : null,
+          ),
+        ],
       ),
     );
   }
