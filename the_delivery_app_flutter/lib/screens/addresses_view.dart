@@ -23,18 +23,28 @@ class _AddressesViewState extends State<AddressesView> {
 
   Future<void> _loadAddresses() async {
     setState(() => _isLoading = true);
-    final userRaw = await client.userProfileController.getCurrentUser();
-    final userId = jsonDecode(userRaw)['userId'] as int;
-    final profileRaw = await client.userProfileController.getProfile(userId);
-    final profile = jsonDecode(profileRaw);
-    final list = (profile['user']['addresses'] as List<dynamic>)
-        .whereType<Map<String, dynamic>>()
-        .toList();
-    if (!mounted) return;
-    setState(() {
-      _addresses = list;
-      _isLoading = false;
-    });
+    try {
+      final userRaw = await client.userProfileController.getCurrentUser();
+      final userData = jsonDecode(userRaw);
+      if (userData['success'] != true) {
+        throw Exception(userData['errorMessage'] ?? 'Not signed in');
+      }
+      final userId = userData['userId'] as int;
+      final profileRaw = await client.userProfileController.getProfile(userId);
+      final profile = jsonDecode(profileRaw);
+      final list = (profile['user']?['addresses'] as List<dynamic>? ?? [])
+          .whereType<Map<String, dynamic>>()
+          .toList();
+      if (!mounted) return;
+      setState(() {
+        _addresses = list;
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+    }
   }
 
   Future<void> _showAddDialog() async {
@@ -137,7 +147,18 @@ class _AddressesViewState extends State<AddressesView> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _addresses.isEmpty
-              ? const Center(child: Text('No addresses saved yet.'))
+              ? const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.location_off_outlined, size: 64, color: Colors.grey),
+                      SizedBox(height: 16),
+                      Text('No addresses yet', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 8),
+                      Text('Tap the + button to add one', style: TextStyle(color: Colors.grey)),
+                    ],
+                  ),
+                )
               : ListView(
                   children: _addresses.map(_buildAddressTile).toList(),
                 ),
