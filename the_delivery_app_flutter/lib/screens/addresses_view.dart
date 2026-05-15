@@ -37,6 +37,46 @@ class _AddressesViewState extends State<AddressesView> {
     });
   }
 
+  Future<void> _showAddDialog() async {
+    final line1 = TextEditingController();
+    final city = TextEditingController();
+    final postcode = TextEditingController();
+    final country = TextEditingController(text: 'UK');
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Add Address'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(controller: line1, decoration: const InputDecoration(labelText: 'Address line 1')),
+            TextField(controller: city, decoration: const InputDecoration(labelText: 'City')),
+            TextField(controller: postcode, decoration: const InputDecoration(labelText: 'Postcode')),
+            TextField(controller: country, decoration: const InputDecoration(labelText: 'Country')),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Save')),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    final userRaw = await client.userProfileController.getCurrentUser();
+    final userId = jsonDecode(userRaw)['userId'] as int;
+    await client.userProfileController.addAddress(jsonEncode({
+      'userId': userId,
+      'addressLine1': line1.text,
+      'city': city.text,
+      'postcode': postcode.text,
+      'country': country.text,
+    }));
+    _loadAddresses();
+  }
+
   Future<void> _deleteAddress(int addressId) async {
     await client.userProfileController.deleteAddress(addressId);
     _loadAddresses();
