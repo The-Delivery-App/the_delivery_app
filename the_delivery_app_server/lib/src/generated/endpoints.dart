@@ -777,6 +777,25 @@ class Endpoints extends _i1.EndpointDispatch {
             params['addressId'],
           ),
         ),
+        'setDefaultAddress': _i1.MethodConnector(
+          name: 'setDefaultAddress',
+          params: {
+            'addressId': _i1.ParameterDescription(
+              name: 'addressId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['userProfileController'] as _i8.UserProfileController)
+                  .setDefaultAddress(
+            session,
+            params['addressId'],
+          ),
+        ),
       },
     );
     connectors['emailIdp'] = _i1.EndpointConnector(

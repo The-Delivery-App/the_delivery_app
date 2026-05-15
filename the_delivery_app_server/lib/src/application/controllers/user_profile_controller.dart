@@ -174,6 +174,29 @@ class UserProfileController extends Endpoint {
     }
   }
 
+  Future<String> setDefaultAddress(
+    Session session,
+    int addressId,
+  ) async {
+    try {
+      final address = await Address.db.findById(session, addressId);
+      if (address == null) {
+        return jsonEncode({'success': false, 'errorMessage': 'Address not found'});
+      }
+      final allUserAddresses = await Address.db.find(
+        session,
+        where: (t) => t.userId.equals(address.userId),
+      );
+      for (final a in allUserAddresses) {
+        a.isDefault = a.id == addressId;
+        await Address.db.updateRow(session, a);
+      }
+      return jsonEncode({'success': true});
+    } catch (e) {
+      return jsonEncode({'success': false, 'error': '$e'});
+    }
+  }
+
   Future<String> deleteAddress(
     Session session,
     int addressId,
