@@ -12,6 +12,16 @@ class CheckoutView extends StatefulWidget {
 }
 
 class _CheckoutViewState extends State<CheckoutView> {
+  Widget _row(String label, String value, {bool bold = false}) {
+    final style = bold
+        ? const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)
+        : const TextStyle(color: Colors.grey, fontSize: 13);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [Text(label, style: style), Text(value, style: style)],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
