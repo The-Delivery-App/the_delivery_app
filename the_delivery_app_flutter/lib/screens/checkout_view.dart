@@ -32,6 +32,21 @@ class _CheckoutViewState extends State<CheckoutView> {
     super.dispose();
   }
 
+  Future<void> _loadAddresses() async {
+    final userRaw = await client.userProfileController.getCurrentUser();
+    final userId = jsonDecode(userRaw)['userId'] as int;
+    final profileRaw = await client.userProfileController.getProfile(userId);
+    final profile = jsonDecode(profileRaw);
+    final list = (profile['user']['addresses'] as List<dynamic>)
+        .whereType<Map<String, dynamic>>()
+        .toList();
+    if (!mounted) return;
+    setState(() {
+      _addresses = list;
+      _selectedAddressId = list.isNotEmpty ? list.first['id'] as int : null;
+    });
+  }
+
   Future<void> _placeOrder() async {
     setState(() => _isPlacing = true);
 
