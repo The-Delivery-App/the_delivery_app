@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -58,6 +59,7 @@ abstract class FoodDeal implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'FoodDeal',
       if (id != null) 'id': id,
       'specialDealId': specialDealId,
       'foodId': foodId,
@@ -80,11 +82,11 @@ class _FoodDealImpl extends FoodDeal {
     required int foodId,
     required int itemQty,
   }) : super._(
-          id: id,
-          specialDealId: specialDealId,
-          foodId: foodId,
-          itemQty: itemQty,
-        );
+         id: id,
+         specialDealId: specialDealId,
+         foodId: foodId,
+         itemQty: itemQty,
+       );
 
   /// Returns a shallow copy of this [FoodDeal]
   /// with some or all fields replaced by the given arguments.

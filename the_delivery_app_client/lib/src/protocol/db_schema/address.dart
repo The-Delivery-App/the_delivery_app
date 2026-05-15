@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -38,7 +39,7 @@ abstract class Address implements _i1.SerializableModel {
     return Address(
       id: jsonSerialization['id'] as int?,
       userId: jsonSerialization['userId'] as int,
-      isDefault: jsonSerialization['isDefault'] as bool,
+      isDefault: _i1.BoolJsonExtension.fromJson(jsonSerialization['isDefault']),
       country: jsonSerialization['country'] as String,
       city: jsonSerialization['city'] as String,
       postcode: jsonSerialization['postcode'] as String,
@@ -82,6 +83,7 @@ abstract class Address implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Address',
       if (id != null) 'id': id,
       'userId': userId,
       'isDefault': isDefault,
@@ -112,15 +114,15 @@ class _AddressImpl extends Address {
     required String addressLine1,
     String? addressLine2,
   }) : super._(
-          id: id,
-          userId: userId,
-          isDefault: isDefault,
-          country: country,
-          city: city,
-          postcode: postcode,
-          addressLine1: addressLine1,
-          addressLine2: addressLine2,
-        );
+         id: id,
+         userId: userId,
+         isDefault: isDefault,
+         country: country,
+         city: city,
+         postcode: postcode,
+         addressLine1: addressLine1,
+         addressLine2: addressLine2,
+       );
 
   /// Returns a shallow copy of this [Address]
   /// with some or all fields replaced by the given arguments.

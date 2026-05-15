@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -88,6 +89,7 @@ abstract class OrderItem
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'OrderItem',
       if (id != null) 'id': id,
       'orderId': orderId,
       'foodItemId': foodItemId,
@@ -104,6 +106,7 @@ abstract class OrderItem
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'OrderItem',
       if (id != null) 'id': id,
       'orderId': orderId,
       'foodItemId': foodItemId,
@@ -160,15 +163,15 @@ class _OrderItemImpl extends OrderItem {
     required String foodItemName,
     String? foodItemDescription,
   }) : super._(
-          id: id,
-          orderId: orderId,
-          foodItemId: foodItemId,
-          quantity: quantity,
-          unitPrice: unitPrice,
-          specialInstructions: specialInstructions,
-          foodItemName: foodItemName,
-          foodItemDescription: foodItemDescription,
-        );
+         id: id,
+         orderId: orderId,
+         foodItemId: foodItemId,
+         quantity: quantity,
+         unitPrice: unitPrice,
+         specialInstructions: specialInstructions,
+         foodItemName: foodItemName,
+         foodItemDescription: foodItemDescription,
+       );
 
   /// Returns a shallow copy of this [OrderItem]
   /// with some or all fields replaced by the given arguments.
@@ -201,8 +204,50 @@ class _OrderItemImpl extends OrderItem {
   }
 }
 
+class OrderItemUpdateTable extends _i1.UpdateTable<OrderItemTable> {
+  OrderItemUpdateTable(super.table);
+
+  _i1.ColumnValue<int, int> orderId(int value) => _i1.ColumnValue(
+    table.orderId,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> foodItemId(int value) => _i1.ColumnValue(
+    table.foodItemId,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> quantity(int value) => _i1.ColumnValue(
+    table.quantity,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> unitPrice(double value) => _i1.ColumnValue(
+    table.unitPrice,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> specialInstructions(String? value) =>
+      _i1.ColumnValue(
+        table.specialInstructions,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> foodItemName(String value) => _i1.ColumnValue(
+    table.foodItemName,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> foodItemDescription(String? value) =>
+      _i1.ColumnValue(
+        table.foodItemDescription,
+        value,
+      );
+}
+
 class OrderItemTable extends _i1.Table<int?> {
   OrderItemTable({super.tableRelation}) : super(tableName: 'order_item') {
+    updateTable = OrderItemUpdateTable(this);
     orderId = _i1.ColumnInt(
       'orderId',
       this,
@@ -233,6 +278,8 @@ class OrderItemTable extends _i1.Table<int?> {
     );
   }
 
+  late final OrderItemUpdateTable updateTable;
+
   late final _i1.ColumnInt orderId;
 
   late final _i1.ColumnInt foodItemId;
@@ -249,15 +296,15 @@ class OrderItemTable extends _i1.Table<int?> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        orderId,
-        foodItemId,
-        quantity,
-        unitPrice,
-        specialInstructions,
-        foodItemName,
-        foodItemDescription,
-      ];
+    id,
+    orderId,
+    foodItemId,
+    quantity,
+    unitPrice,
+    specialInstructions,
+    foodItemName,
+    foodItemDescription,
+  ];
 }
 
 class OrderItemInclude extends _i1.IncludeObject {
@@ -316,7 +363,7 @@ class OrderItemRepository {
   /// );
   /// ```
   Future<List<OrderItem>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<OrderItemTable>? where,
     int? limit,
     int? offset,
@@ -324,6 +371,8 @@ class OrderItemRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<OrderItemTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<OrderItem>(
       where: where?.call(OrderItem.t),
@@ -333,6 +382,8 @@ class OrderItemRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -354,13 +405,15 @@ class OrderItemRepository {
   /// );
   /// ```
   Future<OrderItem?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<OrderItemTable>? where,
     int? offset,
     _i1.OrderByBuilder<OrderItemTable>? orderBy,
     bool orderDescending = false,
     _i1.OrderByListBuilder<OrderItemTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<OrderItem>(
       where: where?.call(OrderItem.t),
@@ -369,18 +422,24 @@ class OrderItemRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
   /// Finds a single [OrderItem] by its [id] or null if no such row exists.
   Future<OrderItem?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<OrderItem>(
       id,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -390,14 +449,20 @@ class OrderItemRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<OrderItem>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<OrderItem> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<OrderItem>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -405,7 +470,7 @@ class OrderItemRepository {
   ///
   /// The returned [OrderItem] will have its `id` field set.
   Future<OrderItem> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     OrderItem row, {
     _i1.Transaction? transaction,
   }) async {
@@ -421,7 +486,7 @@ class OrderItemRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<OrderItem>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<OrderItem> rows, {
     _i1.ColumnSelections<OrderItemTable>? columns,
     _i1.Transaction? transaction,
@@ -437,7 +502,7 @@ class OrderItemRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<OrderItem> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     OrderItem row, {
     _i1.ColumnSelections<OrderItemTable>? columns,
     _i1.Transaction? transaction,
@@ -449,11 +514,51 @@ class OrderItemRepository {
     );
   }
 
+  /// Updates a single [OrderItem] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<OrderItem?> updateById(
+    _i1.DatabaseSession session,
+    int id, {
+    required _i1.ColumnValueListBuilder<OrderItemUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<OrderItem>(
+      id,
+      columnValues: columnValues(OrderItem.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [OrderItem]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<OrderItem>> updateWhere(
+    _i1.DatabaseSession session, {
+    required _i1.ColumnValueListBuilder<OrderItemUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<OrderItemTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<OrderItemTable>? orderBy,
+    _i1.OrderByListBuilder<OrderItemTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<OrderItem>(
+      columnValues: columnValues(OrderItem.t.updateTable),
+      where: where(OrderItem.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(OrderItem.t),
+      orderByList: orderByList?.call(OrderItem.t),
+      orderDescending: orderDescending,
+      transaction: transaction,
+    );
+  }
+
   /// Deletes all [OrderItem]s in the list and returns the deleted rows.
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<OrderItem>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<OrderItem> rows, {
     _i1.Transaction? transaction,
   }) async {
@@ -465,7 +570,7 @@ class OrderItemRepository {
 
   /// Deletes a single [OrderItem].
   Future<OrderItem> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     OrderItem row, {
     _i1.Transaction? transaction,
   }) async {
@@ -477,7 +582,7 @@ class OrderItemRepository {
 
   /// Deletes all rows matching the [where] expression.
   Future<List<OrderItem>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<OrderItemTable> where,
     _i1.Transaction? transaction,
   }) async {
@@ -490,7 +595,7 @@ class OrderItemRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<OrderItemTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -498,6 +603,22 @@ class OrderItemRepository {
     return session.db.count<OrderItem>(
       where: where?.call(OrderItem.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [OrderItem] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<OrderItemTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<OrderItem>(
+      where: where(OrderItem.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

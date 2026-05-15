@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -20,9 +21,9 @@ import '../application/controllers/user_profile_controller.dart' as _i8;
 import '../auth/email_idp_endpoint.dart' as _i9;
 import '../auth/jwt_refresh_endpoint.dart' as _i10;
 import '../greetings/greeting_endpoint.dart' as _i11;
-import 'package:uuid/uuid_value.dart' as _i12;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
-    as _i13;
+    as _i12;
+import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i13;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i14;
 
@@ -102,17 +103,19 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'requestJson',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['courierController'] as _i2.CourierControllerEndpoint)
-                  .assignCourier(
-            session,
-            params['requestJson'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['courierController']
+                          as _i2.CourierControllerEndpoint)
+                      .assignCourier(
+                        session,
+                        params['requestJson'],
+                      ),
         ),
         'updateDeliveryStatus': _i1.MethodConnector(
           name: 'updateDeliveryStatus',
@@ -121,27 +124,31 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'requestJson',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['courierController'] as _i2.CourierControllerEndpoint)
-                  .updateDeliveryStatus(
-            session,
-            params['requestJson'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['courierController']
+                          as _i2.CourierControllerEndpoint)
+                      .updateDeliveryStatus(
+                        session,
+                        params['requestJson'],
+                      ),
         ),
         'getAvailableCouriers': _i1.MethodConnector(
           name: 'getAvailableCouriers',
           params: {},
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['courierController'] as _i2.CourierControllerEndpoint)
-                  .getAvailableCouriers(session),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['courierController']
+                          as _i2.CourierControllerEndpoint)
+                      .getAvailableCouriers(session),
         ),
       },
     );
@@ -156,17 +163,19 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'userId',
               type: _i1.getType<int>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['favouritesController'] as _i3.FavouritesController)
-                  .getFavourites(
-            session,
-            params['userId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['favouritesController']
+                          as _i3.FavouritesController)
+                      .getFavourites(
+                        session,
+                        params['userId'],
+                      ),
         ),
         'addFavourite': _i1.MethodConnector(
           name: 'addFavourite',
@@ -175,17 +184,19 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'requestJson',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['favouritesController'] as _i3.FavouritesController)
-                  .addFavourite(
-            session,
-            params['requestJson'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['favouritesController']
+                          as _i3.FavouritesController)
+                      .addFavourite(
+                        session,
+                        params['requestJson'],
+                      ),
         ),
         'removeFavourite': _i1.MethodConnector(
           name: 'removeFavourite',
@@ -194,17 +205,19 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'favouriteId',
               type: _i1.getType<int>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['favouritesController'] as _i3.FavouritesController)
-                  .removeFavourite(
-            session,
-            params['favouriteId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['favouritesController']
+                          as _i3.FavouritesController)
+                      .removeFavourite(
+                        session,
+                        params['favouriteId'],
+                      ),
         ),
       },
     );
@@ -261,23 +274,24 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: true,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['feedController'] as _i4.FeedControllerEndpoint)
-                  .getFeedChunk(
-            session,
-            params['screenWidth'],
-            params['screenHeight'],
-            params['dpi'],
-            params['dataTransferRate'],
-            params['userLatitude'],
-            params['userLongitude'],
-            params['chunkSize'],
-            params['chunkOffset'],
-            params['filters'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['feedController'] as _i4.FeedControllerEndpoint)
+                      .getFeedChunk(
+                        session,
+                        params['screenWidth'],
+                        params['screenHeight'],
+                        params['dpi'],
+                        params['dataTransferRate'],
+                        params['userLatitude'],
+                        params['userLongitude'],
+                        params['chunkSize'],
+                        params['chunkOffset'],
+                        params['filters'],
+                      ),
         ),
         'getSpecialDeals': _i1.MethodConnector(
           name: 'getSpecialDeals',
@@ -293,16 +307,17 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: true,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['feedController'] as _i4.FeedControllerEndpoint)
-                  .getSpecialDeals(
-            session,
-            params['limit'],
-            params['city'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['feedController'] as _i4.FeedControllerEndpoint)
+                      .getSpecialDeals(
+                        session,
+                        params['limit'],
+                        params['city'],
+                      ),
         ),
         'search': _i1.MethodConnector(
           name: 'search',
@@ -323,17 +338,18 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: true,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['feedController'] as _i4.FeedControllerEndpoint)
-                  .search(
-            session,
-            params['query'],
-            params['limit'],
-            params['city'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['feedController'] as _i4.FeedControllerEndpoint)
+                      .search(
+                        session,
+                        params['query'],
+                        params['limit'],
+                        params['city'],
+                      ),
         ),
       },
     );
@@ -344,12 +360,13 @@ class Endpoints extends _i1.EndpointDispatch {
         'hello': _i1.MethodConnector(
           name: 'hello',
           params: {},
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['orderController'] as _i5.OrderControllerEndpoint)
-                  .hello(session),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['orderController'] as _i5.OrderControllerEndpoint)
+                      .hello(session),
         ),
         'getOrder': _i1.MethodConnector(
           name: 'getOrder',
@@ -358,17 +375,18 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'orderId',
               type: _i1.getType<int>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['orderController'] as _i5.OrderControllerEndpoint)
-                  .getOrder(
-            session,
-            params['orderId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['orderController'] as _i5.OrderControllerEndpoint)
+                      .getOrder(
+                        session,
+                        params['orderId'],
+                      ),
         ),
         'getOrderDetails': _i1.MethodConnector(
           name: 'getOrderDetails',
@@ -377,17 +395,18 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'requestJson',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['orderController'] as _i5.OrderControllerEndpoint)
-                  .getOrderDetails(
-            session,
-            params['requestJson'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['orderController'] as _i5.OrderControllerEndpoint)
+                      .getOrderDetails(
+                        session,
+                        params['requestJson'],
+                      ),
         ),
         'createOrder': _i1.MethodConnector(
           name: 'createOrder',
@@ -396,17 +415,18 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'requestJson',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['orderController'] as _i5.OrderControllerEndpoint)
-                  .createOrder(
-            session,
-            params['requestJson'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['orderController'] as _i5.OrderControllerEndpoint)
+                      .createOrder(
+                        session,
+                        params['requestJson'],
+                      ),
         ),
         'processPayment': _i1.MethodConnector(
           name: 'processPayment',
@@ -415,17 +435,18 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'requestJson',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['orderController'] as _i5.OrderControllerEndpoint)
-                  .processPayment(
-            session,
-            params['requestJson'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['orderController'] as _i5.OrderControllerEndpoint)
+                      .processPayment(
+                        session,
+                        params['requestJson'],
+                      ),
         ),
         'getHistory': _i1.MethodConnector(
           name: 'getHistory',
@@ -446,17 +467,18 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['orderController'] as _i5.OrderControllerEndpoint)
-                  .getHistory(
-            session,
-            params['userId'],
-            params['limit'],
-            params['offset'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['orderController'] as _i5.OrderControllerEndpoint)
+                      .getHistory(
+                        session,
+                        params['userId'],
+                        params['limit'],
+                        params['offset'],
+                      ),
         ),
         'getTrackingInfo': _i1.MethodConnector(
           name: 'getTrackingInfo',
@@ -465,17 +487,18 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'requestJson',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['orderController'] as _i5.OrderControllerEndpoint)
-                  .getTrackingInfo(
-            session,
-            params['requestJson'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['orderController'] as _i5.OrderControllerEndpoint)
+                      .getTrackingInfo(
+                        session,
+                        params['requestJson'],
+                      ),
         ),
         'updateCourierLocation': _i1.MethodConnector(
           name: 'updateCourierLocation',
@@ -484,17 +507,18 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'requestJson',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['orderController'] as _i5.OrderControllerEndpoint)
-                  .updateCourierLocation(
-            session,
-            params['requestJson'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['orderController'] as _i5.OrderControllerEndpoint)
+                      .updateCourierLocation(
+                        session,
+                        params['requestJson'],
+                      ),
         ),
       },
     );
@@ -509,17 +533,19 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'restaurantId',
               type: _i1.getType<int>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['restaurantController'] as _i6.RestaurantController)
-                  .getRestaurant(
-            session,
-            params['restaurantId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['restaurantController']
+                          as _i6.RestaurantController)
+                      .getRestaurant(
+                        session,
+                        params['restaurantId'],
+                      ),
         ),
         'getMenu': _i1.MethodConnector(
           name: 'getMenu',
@@ -528,17 +554,19 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'restaurantId',
               type: _i1.getType<int>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['restaurantController'] as _i6.RestaurantController)
-                  .getMenu(
-            session,
-            params['restaurantId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['restaurantController']
+                          as _i6.RestaurantController)
+                      .getMenu(
+                        session,
+                        params['restaurantId'],
+                      ),
         ),
         'getReviews': _i1.MethodConnector(
           name: 'getReviews',
@@ -559,17 +587,19 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['restaurantController'] as _i6.RestaurantController)
-                  .getReviews(
-            session,
-            params['restaurantId'],
-            params['limit'],
-            params['offset'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['restaurantController']
+                          as _i6.RestaurantController)
+                      .getReviews(
+                        session,
+                        params['restaurantId'],
+                        params['limit'],
+                        params['offset'],
+                      ),
         ),
         'getFeatured': _i1.MethodConnector(
           name: 'getFeatured',
@@ -578,17 +608,19 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'limit',
               type: _i1.getType<int>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['restaurantController'] as _i6.RestaurantController)
-                  .getFeatured(
-            session,
-            params['limit'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['restaurantController']
+                          as _i6.RestaurantController)
+                      .getFeatured(
+                        session,
+                        params['limit'],
+                      ),
         ),
       },
     );
@@ -603,17 +635,18 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'requestJson',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['reviewsController'] as _i7.ReviewsController)
-                  .createReview(
-            session,
-            params['requestJson'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['reviewsController'] as _i7.ReviewsController)
+                      .createReview(
+                        session,
+                        params['requestJson'],
+                      ),
         ),
         'getReviews': _i1.MethodConnector(
           name: 'getReviews',
@@ -634,17 +667,18 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['reviewsController'] as _i7.ReviewsController)
-                  .getReviews(
-            session,
-            params['foodId'],
-            params['limit'],
-            params['offset'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['reviewsController'] as _i7.ReviewsController)
+                      .getReviews(
+                        session,
+                        params['foodId'],
+                        params['limit'],
+                        params['offset'],
+                      ),
         ),
         'deleteReview': _i1.MethodConnector(
           name: 'deleteReview',
@@ -653,17 +687,18 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'reviewId',
               type: _i1.getType<int>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['reviewsController'] as _i7.ReviewsController)
-                  .deleteReview(
-            session,
-            params['reviewId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['reviewsController'] as _i7.ReviewsController)
+                      .deleteReview(
+                        session,
+                        params['reviewId'],
+                      ),
         ),
       },
     );
@@ -674,12 +709,14 @@ class Endpoints extends _i1.EndpointDispatch {
         'getCurrentUser': _i1.MethodConnector(
           name: 'getCurrentUser',
           params: {},
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['userProfileController'] as _i8.UserProfileController)
-                  .getCurrentUser(session),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['userProfileController']
+                          as _i8.UserProfileController)
+                      .getCurrentUser(session),
         ),
         'getProfile': _i1.MethodConnector(
           name: 'getProfile',
@@ -688,17 +725,19 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'userId',
               type: _i1.getType<int>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['userProfileController'] as _i8.UserProfileController)
-                  .getProfile(
-            session,
-            params['userId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['userProfileController']
+                          as _i8.UserProfileController)
+                      .getProfile(
+                        session,
+                        params['userId'],
+                      ),
         ),
         'updateProfile': _i1.MethodConnector(
           name: 'updateProfile',
@@ -707,17 +746,19 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'requestJson',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['userProfileController'] as _i8.UserProfileController)
-                  .updateProfile(
-            session,
-            params['requestJson'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['userProfileController']
+                          as _i8.UserProfileController)
+                      .updateProfile(
+                        session,
+                        params['requestJson'],
+                      ),
         ),
         'addAddress': _i1.MethodConnector(
           name: 'addAddress',
@@ -726,17 +767,19 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'requestJson',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['userProfileController'] as _i8.UserProfileController)
-                  .addAddress(
-            session,
-            params['requestJson'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['userProfileController']
+                          as _i8.UserProfileController)
+                      .addAddress(
+                        session,
+                        params['requestJson'],
+                      ),
         ),
         'deleteAddress': _i1.MethodConnector(
           name: 'deleteAddress',
@@ -745,17 +788,19 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'addressId',
               type: _i1.getType<int>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['userProfileController'] as _i8.UserProfileController)
-                  .deleteAddress(
-            session,
-            params['addressId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['userProfileController']
+                          as _i8.UserProfileController)
+                      .deleteAddress(
+                        session,
+                        params['addressId'],
+                      ),
         ),
       },
     );
@@ -777,15 +822,15 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['emailIdp'] as _i9.EmailIdpEndpoint).login(
-            session,
-            email: params['email'],
-            password: params['password'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _i9.EmailIdpEndpoint).login(
+                session,
+                email: params['email'],
+                password: params['password'],
+              ),
         ),
         'startRegistration': _i1.MethodConnector(
           name: 'startRegistration',
@@ -794,23 +839,24 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'email',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['emailIdp'] as _i9.EmailIdpEndpoint).startRegistration(
-            session,
-            email: params['email'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
+                  .startRegistration(
+                    session,
+                    email: params['email'],
+                  ),
         ),
         'verifyRegistrationCode': _i1.MethodConnector(
           name: 'verifyRegistrationCode',
           params: {
             'accountRequestId': _i1.ParameterDescription(
               name: 'accountRequestId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'verificationCode': _i1.ParameterDescription(
@@ -819,16 +865,16 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
                   .verifyRegistrationCode(
-            session,
-            accountRequestId: params['accountRequestId'],
-            verificationCode: params['verificationCode'],
-          ),
+                    session,
+                    accountRequestId: params['accountRequestId'],
+                    verificationCode: params['verificationCode'],
+                  ),
         ),
         'finishRegistration': _i1.MethodConnector(
           name: 'finishRegistration',
@@ -844,16 +890,16 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
                   .finishRegistration(
-            session,
-            registrationToken: params['registrationToken'],
-            password: params['password'],
-          ),
+                    session,
+                    registrationToken: params['registrationToken'],
+                    password: params['password'],
+                  ),
         ),
         'startPasswordReset': _i1.MethodConnector(
           name: 'startPasswordReset',
@@ -862,24 +908,24 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'email',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
                   .startPasswordReset(
-            session,
-            email: params['email'],
-          ),
+                    session,
+                    email: params['email'],
+                  ),
         ),
         'verifyPasswordResetCode': _i1.MethodConnector(
           name: 'verifyPasswordResetCode',
           params: {
             'passwordResetRequestId': _i1.ParameterDescription(
               name: 'passwordResetRequestId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'verificationCode': _i1.ParameterDescription(
@@ -888,16 +934,16 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
                   .verifyPasswordResetCode(
-            session,
-            passwordResetRequestId: params['passwordResetRequestId'],
-            verificationCode: params['verificationCode'],
-          ),
+                    session,
+                    passwordResetRequestId: params['passwordResetRequestId'],
+                    verificationCode: params['verificationCode'],
+                  ),
         ),
         'finishPasswordReset': _i1.MethodConnector(
           name: 'finishPasswordReset',
@@ -913,25 +959,26 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
                   .finishPasswordReset(
-            session,
-            finishPasswordResetToken: params['finishPasswordResetToken'],
-            newPassword: params['newPassword'],
-          ),
+                    session,
+                    finishPasswordResetToken:
+                        params['finishPasswordResetToken'],
+                    newPassword: params['newPassword'],
+                  ),
         ),
         'hasAccount': _i1.MethodConnector(
           name: 'hasAccount',
           params: {},
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _i9.EmailIdpEndpoint)
                   .hasAccount(session),
         ),
       },
@@ -947,18 +994,18 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'refreshToken',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['jwtRefresh'] as _i10.JwtRefreshEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['jwtRefresh'] as _i10.JwtRefreshEndpoint)
                   .refreshAccessToken(
-            session,
-            refreshToken: params['refreshToken'],
-          ),
-        )
+                    session,
+                    refreshToken: params['refreshToken'],
+                  ),
+        ),
       },
     );
     connectors['greeting'] = _i1.EndpointConnector(
@@ -972,21 +1019,22 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'name',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['greeting'] as _i11.GreetingEndpoint).hello(
-            session,
-            params['name'],
-          ),
-        )
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['greeting'] as _i11.GreetingEndpoint).hello(
+                session,
+                params['name'],
+              ),
+        ),
       },
     );
-    modules['serverpod_auth_idp'] = _i13.Endpoints()
+    modules['serverpod_auth_idp'] = _i12.Endpoints()
       ..initializeEndpoints(server);
+    modules['serverpod_auth'] = _i13.Endpoints()..initializeEndpoints(server);
     modules['serverpod_auth_core'] = _i14.Endpoints()
       ..initializeEndpoints(server);
   }

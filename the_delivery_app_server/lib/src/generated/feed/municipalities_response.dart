@@ -7,9 +7,11 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
+import 'package:the_delivery_app_server/src/generated/protocol.dart' as _i2;
 
 abstract class MunicipalitiesResponse
     implements _i1.SerializableModel, _i1.ProtocolSerialization {
@@ -26,12 +28,13 @@ abstract class MunicipalitiesResponse
   }) = _MunicipalitiesResponseImpl;
 
   factory MunicipalitiesResponse.fromJson(
-      Map<String, dynamic> jsonSerialization) {
+    Map<String, dynamic> jsonSerialization,
+  ) {
     return MunicipalitiesResponse(
-      success: jsonSerialization['success'] as bool,
-      municipalities: (jsonSerialization['municipalities'] as List)
-          .map((e) => e as String)
-          .toList(),
+      success: _i1.BoolJsonExtension.fromJson(jsonSerialization['success']),
+      municipalities: _i2.Protocol().deserialize<List<String>>(
+        jsonSerialization['municipalities'],
+      ),
       message: jsonSerialization['message'] as String,
     );
   }
@@ -53,6 +56,7 @@ abstract class MunicipalitiesResponse
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'MunicipalitiesResponse',
       'success': success,
       'municipalities': municipalities.toJson(),
       'message': message,
@@ -62,6 +66,7 @@ abstract class MunicipalitiesResponse
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'MunicipalitiesResponse',
       'success': success,
       'municipalities': municipalities.toJson(),
       'message': message,
@@ -80,10 +85,10 @@ class _MunicipalitiesResponseImpl extends MunicipalitiesResponse {
     required List<String> municipalities,
     required String message,
   }) : super._(
-          success: success,
-          municipalities: municipalities,
-          message: message,
-        );
+         success: success,
+         municipalities: municipalities,
+         message: message,
+       );
 
   /// Returns a shallow copy of this [MunicipalitiesResponse]
   /// with some or all fields replaced by the given arguments.
