@@ -37,6 +37,39 @@ class _AddressesViewState extends State<AddressesView> {
     });
   }
 
+  Widget _buildAddressTile(Map<String, dynamic> address) {
+    final line1 = address['addressLine1'] as String? ?? '';
+    final city = address['city'] as String? ?? '';
+    final postcode = address['postcode'] as String? ?? '';
+    final isDefault = address['isDefault'] as bool? ?? false;
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.location_on, color: Colors.deepOrange),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(line1, style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text('$city, $postcode', style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                if (isDefault)
+                  const Text('Default', style: TextStyle(color: Colors.deepOrange, fontSize: 11)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
