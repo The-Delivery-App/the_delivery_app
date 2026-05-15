@@ -19,6 +19,7 @@ import '../view_models/search_view_model.dart';
 import '../view_models/settings_view_model.dart';
 import '../view_models/special_deal_view_model.dart';
 import 'account_view.dart';
+import 'addresses_view.dart';
 import 'basket_view.dart';
 import 'feed_view.dart';
 import 'map_view.dart';
