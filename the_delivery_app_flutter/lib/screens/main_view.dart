@@ -185,6 +185,9 @@ class _MainViewState extends State<MainView> {
               MaterialPageRoute(builder: (_) => const AddressesView()),
             ).then((_) => _loadDefaultAddress()),
             addressLabel: _addressLabel,
+            featuredRestaurants: _featuredRestaurants,
+            userLat: _addressLat,
+            userLng: _addressLng,
           ),
         );
       case 1:
