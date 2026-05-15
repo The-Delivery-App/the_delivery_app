@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 
 import '../models/food.dart';
@@ -21,6 +24,7 @@ class MapView extends StatefulWidget {
 
 class _MapViewState extends State<MapView> {
   final MapController _mapController = MapController();
+  List<LatLng> _routePoints = [];
 
   Widget _buildMap() {
     final location = widget.state.currentLocation;
