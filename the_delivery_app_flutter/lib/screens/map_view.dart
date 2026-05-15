@@ -89,7 +89,13 @@ class _MapViewState extends State<MapView> {
             Expanded(
               child: Text(restaurant.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
             ),
-            const Icon(Icons.chevron_right, color: Colors.grey),
+            IconButton(
+              icon: const Icon(Icons.map, color: Colors.deepOrange),
+              tooltip: 'Show on map',
+              onPressed: restaurant.latitude != null && restaurant.longitude != null
+                  ? () => _mapController.move(LatLng(restaurant.latitude!, restaurant.longitude!), 16)
+                  : null,
+            ),
           ],
         ),
       ),
