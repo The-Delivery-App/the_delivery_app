@@ -70,6 +70,10 @@ class _AddressesViewState extends State<AddressesView> {
               ],
             ),
           ),
+          IconButton(
+            icon: const Icon(Icons.delete_outline, color: Colors.red),
+            onPressed: () => _deleteAddress(address['id'] as int),
+          ),
         ],
       ),
     );
