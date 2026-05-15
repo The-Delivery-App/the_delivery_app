@@ -47,24 +47,31 @@ class _AddressesViewState extends State<AddressesView> {
     }
   }
 
-  Future<void> _showAddDialog() async {
-    final line1 = TextEditingController();
-    final city = TextEditingController();
-    final postcode = TextEditingController();
-    final country = TextEditingController(text: 'UK');
+  Future<void> _showAddressDialog({Map<String, dynamic>? existing}) async {
+    final label = TextEditingController(text: existing?['label'] as String? ?? '');
+    final line1 = TextEditingController(text: existing?['addressLine1'] as String? ?? '');
+    final line2 = TextEditingController(text: existing?['addressLine2'] as String? ?? '');
+    final city = TextEditingController(text: existing?['city'] as String? ?? '');
+    final postcode = TextEditingController(text: existing?['postcode'] as String? ?? '');
+    final country = TextEditingController(text: existing?['country'] as String? ?? 'UK');
+    final isEdit = existing != null;
 
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Add Address'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: line1, decoration: const InputDecoration(labelText: 'Address line 1')),
-            TextField(controller: city, decoration: const InputDecoration(labelText: 'City')),
-            TextField(controller: postcode, decoration: const InputDecoration(labelText: 'Postcode')),
-            TextField(controller: country, decoration: const InputDecoration(labelText: 'Country')),
-          ],
+        title: Text(isEdit ? 'Edit Address' : 'Add Address'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(controller: label, decoration: const InputDecoration(labelText: 'Address name (Home, Work...)')),
+              TextField(controller: line1, decoration: const InputDecoration(labelText: 'Address line 1')),
+              TextField(controller: line2, decoration: const InputDecoration(labelText: 'Address line 2')),
+              TextField(controller: city, decoration: const InputDecoration(labelText: 'City')),
+              TextField(controller: postcode, decoration: const InputDecoration(labelText: 'Postcode')),
+              TextField(controller: country, decoration: const InputDecoration(labelText: 'Country')),
+            ],
+          ),
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
@@ -75,15 +82,29 @@ class _AddressesViewState extends State<AddressesView> {
 
     if (confirmed != true) return;
 
-    final userRaw = await client.userProfileController.getCurrentUser();
-    final userId = jsonDecode(userRaw)['userId'] as int;
-    await client.userProfileController.addAddress(jsonEncode({
-      'userId': userId,
-      'addressLine1': line1.text,
-      'city': city.text,
-      'postcode': postcode.text,
-      'country': country.text,
-    }));
+    if (isEdit) {
+      await client.userProfileController.updateAddress(jsonEncode({
+        'addressId': existing['id'],
+        'label': label.text,
+        'addressLine1': line1.text,
+        'addressLine2': line2.text,
+        'city': city.text,
+        'postcode': postcode.text,
+        'country': country.text,
+      }));
+    } else {
+      final userRaw = await client.userProfileController.getCurrentUser();
+      final userId = jsonDecode(userRaw)['userId'] as int;
+      await client.userProfileController.addAddress(jsonEncode({
+        'userId': userId,
+        'label': label.text,
+        'addressLine1': line1.text,
+        'addressLine2': line2.text,
+        'city': city.text,
+        'postcode': postcode.text,
+        'country': country.text,
+      }));
+    }
     _loadAddresses();
   }
 
@@ -93,38 +114,44 @@ class _AddressesViewState extends State<AddressesView> {
   }
 
   Widget _buildAddressTile(Map<String, dynamic> address) {
+    final label = address['label'] as String? ?? '';
     final line1 = address['addressLine1'] as String? ?? '';
     final city = address['city'] as String? ?? '';
     final postcode = address['postcode'] as String? ?? '';
     final isDefault = address['isDefault'] as bool? ?? false;
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.location_on, color: Colors.deepOrange),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(line1, style: const TextStyle(fontWeight: FontWeight.bold)),
-                Text('$city, $postcode', style: const TextStyle(color: Colors.grey, fontSize: 13)),
-                if (isDefault)
-                  const Text('Default', style: TextStyle(color: Colors.deepOrange, fontSize: 11)),
-              ],
+    final title = label.isNotEmpty ? label : line1;
+    final subtitle = label.isNotEmpty ? '$line1, $city, $postcode' : '$city, $postcode';
+    return GestureDetector(
+      onTap: () => _showAddressDialog(existing: address),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade200),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.location_on, color: Colors.deepOrange),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(subtitle, style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                  if (isDefault)
+                    const Text('Default', style: TextStyle(color: Colors.deepOrange, fontSize: 11)),
+                ],
+              ),
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete_outline, color: Colors.red),
-            onPressed: () => _deleteAddress(address['id'] as int),
-          ),
-        ],
+            IconButton(
+              icon: const Icon(Icons.delete_outline, color: Colors.red),
+              onPressed: () => _deleteAddress(address['id'] as int),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -141,7 +168,7 @@ class _AddressesViewState extends State<AddressesView> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.deepOrange,
-        onPressed: _showAddDialog,
+        onPressed: () => _showAddressDialog(),
         child: const Icon(Icons.add, color: Colors.white),
       ),
       body: _isLoading
