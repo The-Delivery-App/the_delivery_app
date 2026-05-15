@@ -39,10 +39,13 @@ class FeedView extends StatelessWidget {
               ],
             ),
           ),
-          CircleAvatar(
-            radius: 18,
-            backgroundColor: Color(0xFFFFE0D0),
-            child: Icon(Icons.person, color: Colors.deepOrange, size: 20),
+          GestureDetector(
+            onTap: onProfileTap,
+            child: const CircleAvatar(
+              radius: 18,
+              backgroundColor: Color(0xFFFFE0D0),
+              child: Icon(Icons.person, color: Colors.deepOrange, size: 20),
+            ),
           ),
         ],
       ),
