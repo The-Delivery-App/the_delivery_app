@@ -12,6 +12,9 @@ class AddressesView extends StatefulWidget {
 }
 
 class _AddressesViewState extends State<AddressesView> {
+  List<Map<String, dynamic>> _addresses = [];
+  bool _isLoading = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
