@@ -30,6 +30,48 @@ class _CheckoutViewState extends State<CheckoutView> {
     super.dispose();
   }
 
+  Future<void> _placeOrder() async {
+    setState(() => _isPlacing = true);
+
+    final userRaw = await client.userProfileController.getCurrentUser();
+    final userId = jsonDecode(userRaw)['userId'] as int;
+
+    final addressRaw = await client.userProfileController.addAddress(jsonEncode({
+      'userId': userId,
+      'addressLine1': _addressLine1Controller.text,
+      'city': _cityController.text,
+      'postcode': _postcodeController.text,
+      'country': _countryController.text,
+    }));
+    final addressId = jsonDecode(addressRaw)['addressId'] as int;
+
+    final items = widget.basketViewModel.getState().basket.items;
+    final restaurantId = int.parse(items.first.restaurant.id);
+    final counts = <String, int>{};
+    for (final f in items) {
+      counts[f.id] = (counts[f.id] ?? 0) + 1;
+    }
+    final orderItems = counts.entries.map((e) => {
+      'foodItemId': int.parse(e.key),
+      'quantity': e.value,
+    }).toList();
+
+    await client.orderController.createOrder(jsonEncode({
+      'userId': userId,
+      'restaurantId': restaurantId,
+      'deliveryAddressId': addressId,
+      'idempotencyKey': '${DateTime.now().millisecondsSinceEpoch}',
+      'items': orderItems,
+    }));
+
+    widget.basketViewModel.clearBasket();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Order placed!'), backgroundColor: Colors.deepOrange),
+    );
+    Navigator.pop(context);
+  }
+
   Widget _buildAddressForm() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
