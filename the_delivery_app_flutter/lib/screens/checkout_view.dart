@@ -95,6 +95,40 @@ class _CheckoutViewState extends State<CheckoutView> {
     Navigator.pop(context);
   }
 
+  Widget _buildAddressSelector() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Delivery Address', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const SizedBox(height: 8),
+          if (_addresses.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Text('No addresses saved. Add one in your account first.', style: TextStyle(color: Colors.grey)),
+            )
+          else
+            ..._addresses.map((a) => RadioListTile<int>(
+                  value: a['id'] as int,
+                  groupValue: _selectedAddressId,
+                  onChanged: (v) => setState(() => _selectedAddressId = v),
+                  activeColor: Colors.deepOrange,
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(a['addressLine1'] as String? ?? ''),
+                  subtitle: Text('${a['city']}, ${a['postcode']}'),
+                )),
+        ],
+      ),
+    );
+  }
+
   Widget _buildAddressForm() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
