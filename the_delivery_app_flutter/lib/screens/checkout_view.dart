@@ -12,6 +12,58 @@ class CheckoutView extends StatefulWidget {
 }
 
 class _CheckoutViewState extends State<CheckoutView> {
+  final _addressLine1Controller = TextEditingController();
+  final _cityController = TextEditingController();
+  final _postcodeController = TextEditingController();
+  final _countryController = TextEditingController(text: 'UK');
+
+  @override
+  void dispose() {
+    _addressLine1Controller.dispose();
+    _cityController.dispose();
+    _postcodeController.dispose();
+    _countryController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildAddressForm() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Delivery Address', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const SizedBox(height: 12),
+          TextField(
+            controller: _addressLine1Controller,
+            decoration: const InputDecoration(labelText: 'Address line 1', border: OutlineInputBorder()),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _cityController,
+            decoration: const InputDecoration(labelText: 'City', border: OutlineInputBorder()),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _postcodeController,
+            decoration: const InputDecoration(labelText: 'Postcode', border: OutlineInputBorder()),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _countryController,
+            decoration: const InputDecoration(labelText: 'Country', border: OutlineInputBorder()),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildOrderSummary() {
     final items = widget.basketViewModel.getState().basket.items;
     final subtotal = items.fold(0.0, (sum, f) => sum + f.price);
