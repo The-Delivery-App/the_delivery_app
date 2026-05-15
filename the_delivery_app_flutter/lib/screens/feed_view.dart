@@ -28,20 +28,22 @@ class FeedView extends StatelessWidget {
             child: GestureDetector(
               onTap: onAddressTap,
               behavior: HitTestBehavior.opaque,
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.location_on, color: Colors.deepOrange, size: 20),
-                  SizedBox(width: 4),
+                  const Icon(Icons.location_on, color: Colors.deepOrange, size: 20),
+                  const SizedBox(width: 4),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Delivering to', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                        const Text('Delivering to', style: TextStyle(fontSize: 12, color: Colors.grey)),
                         Row(
                           children: [
-                            Text('London, UK', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                            SizedBox(width: 4),
-                            Icon(Icons.keyboard_arrow_down, size: 18),
+                            Flexible(
+                              child: Text(addressLabel, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15), overflow: TextOverflow.ellipsis),
+                            ),
+                            const SizedBox(width: 4),
+                            const Icon(Icons.keyboard_arrow_down, size: 18),
                           ],
                         ),
                       ],
