@@ -183,21 +183,10 @@ class FeedView extends StatelessWidget {
   }
 
   Widget _buildNearYouSection(BuildContext context, List<MapEntry<Restaurant, List<Food>>> groups, {bool isRanking = false}) {
-    if (groups.isEmpty) return const SizedBox.shrink();
+    if (groups.isEmpty && !isRanking) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (isRanking)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-            child: Row(
-              children: [
-                SizedBox(width: 12, height: 12, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.deepOrange)),
-                const SizedBox(width: 8),
-                Text('Finding the closest restaurants...', style: TextStyle(fontSize: 12, color: Colors.grey.shade700)),
-              ],
-            ),
-          ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
           child: Row(
@@ -222,12 +211,30 @@ class FeedView extends StatelessWidget {
         ),
         SizedBox(
           height: 195,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: groups.length,
-            itemBuilder: (ctx, i) => _buildNearYouCard(ctx, groups[i].key, groups[i].value),
-          ),
+          child: isRanking
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        width: 28,
+                        height: 28,
+                        child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.deepOrange),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Finding the closest restaurants to your address...',
+                        style: TextStyle(color: Colors.grey.shade700, fontSize: 13),
+                      ),
+                    ],
+                  ),
+                )
+              : ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: groups.length,
+                  itemBuilder: (ctx, i) => _buildNearYouCard(ctx, groups[i].key, groups[i].value),
+                ),
         ),
       ],
     );
@@ -386,7 +393,7 @@ class FeedView extends StatelessWidget {
     }
     final groups = _groupByRestaurant(state.feedItems);
     final canRank = userLat != null && userLng != null && featuredRestaurants.isNotEmpty;
-    final nearYou = canRank ? _sortByDistance(groups).take(5).toList() : groups.take(5).toList();
+    final nearYou = canRank ? _sortByDistance(groups).take(5).toList() : <MapEntry<Restaurant, List<Food>>>[];
     return Scaffold(
       backgroundColor: const Color(0xFFFAF7F2),
       body: SafeArea(
