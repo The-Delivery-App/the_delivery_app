@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../main.dart';
 import '../view_models/basket_view_model.dart';
 
 class CheckoutView extends StatefulWidget {
