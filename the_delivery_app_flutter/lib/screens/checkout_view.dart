@@ -66,7 +66,9 @@ class _CheckoutViewState extends State<CheckoutView> {
         foregroundColor: Colors.black,
         elevation: 0,
       ),
-      body: const SizedBox.shrink(),
+      body: ListView(
+        children: [_buildOrderSummary()],
+      ),
     );
   }
 }
