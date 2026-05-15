@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '../main.dart';
 
@@ -113,6 +114,15 @@ class _AddressesViewState extends State<AddressesView> {
     _loadAddresses();
   }
 
+  Future<void> _setDefault(int addressId) async {
+    await http.post(
+      Uri.parse('http://localhost:8080/userProfileController/setDefaultAddress'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'addressId': addressId}),
+    );
+    _loadAddresses();
+  }
+
   Widget _buildAddressTile(Map<String, dynamic> address) {
     final label = address['label'] as String? ?? '';
     final line1 = address['addressLine1'] as String? ?? '';
@@ -145,6 +155,14 @@ class _AddressesViewState extends State<AddressesView> {
                     const Text('Default', style: TextStyle(color: Colors.deepOrange, fontSize: 11)),
                 ],
               ),
+            ),
+            IconButton(
+              icon: Icon(
+                isDefault ? Icons.star : Icons.star_border,
+                color: Colors.deepOrange,
+              ),
+              tooltip: isDefault ? 'Default' : 'Set as default',
+              onPressed: isDefault ? null : () => _setDefault(address['id'] as int),
             ),
             IconButton(
               icon: const Icon(Icons.delete_outline, color: Colors.red),
