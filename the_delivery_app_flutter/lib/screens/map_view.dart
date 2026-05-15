@@ -63,14 +63,16 @@ class _MapViewState extends State<MapView> {
 
     return SizedBox(
       height: 300,
-      child: FlutterMap(
-        mapController: _mapController,
-        options: MapOptions(initialCenter: center, initialZoom: 14),
+      child: Stack(
         children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'com.example.the_delivery_app',
-          ),
+          FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(initialCenter: center, initialZoom: 14),
+            children: [
+              TileLayer(
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.example.the_delivery_app',
+              ),
           if (_routePoints.isNotEmpty)
             PolylineLayer(
               polylines: [
@@ -107,7 +109,41 @@ class _MapViewState extends State<MapView> {
                 ),
             ],
           ),
+            ],
+          ),
+          Positioned(
+            right: 8,
+            top: 8,
+            child: Column(
+              children: [
+                _zoomButton(Icons.add, () {
+                  _mapController.move(_mapController.camera.center, _mapController.camera.zoom + 1);
+                }),
+                const SizedBox(height: 6),
+                _zoomButton(Icons.remove, () {
+                  _mapController.move(_mapController.camera.center, _mapController.camera.zoom - 1);
+                }),
+              ],
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _zoomButton(IconData icon, VoidCallback onTap) {
+    return Material(
+      color: Colors.white,
+      shape: const CircleBorder(),
+      elevation: 2,
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: SizedBox(
+          width: 36,
+          height: 36,
+          child: Icon(icon, color: Colors.black87, size: 20),
+        ),
       ),
     );
   }
