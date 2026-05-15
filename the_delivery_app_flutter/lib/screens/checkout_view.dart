@@ -224,7 +224,7 @@ class _CheckoutViewState extends State<CheckoutView> {
       body: ListView(
         children: [
           _buildOrderSummary(),
-          _buildAddressForm(),
+          _buildAddressSelector(),
           const SizedBox(height: 16),
         ],
       ),
