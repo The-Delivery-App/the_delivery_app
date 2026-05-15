@@ -10,8 +10,10 @@ import 'restaurant_view.dart';
 class MapView extends StatefulWidget {
   final MapState state;
   final void Function(Food)? onAddToBasket;
+  final double? addressLat;
+  final double? addressLng;
 
-  const MapView({super.key, required this.state, this.onAddToBasket});
+  const MapView({super.key, required this.state, this.onAddToBasket, this.addressLat, this.addressLng});
 
   @override
   State<MapView> createState() => _MapViewState();
@@ -22,9 +24,16 @@ class _MapViewState extends State<MapView> {
 
   Widget _buildMap() {
     final location = widget.state.currentLocation;
-    final center = location != null
-        ? LatLng(location.latitude, location.longitude)
-        : const LatLng(51.5074, -0.1278);
+    final addressLat = widget.addressLat;
+    final addressLng = widget.addressLng;
+    LatLng center;
+    if (addressLat != null && addressLng != null) {
+      center = LatLng(addressLat, addressLng);
+    } else if (location != null) {
+      center = LatLng(location.latitude, location.longitude);
+    } else {
+      center = const LatLng(51.5074, -0.1278);
+    }
 
     return SizedBox(
       height: 300,
@@ -52,6 +61,13 @@ class _MapViewState extends State<MapView> {
                   width: 40,
                   height: 40,
                   child: const Icon(Icons.my_location, color: Colors.blue, size: 32),
+                ),
+              if (addressLat != null && addressLng != null)
+                Marker(
+                  point: LatLng(addressLat, addressLng),
+                  width: 50,
+                  height: 50,
+                  child: const Icon(Icons.home, color: Colors.green, size: 36),
                 ),
             ],
           ),
