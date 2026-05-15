@@ -62,7 +62,6 @@ class _MapViewState extends State<MapView> {
 
   Widget _buildRestaurantTile(BuildContext context, Restaurant restaurant) {
     return GestureDetector(
-      behavior: HitTestBehavior.opaque,
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
