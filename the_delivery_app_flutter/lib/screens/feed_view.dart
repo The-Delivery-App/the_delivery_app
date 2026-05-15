@@ -15,8 +15,9 @@ class FeedView extends StatelessWidget {
   final VoidCallback? onSeeMap;
   final VoidCallback? onProfileTap;
   final VoidCallback? onAddressTap;
+  final String addressLabel;
 
-  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals, this.onSearchTap, this.onSeeMap, this.onProfileTap, this.onAddressTap});
+  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals, this.onSearchTap, this.onSeeMap, this.onProfileTap, this.onAddressTap, this.addressLabel = 'London, UK'});
 
   Widget _buildHeader() {
     return Padding(
