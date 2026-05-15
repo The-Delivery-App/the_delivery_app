@@ -210,6 +210,8 @@ class RestaurantController extends Endpoint {
           'logoUrl': restaurant.logoThumb,  
           'estimatedDeliveryTime': restaurant.estimatedDeliveryTime,
           'city': place?.city,
+          'latitude': place?.latitude,
+          'longitude': place?.longitude,
         });
       }
 
