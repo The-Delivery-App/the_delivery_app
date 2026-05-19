@@ -1,7 +1,7 @@
 Overview
 ========
  
-The Delivery App is a full-stack mobile food delivery app made by Team 1b as part of our university project. The idea is simple — customers can order food from nearby restaurants and have it delivered, while tracking the courier on a live map.
+The Delivery App is a full-stack mobile food delivery app made by Team 1b. The idea was to allow people to order food from nearby restaurants and have it delivered, while tracking the courier on a live map.
  
 What the app lets you do
 ------------------------
