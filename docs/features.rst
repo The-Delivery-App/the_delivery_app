@@ -13,10 +13,15 @@ Restaurant pages
  
 Tapping a restaurant takes you to its full menu. Each food item shows the name, price, rating, description, calorie count, and a thumbnail image.
  
+Map view
+--------
+ 
+The map screen does two things. First, it shows nearby restaurants as pins on an interactive map — you can tap any of them to open their menu. Second, when you're tracking an order, it shows your courier's live location. 
+ 
 Basket
 ------
  
-Adding items builds up a basket. Before you check out you can review everything — quantities, subtotal, delivery fee, service fee, and any discount that applies.
+The basket groups your items by restaurant and flags a warning if you've mixed items from more than one. You can adjust quantities before heading to checkout, and there's a split payment toggle if you're sharing the cost.
  
 Placing an order
 ----------------
