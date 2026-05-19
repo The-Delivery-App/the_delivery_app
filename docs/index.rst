@@ -5,8 +5,6 @@
 
 The_delivery_app documentation
 ==============================
-The Delivery App
-================
  
 The Delivery App is a food delivery platform we built from scratch using Flutter and Dart. Users can browse restaurants, order food, and track their delivery live on a map — all from their phone.
  
