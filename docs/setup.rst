@@ -9,7 +9,16 @@ What you'll need first
 - `Flutter SDK <https://flutter.dev/docs/get-started/install>`_ (comes with Dart — you need SDK ^3.8.0 or higher)
 - `Docker <https://docs.docker.com/get-docker/>`_ and Docker Compose
 - `Serverpod CLI <https://docs.serverpod.dev>`_
+
+Key dependencies
+----------------
  
+The app uses a few packages that you should know about:
+ 
+- ``flutter_map`` and ``latlong2`` — for the interactive map screen
+- ``serverpod_flutter`` and ``serverpod_auth_idp_flutter`` — for server communication and authentication
+- ``http`` — used directly in a few screens for external API calls (e.g. the OSRM routing API for map routes)
+
 1. Clone the repo
 
 2. Start the database
