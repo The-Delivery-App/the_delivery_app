@@ -2,3 +2,9 @@
 .vscode
 .dart_tool/
 
+# CocoaPods
+Podfile
+Podfile.lock
+*.podspec
+Pods/
+
