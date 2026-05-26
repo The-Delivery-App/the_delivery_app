@@ -59,6 +59,17 @@ class _MapViewState extends State<MapView> {
         _routesByOrder.clear();
       });
     }
+    if (widget.orderStatusIndex == 4 && oldWidget.onTheWayProgress != widget.onTheWayProgress) {
+      _followFirstCourier();
+    }
+  }
+
+  void _followFirstCourier() {
+    if (widget.trackedDeliveries.isEmpty) return;
+    final pos = _courierPosition(widget.trackedDeliveries.first);
+    if (pos != null) {
+      _mapController.move(pos, _mapController.camera.zoom);
+    }
   }
 
   Future<void> _loadOrderRoute(TrackedDelivery d) async {
