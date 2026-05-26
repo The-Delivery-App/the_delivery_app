@@ -34,6 +34,17 @@ class _OrderHistoryViewState extends State<OrderHistoryView> {
       final list = (data['orders'] as List<dynamic>? ?? [])
           .whereType<Map<String, dynamic>>()
           .toList();
+      for (final order in list) {
+        final id = order['id'];
+        if (id is int) {
+          try {
+            final detailRaw = await client.orderController.getOrder(id);
+            final detail = jsonDecode(detailRaw) as Map<String, dynamic>;
+            final inner = detail['order'] as Map<String, dynamic>?;
+            order['actualDeliveryTime'] = inner?['actualDeliveryTime'];
+          } catch (_) {}
+        }
+      }
       if (!mounted) return;
       setState(() {
         _orders = list;
@@ -108,17 +119,39 @@ class _OrderHistoryViewState extends State<OrderHistoryView> {
           const SizedBox(height: 6),
           Text(_formatDate(createdAt), style: const TextStyle(color: Colors.grey, fontSize: 11)),
           const Divider(height: 16),
-          ...orders.map((o) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
-                child: Row(
-                  children: [
-                    const Icon(Icons.restaurant, size: 14, color: Colors.deepOrange),
-                    const SizedBox(width: 6),
-                    Expanded(child: Text(o['restaurantName'] as String? ?? '', style: const TextStyle(fontSize: 13))),
-                    Text('£${((o['totalAmount'] as num?)?.toDouble() ?? 0).toStringAsFixed(2)}', style: const TextStyle(fontSize: 13, color: Colors.grey)),
-                  ],
-                ),
-              )),
+          ...orders.map((o) {
+            final status = o['status'] as String? ?? '';
+            final delivered = o['actualDeliveryTime'] as String?;
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.restaurant, size: 14, color: Colors.deepOrange),
+                      const SizedBox(width: 6),
+                      Expanded(child: Text(o['restaurantName'] as String? ?? '', style: const TextStyle(fontSize: 13))),
+                      Text('£${((o['totalAmount'] as num?)?.toDouble() ?? 0).toStringAsFixed(2)}', style: const TextStyle(fontSize: 13, color: Colors.grey)),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 2),
+                    child: Text(
+                      delivered != null
+                          ? 'Delivered ${_formatDate(delivered)}'
+                          : 'Status: $status',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: delivered != null ? Colors.green.shade700 : Colors.deepOrange,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
         ],
       ),
     );
