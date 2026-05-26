@@ -247,6 +247,7 @@ class _MapViewState extends State<MapView> {
       body: Column(
         children: [
           _buildMap(),
+          if (widget.orderStatusIndex != null) _buildTrackingPanel(),
           const SizedBox(height: 8),
           Expanded(
             child: sorted.isEmpty
@@ -256,6 +257,50 @@ class _MapViewState extends State<MapView> {
                     itemBuilder: (context, index) =>
                         _buildRestaurantTile(context, sorted[index]),
                   ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTrackingPanel() {
+    final idx = widget.orderStatusIndex ?? 0;
+    final statusText = idx < widget.orderStatuses.length ? widget.orderStatuses[idx] : '';
+    final isDelivered = idx >= widget.orderStatuses.length - 1;
+    return Container(
+      margin: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.deepOrange),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.delivery_dining, color: Colors.deepOrange),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text('Courier: ${widget.courierName ?? "Assigning..."}',
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+              ),
+              if (isDelivered && widget.onDismissOrder != null)
+                IconButton(
+                  icon: const Icon(Icons.close, color: Colors.grey),
+                  onPressed: widget.onDismissOrder,
+                  tooltip: 'Close',
+                ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(statusText, style: const TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 4),
+          LinearProgressIndicator(
+            value: (idx + 1) / widget.orderStatuses.length,
+            backgroundColor: Colors.grey.shade200,
+            valueColor: const AlwaysStoppedAnimation(Colors.deepOrange),
           ),
         ],
       ),
