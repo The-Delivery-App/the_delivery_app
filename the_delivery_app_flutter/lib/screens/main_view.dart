@@ -57,6 +57,10 @@ class _MainViewState extends State<MainView> {
   String? _cuisine;
   int? _orderStatusIndex;
   String? _courierName;
+  String? _courierVehicle;
+  String? _courierPlate;
+  String? _courierPhone;
+  int? _courierId;
   double? _restaurantLat;
   double? _restaurantLng;
   List<int> _activeOrderIds = [];
@@ -177,16 +181,20 @@ class _MainViewState extends State<MainView> {
     } catch (_) {}
   }
 
-  void _startOrderTracking({required String restaurantName, double? restaurantLat, double? restaurantLng, List<int> orderIds = const []}) {
-    final courierNames = ['Alex Carter', 'Sam Patel', 'Jordan Lee', 'Riley Khan', 'Chris Morgan'];
+  Future<void> _startOrderTracking({required String restaurantName, double? restaurantLat, double? restaurantLng, List<int> orderIds = const []}) async {
     setState(() {
       _orderStatusIndex = 0;
-      _courierName = courierNames[DateTime.now().millisecondsSinceEpoch % courierNames.length];
+      _courierName = null;
+      _courierVehicle = null;
+      _courierPlate = null;
+      _courierPhone = null;
+      _courierId = null;
       _restaurantLat = restaurantLat;
       _restaurantLng = restaurantLng;
       _activeOrderIds = orderIds;
       _selectedIndex = 2;
     });
+    await _pickCourier();
     _orderStatusTimer?.cancel();
     _orderStatusTimer = Timer.periodic(const Duration(seconds: 3), (t) {
       if (!mounted) {
@@ -203,15 +211,40 @@ class _MainViewState extends State<MainView> {
     });
   }
 
+  Future<void> _pickCourier() async {
+    try {
+      final raw = await client.courierController.getAvailableCouriers();
+      final data = jsonDecode(raw) as Map<String, dynamic>;
+      final couriers = (data['couriers'] as List<dynamic>? ?? []).whereType<Map<String, dynamic>>().toList();
+      if (couriers.isEmpty) return;
+      final pick = couriers[DateTime.now().millisecondsSinceEpoch % couriers.length];
+      if (!mounted) return;
+      setState(() {
+        _courierId = pick['id'] as int?;
+        _courierName = pick['name'] as String?;
+        _courierVehicle = pick['vehicle'] as String?;
+        _courierPlate = pick['plateNumber'] as String?;
+        _courierPhone = pick['phone'] as String?;
+      });
+    } catch (_) {}
+  }
+
   Future<void> _pushStatusToBackend(int index) async {
     if (_activeOrderIds.isEmpty || index >= _orderStatusKeys.length) return;
     final newStatus = _orderStatusKeys[index];
     for (final orderId in _activeOrderIds) {
       try {
-        await client.courierController.updateDeliveryStatus(jsonEncode({
-          'orderId': orderId,
-          'newStatus': newStatus,
-        }));
+        if (newStatus == 'assigned' && _courierId != null) {
+          await client.courierController.assignCourier(jsonEncode({
+            'orderId': orderId,
+            'courierId': _courierId,
+          }));
+        } else {
+          await client.courierController.updateDeliveryStatus(jsonEncode({
+            'orderId': orderId,
+            'newStatus': newStatus,
+          }));
+        }
       } catch (_) {}
     }
   }
@@ -221,6 +254,10 @@ class _MainViewState extends State<MainView> {
     setState(() {
       _orderStatusIndex = null;
       _courierName = null;
+      _courierVehicle = null;
+      _courierPlate = null;
+      _courierPhone = null;
+      _courierId = null;
       _restaurantLat = null;
       _restaurantLng = null;
     });
@@ -451,6 +488,9 @@ class _MainViewState extends State<MainView> {
             orderStatusIndex: _orderStatusIndex,
             orderStatuses: _orderStatuses,
             courierName: _courierName,
+            courierVehicle: _courierVehicle,
+            courierPlate: _courierPlate,
+            courierPhone: _courierPhone,
             orderRestaurantLat: _restaurantLat,
             orderRestaurantLng: _restaurantLng,
             onDismissOrder: _clearOrderTracking,
