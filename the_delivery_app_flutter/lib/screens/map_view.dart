@@ -7,6 +7,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../models/food.dart';
 import '../models/restaurant.dart';
+import '../models/tracked_delivery.dart';
 import '../state/map_state.dart';
 import 'restaurant_view.dart';
 
@@ -17,15 +18,22 @@ class MapView extends StatefulWidget {
   final double? addressLng;
   final int? orderStatusIndex;
   final List<String> orderStatuses;
-  final String? courierName;
-  final String? courierVehicle;
-  final String? courierPlate;
-  final String? courierPhone;
-  final double? orderRestaurantLat;
-  final double? orderRestaurantLng;
+  final List<TrackedDelivery> trackedDeliveries;
+  final double onTheWayProgress;
   final VoidCallback? onDismissOrder;
 
-  const MapView({super.key, required this.state, this.onAddToBasket, this.addressLat, this.addressLng, this.orderStatusIndex, this.orderStatuses = const [], this.courierName, this.courierVehicle, this.courierPlate, this.courierPhone, this.orderRestaurantLat, this.orderRestaurantLng, this.onDismissOrder});
+  const MapView({
+    super.key,
+    required this.state,
+    this.onAddToBasket,
+    this.addressLat,
+    this.addressLng,
+    this.orderStatusIndex,
+    this.orderStatuses = const [],
+    this.trackedDeliveries = const [],
+    this.onTheWayProgress = 0.0,
+    this.onDismissOrder,
+  });
 
   @override
   State<MapView> createState() => _MapViewState();
@@ -39,8 +47,9 @@ class _MapViewState extends State<MapView> {
   void didUpdateWidget(covariant MapView oldWidget) {
     super.didUpdateWidget(oldWidget);
     final justStarted = oldWidget.orderStatusIndex == null && widget.orderStatusIndex != null;
-    if (justStarted && widget.orderRestaurantLat != null && widget.orderRestaurantLng != null) {
-      _loadRoute(widget.orderRestaurantLat!, widget.orderRestaurantLng!);
+    if (justStarted && widget.trackedDeliveries.isNotEmpty) {
+      final first = widget.trackedDeliveries.first;
+      _loadRoute(first.restaurantLat, first.restaurantLng);
     }
     if (oldWidget.orderStatusIndex != null && widget.orderStatusIndex == null) {
       setState(() => _routePoints = []);
@@ -281,14 +290,14 @@ class _MapViewState extends State<MapView> {
 
   List<Marker> _buildCourierMarker() {
     final idx = widget.orderStatusIndex;
-    final restLat = widget.orderRestaurantLat;
-    final restLng = widget.orderRestaurantLng;
     final userLat = widget.addressLat;
     final userLng = widget.addressLng;
-    if (idx == null || idx < 2 || restLat == null || restLng == null || userLat == null || userLng == null) {
+    if (idx == null || idx < 2 || userLat == null || userLng == null || widget.trackedDeliveries.isEmpty) {
       return [];
     }
-    // 2=assigned, 3=at restaurant, 4=on the way, 5=delivered
+    final d = widget.trackedDeliveries.first;
+    final restLat = d.restaurantLat;
+    final restLng = d.restaurantLng;
     double progress;
     if (idx <= 3) {
       progress = 0.0;
@@ -313,6 +322,8 @@ class _MapViewState extends State<MapView> {
     final idx = widget.orderStatusIndex ?? 0;
     final statusText = idx < widget.orderStatuses.length ? widget.orderStatuses[idx] : '';
     final isDelivered = idx >= widget.orderStatuses.length - 1;
+    final first = widget.trackedDeliveries.isNotEmpty ? widget.trackedDeliveries.first : null;
+    final vehicleBits = [first?.courierVehicle, first?.courierPlate].where((s) => s != null && s.isNotEmpty).join(' · ');
     return Container(
       margin: const EdgeInsets.all(12),
       padding: const EdgeInsets.all(12),
@@ -329,7 +340,7 @@ class _MapViewState extends State<MapView> {
               const Icon(Icons.delivery_dining, color: Colors.deepOrange),
               const SizedBox(width: 8),
               Expanded(
-                child: Text('Courier: ${widget.courierName ?? "Assigning..."}',
+                child: Text('Courier: ${first?.courierName ?? "Assigning..."}',
                     style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
               if (isDelivered && widget.onDismissOrder != null)
@@ -340,26 +351,23 @@ class _MapViewState extends State<MapView> {
                 ),
             ],
           ),
-          if (widget.courierVehicle != null || widget.courierPlate != null) ...[
+          if (vehicleBits.isNotEmpty) ...[
             const SizedBox(height: 4),
             Row(
               children: [
                 const Icon(Icons.directions_car, size: 14, color: Colors.grey),
                 const SizedBox(width: 4),
-                Text(
-                  [widget.courierVehicle, widget.courierPlate].where((s) => s != null && s.isNotEmpty).join(' · '),
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
-                ),
+                Text(vehicleBits, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               ],
             ),
           ],
-          if (widget.courierPhone != null && widget.courierPhone!.isNotEmpty) ...[
+          if (first?.courierPhone != null && first!.courierPhone!.isNotEmpty) ...[
             const SizedBox(height: 2),
             Row(
               children: [
                 const Icon(Icons.phone, size: 14, color: Colors.grey),
                 const SizedBox(width: 4),
-                Text(widget.courierPhone!, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                Text(first.courierPhone!, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               ],
             ),
           ],
