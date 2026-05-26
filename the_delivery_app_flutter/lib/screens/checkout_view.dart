@@ -7,7 +7,7 @@ import '../view_models/basket_view_model.dart';
 
 class CheckoutView extends StatefulWidget {
   final BasketViewModel basketViewModel;
-  final void Function(List<String> restaurantIds)? onOrderPlaced;
+  final void Function(List<String> restaurantIds, List<int> orderIds)? onOrderPlaced;
 
   const CheckoutView({super.key, required this.basketViewModel, this.onOrderPlaced});
 
@@ -60,6 +60,7 @@ class _CheckoutViewState extends State<CheckoutView> {
       byRestaurant.putIfAbsent(food.restaurant.id, () => []).add(food);
     }
 
+    final orderIds = <int>[];
     for (final entry in byRestaurant.entries) {
       final restaurantId = int.tryParse(entry.key);
       if (restaurantId == null) continue;
@@ -71,19 +72,22 @@ class _CheckoutViewState extends State<CheckoutView> {
         'foodItemId': int.parse(e.key),
         'quantity': e.value,
       }).toList();
-      await client.orderController.createOrder(jsonEncode({
+      final raw = await client.orderController.createOrder(jsonEncode({
         'userId': userId,
         'restaurantId': restaurantId,
         'deliveryAddressId': addressId,
         'idempotencyKey': '${DateTime.now().millisecondsSinceEpoch}-$restaurantId',
         'items': orderItems,
       }));
+      final decoded = jsonDecode(raw) as Map<String, dynamic>;
+      final orderId = decoded['orderId'];
+      if (orderId is int) orderIds.add(orderId);
     }
 
     widget.basketViewModel.clearBasket();
     if (!mounted) return;
     final restaurantIds = byRestaurant.keys.toList();
-    widget.onOrderPlaced?.call(restaurantIds);
+    widget.onOrderPlaced?.call(restaurantIds, orderIds);
     Navigator.pop(context);
   }
 
