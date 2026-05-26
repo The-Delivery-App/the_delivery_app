@@ -25,7 +25,7 @@ class _OrderTrackingViewState extends State<OrderTrackingView> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 5), (t) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (t) {
       if (_currentStep < _steps.length - 1) {
         setState(() => _currentStep++);
       } else {
