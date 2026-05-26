@@ -342,7 +342,6 @@ class EndpointUserProfileController extends _i1.EndpointRef {
         'setDefaultAddress',
         {'addressId': addressId},
       );
-  _i2.Future<String> getDefault
 }
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
