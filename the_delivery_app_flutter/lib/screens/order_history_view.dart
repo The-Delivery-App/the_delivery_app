@@ -114,7 +114,22 @@ class _OrderHistoryViewState extends State<OrderHistoryView> {
         foregroundColor: Colors.black,
         elevation: 0,
       ),
-      body: const SizedBox.shrink(),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _orders.isEmpty
+              ? const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.receipt_long, size: 64, color: Colors.grey),
+                      SizedBox(height: 16),
+                      Text('No past orders yet', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 8),
+                      Text('Your completed orders will appear here', style: TextStyle(color: Colors.grey)),
+                    ],
+                  ),
+                )
+              : ListView(children: _orders.map(_buildOrderTile).toList()),
     );
   }
 }
