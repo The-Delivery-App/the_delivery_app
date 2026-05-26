@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 
 import '../main.dart';
 import '../view_models/basket_view_model.dart';
-import 'order_tracking_view.dart';
 
 class CheckoutView extends StatefulWidget {
   final BasketViewModel basketViewModel;
+  final void Function(List<String> restaurantIds)? onOrderPlaced;
 
-  const CheckoutView({super.key, required this.basketViewModel});
+  const CheckoutView({super.key, required this.basketViewModel, this.onOrderPlaced});
 
   @override
   State<CheckoutView> createState() => _CheckoutViewState();
@@ -82,10 +82,9 @@ class _CheckoutViewState extends State<CheckoutView> {
 
     widget.basketViewModel.clearBasket();
     if (!mounted) return;
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const OrderTrackingView()),
-    );
+    final restaurantIds = byRestaurant.keys.toList();
+    widget.onOrderPlaced?.call(restaurantIds);
+    Navigator.pop(context);
   }
 
   Widget _buildAddressSelector() {
