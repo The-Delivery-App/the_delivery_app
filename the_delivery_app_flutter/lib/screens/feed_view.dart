@@ -307,8 +307,8 @@ class FeedView extends StatelessWidget {
     );
   }
 
-  Widget _buildAllRestaurantsSection(BuildContext context, List<MapEntry<Restaurant, List<Food>>> groups, {bool hasActiveFilters = false, VoidCallback? onClearFilters}) {
-    final hasFilters = hasActiveFilters || sortRule != null || priceTier != null || onlyDiscounted;
+  Widget _buildAllRestaurantsSection(BuildContext context, List<MapEntry<Restaurant, List<Food>>> groups, List<Food> filteredFood, {VoidCallback? onClearFilters}) {
+    final hasFilters = sortRule != null || priceTier != null || onlyDiscounted;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -317,7 +317,7 @@ class FeedView extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('All Restaurants', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(hasFilters ? 'Filtered Foods' : 'All Restaurants', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               if (onFilterTap != null)
                 ElevatedButton.icon(
                   onPressed: onFilterTap,
@@ -335,28 +335,93 @@ class FeedView extends StatelessWidget {
             ],
           ),
         ),
-        if (groups.isEmpty)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-            child: Column(
-              children: [
-                const Icon(Icons.search_off, size: 48, color: Colors.grey),
-                const SizedBox(height: 8),
-                const Text('No restaurants match your filters.', style: TextStyle(color: Colors.grey)),
-                if (hasFilters && onClearFilters != null) ...[
+        if (hasFilters)
+          if (filteredFood.isEmpty)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+              child: Column(
+                children: [
+                  const Icon(Icons.search_off, size: 48, color: Colors.grey),
                   const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: onClearFilters,
-                    child: const Text('Clear filters', style: TextStyle(color: Colors.deepOrange)),
-                  ),
+                  const Text('No foods match your filters.', style: TextStyle(color: Colors.grey)),
+                  if (onClearFilters != null) ...[
+                    const SizedBox(height: 8),
+                    TextButton(
+                      onPressed: onClearFilters,
+                      child: const Text('Clear filters', style: TextStyle(color: Colors.deepOrange)),
+                    ),
+                  ],
                 ],
-              ],
-            ),
-          )
+              ),
+            )
+          else
+            ...filteredFood.map((f) => _buildFoodTile(context, f))
         else
           ...groups.map((e) => _buildRestaurantListTile(context, e.key, e.value)),
         const SizedBox(height: 16),
       ],
+    );
+  }
+
+  Widget _buildFoodTile(BuildContext context, Food food) {
+    return GestureDetector(
+      onTap: int.tryParse(food.restaurant.id) != null
+          ? () => Navigator.push(context, MaterialPageRoute(
+                builder: (_) => RestaurantView(restaurant: food.restaurant, onAddToBasket: onAddToBasket),
+              ))
+          : null,
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade200),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 6, offset: const Offset(0, 2))],
+        ),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: food.imageUrl.isNotEmpty
+                  ? (food.imageUrl.startsWith('http')
+                      ? Image.network(food.imageUrl, width: 60, height: 60, fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(width: 60, height: 60, color: Colors.grey[200], child: const Icon(Icons.fastfood, color: Colors.deepOrange)))
+                      : Image.asset(food.imageUrl, width: 60, height: 60, fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(width: 60, height: 60, color: Colors.grey[200], child: const Icon(Icons.fastfood, color: Colors.deepOrange))))
+                  : Container(width: 60, height: 60, color: Colors.grey[200], child: const Icon(Icons.fastfood, color: Colors.deepOrange)),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(food.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  const SizedBox(height: 2),
+                  Text(food.restaurant.name, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, size: 12, color: Colors.amber),
+                      Text(' ${food.rating.toStringAsFixed(1)}', style: const TextStyle(fontSize: 11)),
+                      const SizedBox(width: 8),
+                      Text('£${food.price.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.deepOrange)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            if (onAddToBasket != null)
+              IconButton(
+                icon: const Icon(Icons.add_shopping_cart, color: Colors.deepOrange),
+                onPressed: () {
+                  onAddToBasket!(food);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${food.name} added to basket'), duration: const Duration(seconds: 1), backgroundColor: Colors.deepOrange));
+                },
+              ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -506,7 +571,7 @@ class FeedView extends StatelessWidget {
               _buildSearchBar(context),
               if (onDeals != null) _buildPromoBanner(context),
               _buildNearYouSection(context, nearYou, isRanking: !canRank),
-              _buildAllRestaurantsSection(context, groups, onClearFilters: onClearFilters),
+              _buildAllRestaurantsSection(context, groups, sortedFood, onClearFilters: onClearFilters),
               if (state.isLoadingMore)
                 const Padding(
                   padding: EdgeInsets.all(16),
