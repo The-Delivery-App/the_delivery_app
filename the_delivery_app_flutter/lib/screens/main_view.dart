@@ -406,6 +406,12 @@ class _MainViewState extends State<MainView> {
             onAddToBasket: _basketViewModel.addItem,
             addressLat: _addressLat,
             addressLng: _addressLng,
+            orderStatusIndex: _orderStatusIndex,
+            orderStatuses: _orderStatuses,
+            courierName: _courierName,
+            orderRestaurantLat: _restaurantLat,
+            orderRestaurantLng: _restaurantLng,
+            onDismissOrder: _clearOrderTracking,
           ),
         );
       case 3:
