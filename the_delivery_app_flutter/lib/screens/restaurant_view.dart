@@ -89,6 +89,22 @@ class _RestaurantViewState extends State<RestaurantView> {
     super.dispose();
   }
 
+  Future<void> _favouriteFood(Food food) async {
+    final id = int.tryParse(food.id);
+    if (id == null) return;
+    try {
+      final userRaw = await client.userProfileController.getCurrentUser();
+      final userId = jsonDecode(userRaw)['userId'] as int;
+      await client.favouritesController.addFavourite(
+        jsonEncode({'userId': userId, 'foodItemId': id}),
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${food.name} added to favourites'), duration: const Duration(seconds: 2), backgroundColor: Colors.deepOrange),
+      );
+    } catch (_) {}
+  }
+
   Future<void> _showRateDialog(Food food) async {
     int rating = 5;
     final comment = TextEditingController();
@@ -184,6 +200,11 @@ class _RestaurantViewState extends State<RestaurantView> {
                   fontSize: 15,
                   color: Colors.deepOrange,
                 ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.favorite_border, color: Colors.deepOrange),
+                tooltip: 'Add to favourites',
+                onPressed: () => _favouriteFood(food),
               ),
               IconButton(
                 icon: const Icon(Icons.star_outline, color: Colors.amber),
