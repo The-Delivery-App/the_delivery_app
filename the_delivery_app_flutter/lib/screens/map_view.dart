@@ -322,33 +322,46 @@ class _MapViewState extends State<MapView> {
     );
   }
 
-  List<Marker> _buildCourierMarker() {
+  LatLng? _courierPosition(TrackedDelivery d) {
     final idx = widget.orderStatusIndex;
     final userLat = widget.addressLat;
     final userLng = widget.addressLng;
-    if (idx == null || idx < 2 || userLat == null || userLng == null) {
-      return [];
+    if (idx == null || idx < 2 || userLat == null || userLng == null) return null;
+    if (idx <= 3) return LatLng(d.restaurantLat, d.restaurantLng);
+    if (idx >= 5) return LatLng(userLat, userLng);
+    final route = _routesByOrder[d.orderId];
+    if (route == null || route.length < 2) {
+      final p = widget.onTheWayProgress;
+      return LatLng(
+        d.restaurantLat + (userLat - d.restaurantLat) * p,
+        d.restaurantLng + (userLng - d.restaurantLng) * p,
+      );
     }
-    double progress;
-    if (idx <= 3) {
-      progress = 0.0;
-    } else if (idx == 4) {
-      progress = 0.5;
-    } else {
-      progress = 1.0;
+    final fIndex = widget.onTheWayProgress.clamp(0.0, 1.0) * (route.length - 1);
+    final lower = fIndex.floor();
+    final upper = (lower + 1).clamp(0, route.length - 1);
+    final t = fIndex - lower;
+    final a = route[lower];
+    final b = route[upper];
+    return LatLng(
+      a.latitude + (b.latitude - a.latitude) * t,
+      a.longitude + (b.longitude - a.longitude) * t,
+    );
+  }
+
+  List<Marker> _buildCourierMarker() {
+    final markers = <Marker>[];
+    for (final d in widget.trackedDeliveries) {
+      final pos = _courierPosition(d);
+      if (pos == null) continue;
+      markers.add(Marker(
+        point: pos,
+        width: 48,
+        height: 48,
+        child: const Icon(Icons.delivery_dining, color: Colors.deepOrange, size: 40),
+      ));
     }
-    return [
-      for (final d in widget.trackedDeliveries)
-        Marker(
-          point: LatLng(
-            d.restaurantLat + (userLat - d.restaurantLat) * progress,
-            d.restaurantLng + (userLng - d.restaurantLng) * progress,
-          ),
-          width: 48,
-          height: 48,
-          child: const Icon(Icons.delivery_dining, color: Colors.deepOrange, size: 40),
-        ),
-    ];
+    return markers;
   }
 
   Widget _buildTrackingPanel() {
