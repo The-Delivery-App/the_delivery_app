@@ -113,6 +113,7 @@ class _MapViewState extends State<MapView> {
                   height: 50,
                   child: const Icon(Icons.home, color: Colors.green, size: 36),
                 ),
+              ..._buildCourierMarker(),
             ],
           ),
             ],
@@ -261,6 +262,29 @@ class _MapViewState extends State<MapView> {
         ],
       ),
     );
+  }
+
+  List<Marker> _buildCourierMarker() {
+    final idx = widget.orderStatusIndex;
+    final restLat = widget.orderRestaurantLat;
+    final restLng = widget.orderRestaurantLng;
+    final userLat = widget.addressLat;
+    final userLng = widget.addressLng;
+    if (idx == null || restLat == null || restLng == null || userLat == null || userLng == null) {
+      return [];
+    }
+    // Progress: 0 = at restaurant, 1 = at user. Move linearly with status index.
+    final progress = (idx / (widget.orderStatuses.length - 1)).clamp(0.0, 1.0);
+    final lat = restLat + (userLat - restLat) * progress;
+    final lng = restLng + (userLng - restLng) * progress;
+    return [
+      Marker(
+        point: LatLng(lat, lng),
+        width: 48,
+        height: 48,
+        child: const Icon(Icons.delivery_dining, color: Colors.deepOrange, size: 40),
+      ),
+    ];
   }
 
   Widget _buildTrackingPanel() {
