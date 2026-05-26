@@ -61,8 +61,10 @@ class _RestaurantViewState extends State<RestaurantView> {
     if (id == null) return;
     setState(() => _isFavourited = !_isFavourited);
     try {
+      final userRaw = await client.userProfileController.getCurrentUser();
+      final userId = jsonDecode(userRaw)['userId'] as int;
       await client.favouritesController.addFavourite(
-        jsonEncode({'restaurantId': id}),
+        jsonEncode({'userId': userId, 'restaurantId': id}),
       );
     } catch (_) {}
   }
