@@ -59,6 +59,7 @@ class _MainViewState extends State<MainView> {
   String? _courierName;
   double? _restaurantLat;
   double? _restaurantLng;
+  List<int> _activeOrderIds = [];
   Timer? _orderStatusTimer;
 
   static const _orderStatuses = [
@@ -68,6 +69,14 @@ class _MainViewState extends State<MainView> {
     'Courier at the restaurant',
     'Courier on the way to you',
     'Delivered',
+  ];
+  static const _orderStatusKeys = [
+    'placed',
+    'confirmed',
+    'assigned',
+    'restaurant',
+    'customer',
+    'delivered',
   ];
   static const _cuisines = ['Thai', 'Chinese', 'Indian', 'Japanese', 'Vietnamese', 'Italian', 'American'];
 
@@ -168,13 +177,14 @@ class _MainViewState extends State<MainView> {
     } catch (_) {}
   }
 
-  void _startOrderTracking({required String restaurantName, double? restaurantLat, double? restaurantLng}) {
+  void _startOrderTracking({required String restaurantName, double? restaurantLat, double? restaurantLng, List<int> orderIds = const []}) {
     final courierNames = ['Alex Carter', 'Sam Patel', 'Jordan Lee', 'Riley Khan', 'Chris Morgan'];
     setState(() {
       _orderStatusIndex = 0;
       _courierName = courierNames[DateTime.now().millisecondsSinceEpoch % courierNames.length];
       _restaurantLat = restaurantLat;
       _restaurantLng = restaurantLng;
+      _activeOrderIds = orderIds;
       _selectedIndex = 2;
     });
     _orderStatusTimer?.cancel();
@@ -184,11 +194,26 @@ class _MainViewState extends State<MainView> {
         return;
       }
       if ((_orderStatusIndex ?? 0) < _orderStatuses.length - 1) {
-        setState(() => _orderStatusIndex = (_orderStatusIndex ?? 0) + 1);
+        final next = (_orderStatusIndex ?? 0) + 1;
+        setState(() => _orderStatusIndex = next);
+        _pushStatusToBackend(next);
       } else {
         t.cancel();
       }
     });
+  }
+
+  Future<void> _pushStatusToBackend(int index) async {
+    if (_activeOrderIds.isEmpty || index >= _orderStatusKeys.length) return;
+    final newStatus = _orderStatusKeys[index];
+    for (final orderId in _activeOrderIds) {
+      try {
+        await client.courierController.updateDeliveryStatus(jsonEncode({
+          'orderId': orderId,
+          'newStatus': newStatus,
+        }));
+      } catch (_) {}
+    }
   }
 
   void _clearOrderTracking() {
@@ -201,7 +226,7 @@ class _MainViewState extends State<MainView> {
     });
   }
 
-  void _onOrderPlaced(List<String> restaurantIds) {
+  void _onOrderPlaced(List<String> restaurantIds, List<int> orderIds) {
     if (restaurantIds.isEmpty) return;
     final firstId = restaurantIds.first;
     final restaurant = _featuredRestaurants.firstWhere(
@@ -214,6 +239,7 @@ class _MainViewState extends State<MainView> {
       restaurantName: restaurant.name,
       restaurantLat: restaurant.latitude,
       restaurantLng: restaurant.longitude,
+      orderIds: orderIds,
     );
   }
 
