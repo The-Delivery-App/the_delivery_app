@@ -18,11 +18,14 @@ class MapView extends StatefulWidget {
   final int? orderStatusIndex;
   final List<String> orderStatuses;
   final String? courierName;
+  final String? courierVehicle;
+  final String? courierPlate;
+  final String? courierPhone;
   final double? orderRestaurantLat;
   final double? orderRestaurantLng;
   final VoidCallback? onDismissOrder;
 
-  const MapView({super.key, required this.state, this.onAddToBasket, this.addressLat, this.addressLng, this.orderStatusIndex, this.orderStatuses = const [], this.courierName, this.orderRestaurantLat, this.orderRestaurantLng, this.onDismissOrder});
+  const MapView({super.key, required this.state, this.onAddToBasket, this.addressLat, this.addressLng, this.orderStatusIndex, this.orderStatuses = const [], this.courierName, this.courierVehicle, this.courierPlate, this.courierPhone, this.orderRestaurantLat, this.orderRestaurantLng, this.onDismissOrder});
 
   @override
   State<MapView> createState() => _MapViewState();
@@ -282,11 +285,18 @@ class _MapViewState extends State<MapView> {
     final restLng = widget.orderRestaurantLng;
     final userLat = widget.addressLat;
     final userLng = widget.addressLng;
-    if (idx == null || restLat == null || restLng == null || userLat == null || userLng == null) {
+    if (idx == null || idx < 2 || restLat == null || restLng == null || userLat == null || userLng == null) {
       return [];
     }
-    // Progress: 0 = at restaurant, 1 = at user. Move linearly with status index.
-    final progress = (idx / (widget.orderStatuses.length - 1)).clamp(0.0, 1.0);
+    // 2=assigned, 3=at restaurant, 4=on the way, 5=delivered
+    double progress;
+    if (idx <= 3) {
+      progress = 0.0;
+    } else if (idx == 4) {
+      progress = 0.5;
+    } else {
+      progress = 1.0;
+    }
     final lat = restLat + (userLat - restLat) * progress;
     final lng = restLng + (userLng - restLng) * progress;
     return [
@@ -330,6 +340,29 @@ class _MapViewState extends State<MapView> {
                 ),
             ],
           ),
+          if (widget.courierVehicle != null || widget.courierPlate != null) ...[
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                const Icon(Icons.directions_car, size: 14, color: Colors.grey),
+                const SizedBox(width: 4),
+                Text(
+                  [widget.courierVehicle, widget.courierPlate].where((s) => s != null && s.isNotEmpty).join(' · '),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+              ],
+            ),
+          ],
+          if (widget.courierPhone != null && widget.courierPhone!.isNotEmpty) ...[
+            const SizedBox(height: 2),
+            Row(
+              children: [
+                const Icon(Icons.phone, size: 14, color: Colors.grey),
+                const SizedBox(width: 4),
+                Text(widget.courierPhone!, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              ],
+            ),
+          ],
           const SizedBox(height: 6),
           Text(statusText, style: const TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
