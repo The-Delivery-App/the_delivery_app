@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 import '../main.dart';
 
@@ -115,11 +114,7 @@ class _AddressesViewState extends State<AddressesView> {
   }
 
   Future<void> _setDefault(int addressId) async {
-    await http.post(
-      Uri.parse('http://localhost:8080/userProfileController/setDefaultAddress'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'addressId': addressId}),
-    );
+    await client.userProfileController.setDefaultAddress(addressId);
     _loadAddresses();
   }
 

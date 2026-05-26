@@ -336,6 +336,13 @@ class EndpointUserProfileController extends _i1.EndpointRef {
         'deleteAddress',
         {'addressId': addressId},
       );
+  _i2.Future<String> setDefaultAddress(int addressId) =>
+      caller.callServerEndpoint<String>(
+        'userProfileController',
+        'setDefaultAddress',
+        {'addressId': addressId},
+      );
+  _i2.Future<String> getDefault
 }
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
