@@ -306,6 +306,11 @@ class _MainViewState extends State<MainView> {
             priceTier: _priceTier,
             onlyDiscounted: _onlyDiscounted,
             onFilterTap: _showFilterSheet,
+            onClearFilters: () => setState(() {
+              _sortRule = null;
+              _priceTier = null;
+              _onlyDiscounted = false;
+            }),
           ),
         );
       case 1:
