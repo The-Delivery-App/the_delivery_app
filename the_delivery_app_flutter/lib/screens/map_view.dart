@@ -42,18 +42,45 @@ class MapView extends StatefulWidget {
 class _MapViewState extends State<MapView> {
   final MapController _mapController = MapController();
   List<LatLng> _routePoints = [];
+  final Map<int, List<LatLng>> _routesByOrder = {};
 
   @override
   void didUpdateWidget(covariant MapView oldWidget) {
     super.didUpdateWidget(oldWidget);
     final justStarted = oldWidget.orderStatusIndex == null && widget.orderStatusIndex != null;
-    if (justStarted && widget.trackedDeliveries.isNotEmpty) {
-      final first = widget.trackedDeliveries.first;
-      _loadRoute(first.restaurantLat, first.restaurantLng);
+    if (justStarted) {
+      for (final d in widget.trackedDeliveries) {
+        _loadOrderRoute(d);
+      }
     }
     if (oldWidget.orderStatusIndex != null && widget.orderStatusIndex == null) {
-      setState(() => _routePoints = []);
+      setState(() {
+        _routePoints = [];
+        _routesByOrder.clear();
+      });
     }
+  }
+
+  Future<void> _loadOrderRoute(TrackedDelivery d) async {
+    final userLat = widget.addressLat;
+    final userLng = widget.addressLng;
+    if (userLat == null || userLng == null) return;
+    try {
+      final url = Uri.parse(
+        'https://router.project-osrm.org/route/v1/foot/${d.restaurantLng},${d.restaurantLat};$userLng,$userLat?overview=full&geometries=geojson',
+      );
+      final response = await http.get(url);
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      final routes = data['routes'] as List<dynamic>?;
+      if (routes == null || routes.isEmpty) return;
+      final coords = routes.first['geometry']['coordinates'] as List<dynamic>;
+      final points = coords.map((c) {
+        final pair = c as List<dynamic>;
+        return LatLng(pair[1] as double, pair[0] as double);
+      }).toList();
+      if (!mounted) return;
+      setState(() => _routesByOrder[d.orderId] = points);
+    } catch (_) {}
   }
 
   Future<void> _loadRoute(double destLat, double destLng) async {
@@ -111,6 +138,13 @@ class _MapViewState extends State<MapView> {
                   strokeWidth: 4,
                   color: Colors.deepOrange,
                 ),
+              ],
+            ),
+          if (_routesByOrder.isNotEmpty)
+            PolylineLayer(
+              polylines: [
+                for (final pts in _routesByOrder.values)
+                  Polyline(points: pts, strokeWidth: 4, color: Colors.deepOrange),
               ],
             ),
           MarkerLayer(
