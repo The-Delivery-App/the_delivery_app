@@ -8,8 +8,9 @@ import 'checkout_view.dart';
 class BasketView extends StatefulWidget {
   final BasketViewModel viewModel;
   final VoidCallback? onBrowseRestaurants;
+  final void Function(List<String> restaurantIds)? onOrderPlaced;
 
-  const BasketView({super.key, required this.viewModel, this.onBrowseRestaurants});
+  const BasketView({super.key, required this.viewModel, this.onBrowseRestaurants, this.onOrderPlaced});
 
   @override
   State<BasketView> createState() => _BasketViewState();
@@ -359,7 +360,10 @@ class _BasketViewState extends State<BasketView> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => CheckoutView(basketViewModel: widget.viewModel),
+                      builder: (_) => CheckoutView(
+                        basketViewModel: widget.viewModel,
+                        onOrderPlaced: widget.onOrderPlaced,
+                      ),
                     ),
                   );
                 },
