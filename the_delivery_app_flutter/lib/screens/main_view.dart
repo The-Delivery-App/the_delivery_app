@@ -201,6 +201,22 @@ class _MainViewState extends State<MainView> {
     });
   }
 
+  void _onOrderPlaced(List<String> restaurantIds) {
+    if (restaurantIds.isEmpty) return;
+    final firstId = restaurantIds.first;
+    final restaurant = _featuredRestaurants.firstWhere(
+      (r) => r.id == firstId,
+      orElse: () => _featuredRestaurants.isNotEmpty
+          ? _featuredRestaurants.first
+          : Restaurant(id: firstId, name: 'Restaurant'),
+    );
+    _startOrderTracking(
+      restaurantName: restaurant.name,
+      restaurantLat: restaurant.latitude,
+      restaurantLng: restaurant.longitude,
+    );
+  }
+
   Future<void> _showFilterSheet() async {
     FoodSortRule? sort = _sortRule;
     String? tier = _priceTier;
@@ -418,6 +434,7 @@ class _MainViewState extends State<MainView> {
         return BasketView(
           viewModel: _basketViewModel,
           onBrowseRestaurants: () => setState(() => _selectedIndex = 0),
+          onOrderPlaced: _onOrderPlaced,
         );
       case 4:
         return AccountView(settingsViewModel: _settingsViewModel);
