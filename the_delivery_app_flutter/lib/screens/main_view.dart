@@ -53,6 +53,9 @@ class _MainViewState extends State<MainView> {
   FoodSortRule? _sortRule;
   String? _priceTier;
   bool _onlyDiscounted = false;
+  String? _cuisine;
+
+  static const _cuisines = ['Thai', 'Chinese', 'Indian', 'Japanese', 'Vietnamese', 'Italian', 'American'];
 
   @override
   void initState() {
@@ -155,6 +158,7 @@ class _MainViewState extends State<MainView> {
     FoodSortRule? sort = _sortRule;
     String? tier = _priceTier;
     bool discounted = _onlyDiscounted;
+    String? selectedCuisine = _cuisine;
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -193,6 +197,20 @@ class _MainViewState extends State<MainView> {
                   ],
                 ),
                 const SizedBox(height: 16),
+                const Text('Cuisine', style: TextStyle(fontWeight: FontWeight.bold)),
+                Wrap(
+                  spacing: 6,
+                  children: _cuisines.map((c) {
+                    final isSelected = selectedCuisine == c;
+                    return ChoiceChip(
+                      label: Text(c),
+                      selected: isSelected,
+                      onSelected: (_) => setSheet(() => selectedCuisine = isSelected ? null : c),
+                      selectedColor: const Color(0xFFFFE5DC),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 16),
                 CheckboxListTile(
                   contentPadding: EdgeInsets.zero,
                   title: const Text('Only show discounted items'),
@@ -209,6 +227,7 @@ class _MainViewState extends State<MainView> {
                           sort = null;
                           tier = null;
                           discounted = false;
+                          selectedCuisine = null;
                         }),
                         child: const Text('Clear'),
                       ),
@@ -225,6 +244,7 @@ class _MainViewState extends State<MainView> {
                             _sortRule = sort;
                             _priceTier = tier;
                             _onlyDiscounted = discounted;
+                            _cuisine = selectedCuisine;
                           });
                           Navigator.pop(ctx);
                         },
@@ -305,11 +325,17 @@ class _MainViewState extends State<MainView> {
             sortRule: _sortRule,
             priceTier: _priceTier,
             onlyDiscounted: _onlyDiscounted,
+            cuisine: _cuisine,
+            restaurantCuisines: {
+              for (final r in _featuredRestaurants)
+                if (r.cuisine != null) r.name: r.cuisine!,
+            },
             onFilterTap: _showFilterSheet,
             onClearFilters: () => setState(() {
               _sortRule = null;
               _priceTier = null;
               _onlyDiscounted = false;
+              _cuisine = null;
             }),
           ),
         );
