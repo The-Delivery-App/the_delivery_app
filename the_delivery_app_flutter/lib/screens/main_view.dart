@@ -7,6 +7,7 @@ import '../APIs/feed_api_service.dart';
 import '../APIs/map_api_service.dart';
 import '../APIs/restaurant_api_service.dart';
 import '../main.dart';
+import '../models/food_sort_rule.dart';
 import '../models/restaurant.dart';
 import '../repositories/basket_repository.dart';
 import '../repositories/food_repository.dart';
@@ -49,6 +50,9 @@ class _MainViewState extends State<MainView> {
   String _addressLabel = 'London, UK';
   double? _addressLat;
   double? _addressLng;
+  FoodSortRule? _sortRule;
+  String? _priceTier;
+  bool _onlyDiscounted = false;
 
   @override
   void initState() {
@@ -147,6 +151,116 @@ class _MainViewState extends State<MainView> {
     } catch (_) {}
   }
 
+  Future<void> _showFilterSheet() async {
+    FoodSortRule? sort = _sortRule;
+    String? tier = _priceTier;
+    bool discounted = _onlyDiscounted;
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setSheet) => Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Sort & Filter', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                const SizedBox(height: 16),
+                const Text('Sort by', style: TextStyle(fontWeight: FontWeight.bold)),
+                Wrap(
+                  spacing: 6,
+                  children: [
+                    _sortChip('Price ↑', FoodSortRule.priceLowToHigh, sort, (v) => setSheet(() => sort = v)),
+                    _sortChip('Price ↓', FoodSortRule.priceHighToLow, sort, (v) => setSheet(() => sort = v)),
+                    _sortChip('Rating', FoodSortRule.rating, sort, (v) => setSheet(() => sort = v)),
+                    _sortChip('Delivery ↑', FoodSortRule.distanceClosestFirst, sort, (v) => setSheet(() => sort = v)),
+                    _sortChip('Delivery ↓', FoodSortRule.distanceFarthestFirst, sort, (v) => setSheet(() => sort = v)),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const Text('Price tier', style: TextStyle(fontWeight: FontWeight.bold)),
+                Wrap(
+                  spacing: 6,
+                  children: [
+                    _tierChip('Low (≤Q1)', 'low', tier, (v) => setSheet(() => tier = v)),
+                    _tierChip('Mid (IQR)', 'mid', tier, (v) => setSheet(() => tier = v)),
+                    _tierChip('High (Q3≥)', 'high', tier, (v) => setSheet(() => tier = v)),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                CheckboxListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Only show discounted items'),
+                  value: discounted,
+                  onChanged: (v) => setSheet(() => discounted = v ?? false),
+                  activeColor: Colors.deepOrange,
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () => setSheet(() {
+                          sort = null;
+                          tier = null;
+                          discounted = false;
+                        }),
+                        child: const Text('Clear'),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.deepOrange,
+                          foregroundColor: Colors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _sortRule = sort;
+                            _priceTier = tier;
+                            _onlyDiscounted = discounted;
+                          });
+                          Navigator.pop(ctx);
+                        },
+                        child: const Text('Apply'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _sortChip(String label, FoodSortRule value, FoodSortRule? current, ValueChanged<FoodSortRule?> onTap) {
+    final selected = current == value;
+    return ChoiceChip(
+      label: Text(label),
+      selected: selected,
+      onSelected: (_) => onTap(selected ? null : value),
+      selectedColor: const Color(0xFFFFE5DC),
+    );
+  }
+
+  Widget _tierChip(String label, String value, String? current, ValueChanged<String?> onTap) {
+    final selected = current == value;
+    return ChoiceChip(
+      label: Text(label),
+      selected: selected,
+      onSelected: (_) => onTap(selected ? null : value),
+      selectedColor: const Color(0xFFFFE5DC),
+    );
+  }
+
   void _onTabTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -188,6 +302,10 @@ class _MainViewState extends State<MainView> {
             featuredRestaurants: _featuredRestaurants,
             userLat: _addressLat,
             userLng: _addressLng,
+            sortRule: _sortRule,
+            priceTier: _priceTier,
+            onlyDiscounted: _onlyDiscounted,
+            onFilterTap: _showFilterSheet,
           ),
         );
       case 1:
