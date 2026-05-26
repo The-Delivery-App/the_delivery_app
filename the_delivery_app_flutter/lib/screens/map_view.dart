@@ -292,12 +292,9 @@ class _MapViewState extends State<MapView> {
     final idx = widget.orderStatusIndex;
     final userLat = widget.addressLat;
     final userLng = widget.addressLng;
-    if (idx == null || idx < 2 || userLat == null || userLng == null || widget.trackedDeliveries.isEmpty) {
+    if (idx == null || idx < 2 || userLat == null || userLng == null) {
       return [];
     }
-    final d = widget.trackedDeliveries.first;
-    final restLat = d.restaurantLat;
-    final restLng = d.restaurantLng;
     double progress;
     if (idx <= 3) {
       progress = 0.0;
@@ -306,15 +303,17 @@ class _MapViewState extends State<MapView> {
     } else {
       progress = 1.0;
     }
-    final lat = restLat + (userLat - restLat) * progress;
-    final lng = restLng + (userLng - restLng) * progress;
     return [
-      Marker(
-        point: LatLng(lat, lng),
-        width: 48,
-        height: 48,
-        child: const Icon(Icons.delivery_dining, color: Colors.deepOrange, size: 40),
-      ),
+      for (final d in widget.trackedDeliveries)
+        Marker(
+          point: LatLng(
+            d.restaurantLat + (userLat - d.restaurantLat) * progress,
+            d.restaurantLng + (userLng - d.restaurantLng) * progress,
+          ),
+          width: 48,
+          height: 48,
+          child: const Icon(Icons.delivery_dining, color: Colors.deepOrange, size: 40),
+        ),
     ];
   }
 
