@@ -55,23 +55,30 @@ class _CheckoutViewState extends State<CheckoutView> {
     final addressId = _selectedAddressId!;
 
     final items = widget.basketViewModel.getState().basket.items;
-    final restaurantId = int.parse(items.first.restaurant.id);
-    final counts = <String, int>{};
-    for (final f in items) {
-      counts[f.id] = (counts[f.id] ?? 0) + 1;
+    final byRestaurant = <String, List<dynamic>>{};
+    for (final food in items) {
+      byRestaurant.putIfAbsent(food.restaurant.id, () => []).add(food);
     }
-    final orderItems = counts.entries.map((e) => {
-      'foodItemId': int.parse(e.key),
-      'quantity': e.value,
-    }).toList();
 
-    await client.orderController.createOrder(jsonEncode({
-      'userId': userId,
-      'restaurantId': restaurantId,
-      'deliveryAddressId': addressId,
-      'idempotencyKey': '${DateTime.now().millisecondsSinceEpoch}',
-      'items': orderItems,
-    }));
+    for (final entry in byRestaurant.entries) {
+      final restaurantId = int.tryParse(entry.key);
+      if (restaurantId == null) continue;
+      final counts = <String, int>{};
+      for (final f in entry.value) {
+        counts[f.id] = (counts[f.id] ?? 0) + 1;
+      }
+      final orderItems = counts.entries.map((e) => {
+        'foodItemId': int.parse(e.key),
+        'quantity': e.value,
+      }).toList();
+      await client.orderController.createOrder(jsonEncode({
+        'userId': userId,
+        'restaurantId': restaurantId,
+        'deliveryAddressId': addressId,
+        'idempotencyKey': '${DateTime.now().millisecondsSinceEpoch}-$restaurantId',
+        'items': orderItems,
+      }));
+    }
 
     widget.basketViewModel.clearBasket();
     if (!mounted) return;
