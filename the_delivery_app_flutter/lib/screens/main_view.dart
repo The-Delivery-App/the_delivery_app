@@ -10,6 +10,7 @@ import '../APIs/restaurant_api_service.dart';
 import '../main.dart';
 import '../models/food_sort_rule.dart';
 import '../models/restaurant.dart';
+import '../models/tracked_delivery.dart';
 import '../repositories/basket_repository.dart';
 import '../repositories/food_repository.dart';
 import '../repositories/restaurant_repository.dart';
@@ -56,15 +57,10 @@ class _MainViewState extends State<MainView> {
   bool _onlyDiscounted = false;
   String? _cuisine;
   int? _orderStatusIndex;
-  String? _courierName;
-  String? _courierVehicle;
-  String? _courierPlate;
-  String? _courierPhone;
-  int? _courierId;
-  double? _restaurantLat;
-  double? _restaurantLng;
-  List<int> _activeOrderIds = [];
+  List<TrackedDelivery> _activeDeliveries = [];
+  double _onTheWayProgress = 0.0;
   Timer? _orderStatusTimer;
+  Timer? _animationTimer;
 
   static const _orderStatuses = [
     'Order placed',
@@ -181,67 +177,102 @@ class _MainViewState extends State<MainView> {
     } catch (_) {}
   }
 
-  Future<void> _startOrderTracking({required String restaurantName, double? restaurantLat, double? restaurantLng, List<int> orderIds = const []}) async {
+  Future<void> _startOrderTracking(List<TrackedDelivery> deliveries) async {
     setState(() {
       _orderStatusIndex = 0;
-      _courierName = null;
-      _courierVehicle = null;
-      _courierPlate = null;
-      _courierPhone = null;
-      _courierId = null;
-      _restaurantLat = restaurantLat;
-      _restaurantLng = restaurantLng;
-      _activeOrderIds = orderIds;
+      _onTheWayProgress = 0.0;
+      _activeDeliveries = deliveries;
       _selectedIndex = 2;
     });
-    await _pickCourier();
+    await _assignCouriers();
     _orderStatusTimer?.cancel();
     _orderStatusTimer = Timer.periodic(const Duration(seconds: 3), (t) {
       if (!mounted) {
         t.cancel();
         return;
       }
-      if ((_orderStatusIndex ?? 0) < _orderStatuses.length - 1) {
-        final next = (_orderStatusIndex ?? 0) + 1;
-        setState(() => _orderStatusIndex = next);
-        _pushStatusToBackend(next);
-      } else {
+      final current = _orderStatusIndex ?? 0;
+      if (current >= _orderStatuses.length - 1) {
         t.cancel();
+        return;
+      }
+      if (current == 3) {
+        // Entering "on the way" — switch to animation timer
+        t.cancel();
+        _advanceStatus(4);
+        _startOnTheWayAnimation();
+        return;
+      }
+      _advanceStatus(current + 1);
+    });
+  }
+
+  void _advanceStatus(int next) {
+    setState(() => _orderStatusIndex = next);
+    _pushStatusToBackend(next);
+  }
+
+  void _startOnTheWayAnimation() {
+    _animationTimer?.cancel();
+    const totalTicks = 100; // 20 seconds at 200ms intervals
+    int tick = 0;
+    _animationTimer = Timer.periodic(const Duration(milliseconds: 200), (t) {
+      if (!mounted) {
+        t.cancel();
+        return;
+      }
+      tick++;
+      setState(() => _onTheWayProgress = (tick / totalTicks).clamp(0.0, 1.0));
+      if (tick >= totalTicks) {
+        t.cancel();
+        _advanceStatus(5);
       }
     });
   }
 
-  Future<void> _pickCourier() async {
+  Future<void> _assignCouriers() async {
     try {
       final raw = await client.courierController.getAvailableCouriers();
       final data = jsonDecode(raw) as Map<String, dynamic>;
       final couriers = (data['couriers'] as List<dynamic>? ?? []).whereType<Map<String, dynamic>>().toList();
-      if (couriers.isEmpty) return;
-      final pick = couriers[DateTime.now().millisecondsSinceEpoch % couriers.length];
-      if (!mounted) return;
-      setState(() {
-        _courierId = pick['id'] as int?;
-        _courierName = pick['name'] as String?;
-        _courierVehicle = pick['vehicle'] as String?;
-        _courierPlate = pick['plateNumber'] as String?;
-        _courierPhone = pick['phone'] as String?;
-      });
+      if (couriers.isEmpty || !mounted) return;
+      final used = <int>{};
+      for (var i = 0; i < _activeDeliveries.length; i++) {
+        Map<String, dynamic>? pick;
+        for (var j = 0; j < couriers.length; j++) {
+          final candidate = couriers[(DateTime.now().millisecondsSinceEpoch + i + j) % couriers.length];
+          final id = candidate['id'] as int?;
+          if (id == null) continue;
+          if (used.contains(id) && couriers.length > used.length) continue;
+          used.add(id);
+          pick = candidate;
+          break;
+        }
+        pick ??= couriers[i % couriers.length];
+        final d = _activeDeliveries[i];
+        d.courierId = pick['id'] as int?;
+        d.courierName = pick['name'] as String?;
+        d.courierVehicle = pick['vehicle'] as String?;
+        d.courierPlate = pick['plateNumber'] as String?;
+        d.courierPhone = pick['phone'] as String?;
+      }
+      setState(() {});
     } catch (_) {}
   }
 
   Future<void> _pushStatusToBackend(int index) async {
-    if (_activeOrderIds.isEmpty || index >= _orderStatusKeys.length) return;
+    if (_activeDeliveries.isEmpty || index >= _orderStatusKeys.length) return;
     final newStatus = _orderStatusKeys[index];
-    for (final orderId in _activeOrderIds) {
+    for (final d in _activeDeliveries) {
       try {
-        if (newStatus == 'assigned' && _courierId != null) {
+        if (newStatus == 'assigned' && d.courierId != null) {
           await client.courierController.assignCourier(jsonEncode({
-            'orderId': orderId,
-            'courierId': _courierId,
+            'orderId': d.orderId,
+            'courierId': d.courierId,
           }));
         } else {
           await client.courierController.updateDeliveryStatus(jsonEncode({
-            'orderId': orderId,
+            'orderId': d.orderId,
             'newStatus': newStatus,
           }));
         }
@@ -251,33 +282,33 @@ class _MainViewState extends State<MainView> {
 
   void _clearOrderTracking() {
     _orderStatusTimer?.cancel();
+    _animationTimer?.cancel();
     setState(() {
       _orderStatusIndex = null;
-      _courierName = null;
-      _courierVehicle = null;
-      _courierPlate = null;
-      _courierPhone = null;
-      _courierId = null;
-      _restaurantLat = null;
-      _restaurantLng = null;
+      _onTheWayProgress = 0.0;
+      _activeDeliveries = [];
     });
   }
 
   void _onOrderPlaced(List<String> restaurantIds, List<int> orderIds) {
-    if (restaurantIds.isEmpty) return;
-    final firstId = restaurantIds.first;
-    final restaurant = _featuredRestaurants.firstWhere(
-      (r) => r.id == firstId,
-      orElse: () => _featuredRestaurants.isNotEmpty
-          ? _featuredRestaurants.first
-          : Restaurant(id: firstId, name: 'Restaurant'),
-    );
-    _startOrderTracking(
-      restaurantName: restaurant.name,
-      restaurantLat: restaurant.latitude,
-      restaurantLng: restaurant.longitude,
-      orderIds: orderIds,
-    );
+    if (restaurantIds.isEmpty || orderIds.isEmpty) return;
+    final deliveries = <TrackedDelivery>[];
+    for (var i = 0; i < restaurantIds.length && i < orderIds.length; i++) {
+      final restId = restaurantIds[i];
+      final r = _featuredRestaurants.firstWhere(
+        (r) => r.id == restId,
+        orElse: () => Restaurant(id: restId, name: 'Restaurant'),
+      );
+      if (r.latitude == null || r.longitude == null) continue;
+      deliveries.add(TrackedDelivery(
+        orderId: orderIds[i],
+        restaurantLat: r.latitude!,
+        restaurantLng: r.longitude!,
+        restaurantName: r.name,
+      ));
+    }
+    if (deliveries.isEmpty) return;
+    _startOrderTracking(deliveries);
   }
 
   Future<void> _showFilterSheet() async {
@@ -487,12 +518,8 @@ class _MainViewState extends State<MainView> {
             addressLng: _addressLng,
             orderStatusIndex: _orderStatusIndex,
             orderStatuses: _orderStatuses,
-            courierName: _courierName,
-            courierVehicle: _courierVehicle,
-            courierPlate: _courierPlate,
-            courierPhone: _courierPhone,
-            orderRestaurantLat: _restaurantLat,
-            orderRestaurantLng: _restaurantLng,
+            trackedDeliveries: _activeDeliveries,
+            onTheWayProgress: _onTheWayProgress,
             onDismissOrder: _clearOrderTracking,
           ),
         );
