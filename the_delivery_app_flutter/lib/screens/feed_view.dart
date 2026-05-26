@@ -24,8 +24,9 @@ class FeedView extends StatelessWidget {
   final String? priceTier;
   final bool onlyDiscounted;
   final VoidCallback? onFilterTap;
+  final VoidCallback? onClearFilters;
 
-  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals, this.onSearchTap, this.onSeeMap, this.onProfileTap, this.onAddressTap, this.addressLabel = 'London, UK', this.featuredRestaurants = const [], this.userLat, this.userLng, this.sortRule, this.priceTier, this.onlyDiscounted = false, this.onFilterTap});
+  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals, this.onSearchTap, this.onSeeMap, this.onProfileTap, this.onAddressTap, this.addressLabel = 'London, UK', this.featuredRestaurants = const [], this.userLat, this.userLng, this.sortRule, this.priceTier, this.onlyDiscounted = false, this.onFilterTap, this.onClearFilters});
 
   Widget _buildHeader() {
     return Padding(
@@ -306,8 +307,8 @@ class FeedView extends StatelessWidget {
     );
   }
 
-  Widget _buildAllRestaurantsSection(BuildContext context, List<MapEntry<Restaurant, List<Food>>> groups) {
-    if (groups.isEmpty) return const SizedBox.shrink();
+  Widget _buildAllRestaurantsSection(BuildContext context, List<MapEntry<Restaurant, List<Food>>> groups, {bool hasActiveFilters = false, VoidCallback? onClearFilters}) {
+    final hasFilters = hasActiveFilters || sortRule != null || priceTier != null || onlyDiscounted;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -320,11 +321,11 @@ class FeedView extends StatelessWidget {
               if (onFilterTap != null)
                 ElevatedButton.icon(
                   onPressed: onFilterTap,
-                  icon: const Icon(Icons.tune, size: 16),
-                  label: const Text('Filter'),
+                  icon: Icon(Icons.tune, size: 16, color: hasFilters ? Colors.white : Colors.deepOrange),
+                  label: Text(hasFilters ? 'Filters on' : 'Filter'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
+                    backgroundColor: hasFilters ? Colors.deepOrange : Colors.white,
+                    foregroundColor: hasFilters ? Colors.white : Colors.deepOrange,
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     side: const BorderSide(color: Colors.deepOrange),
                     textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
@@ -334,7 +335,26 @@ class FeedView extends StatelessWidget {
             ],
           ),
         ),
-        ...groups.map((e) => _buildRestaurantListTile(context, e.key, e.value)),
+        if (groups.isEmpty)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+            child: Column(
+              children: [
+                const Icon(Icons.search_off, size: 48, color: Colors.grey),
+                const SizedBox(height: 8),
+                const Text('No restaurants match your filters.', style: TextStyle(color: Colors.grey)),
+                if (hasFilters && onClearFilters != null) ...[
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: onClearFilters,
+                    child: const Text('Clear filters', style: TextStyle(color: Colors.deepOrange)),
+                  ),
+                ],
+              ],
+            ),
+          )
+        else
+          ...groups.map((e) => _buildRestaurantListTile(context, e.key, e.value)),
         const SizedBox(height: 16),
       ],
     );
@@ -486,7 +506,7 @@ class FeedView extends StatelessWidget {
               _buildSearchBar(context),
               if (onDeals != null) _buildPromoBanner(context),
               _buildNearYouSection(context, nearYou, isRanking: !canRank),
-              _buildAllRestaurantsSection(context, groups),
+              _buildAllRestaurantsSection(context, groups, onClearFilters: onClearFilters),
               if (state.isLoadingMore)
                 const Padding(
                   padding: EdgeInsets.all(16),
