@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../main.dart';
 import '../view_models/basket_view_model.dart';
+import 'order_tracking_view.dart';
 
 class CheckoutView extends StatefulWidget {
   final BasketViewModel basketViewModel;
@@ -74,10 +75,10 @@ class _CheckoutViewState extends State<CheckoutView> {
 
     widget.basketViewModel.clearBasket();
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Order placed!'), backgroundColor: Colors.deepOrange),
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const OrderTrackingView()),
     );
-    Navigator.pop(context);
   }
 
   Widget _buildAddressSelector() {
