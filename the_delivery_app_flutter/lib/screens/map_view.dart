@@ -32,6 +32,18 @@ class _MapViewState extends State<MapView> {
   final MapController _mapController = MapController();
   List<LatLng> _routePoints = [];
 
+  @override
+  void didUpdateWidget(covariant MapView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final justStarted = oldWidget.orderStatusIndex == null && widget.orderStatusIndex != null;
+    if (justStarted && widget.orderRestaurantLat != null && widget.orderRestaurantLng != null) {
+      _loadRoute(widget.orderRestaurantLat!, widget.orderRestaurantLng!);
+    }
+    if (oldWidget.orderStatusIndex != null && widget.orderStatusIndex == null) {
+      setState(() => _routePoints = []);
+    }
+  }
+
   Future<void> _loadRoute(double destLat, double destLng) async {
     final fromLat = widget.addressLat;
     final fromLng = widget.addressLng;
