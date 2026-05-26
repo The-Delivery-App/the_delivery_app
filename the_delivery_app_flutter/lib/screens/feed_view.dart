@@ -23,10 +23,12 @@ class FeedView extends StatelessWidget {
   final FoodSortRule? sortRule;
   final String? priceTier;
   final bool onlyDiscounted;
+  final String? cuisine;
+  final Map<String, String> restaurantCuisines;
   final VoidCallback? onFilterTap;
   final VoidCallback? onClearFilters;
 
-  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals, this.onSearchTap, this.onSeeMap, this.onProfileTap, this.onAddressTap, this.addressLabel = 'London, UK', this.featuredRestaurants = const [], this.userLat, this.userLng, this.sortRule, this.priceTier, this.onlyDiscounted = false, this.onFilterTap, this.onClearFilters});
+  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals, this.onSearchTap, this.onSeeMap, this.onProfileTap, this.onAddressTap, this.addressLabel = 'London, UK', this.featuredRestaurants = const [], this.userLat, this.userLng, this.sortRule, this.priceTier, this.onlyDiscounted = false, this.cuisine, this.restaurantCuisines = const {}, this.onFilterTap, this.onClearFilters});
 
   Widget _buildHeader() {
     return Padding(
@@ -308,7 +310,7 @@ class FeedView extends StatelessWidget {
   }
 
   Widget _buildAllRestaurantsSection(BuildContext context, List<MapEntry<Restaurant, List<Food>>> groups, List<Food> filteredFood, {VoidCallback? onClearFilters}) {
-    final hasFilters = sortRule != null || priceTier != null || onlyDiscounted;
+    final hasFilters = sortRule != null || priceTier != null || onlyDiscounted || cuisine != null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -440,6 +442,12 @@ class FeedView extends StatelessWidget {
     var filtered = items;
     if (onlyDiscounted) {
       filtered = filtered.where((f) => f.isDiscounted).toList();
+    }
+    if (cuisine != null) {
+      filtered = filtered.where((f) {
+        final c = restaurantCuisines[f.restaurant.name];
+        return c != null && c.toLowerCase() == cuisine!.toLowerCase();
+      }).toList();
     }
     if (priceTier != null && filtered.isNotEmpty) {
       final prices = filtered.map((f) => f.price).toList()..sort();
