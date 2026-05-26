@@ -165,7 +165,13 @@ class _MapViewState extends State<MapView> {
             PolylineLayer(
               polylines: [
                 for (final pts in _routesByOrder.values)
-                  Polyline(points: pts, strokeWidth: 4, color: Colors.deepOrange),
+                  Polyline(
+                    points: pts,
+                    strokeWidth: 6,
+                    color: Colors.blue.shade700,
+                    borderStrokeWidth: 2,
+                    borderColor: Colors.white,
+                  ),
               ],
             ),
           MarkerLayer(
