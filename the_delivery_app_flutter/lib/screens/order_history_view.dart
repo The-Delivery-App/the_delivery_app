@@ -55,6 +55,75 @@ class _OrderHistoryViewState extends State<OrderHistoryView> {
     }
   }
 
+  List<List<Map<String, dynamic>>> _groupByCheckout(List<Map<String, dynamic>> orders) {
+    final groups = <List<Map<String, dynamic>>>[];
+    for (final order in orders) {
+      final createdAt = DateTime.tryParse(order['createdAt'] as String? ?? '');
+      if (createdAt == null) {
+        groups.add([order]);
+        continue;
+      }
+      bool added = false;
+      for (final group in groups) {
+        final first = DateTime.tryParse(group.first['createdAt'] as String? ?? '');
+        if (first != null && first.difference(createdAt).inSeconds.abs() <= 10) {
+          group.add(order);
+          added = true;
+          break;
+        }
+      }
+      if (!added) groups.add([order]);
+    }
+    return groups;
+  }
+
+  Widget _buildCheckoutCard(List<Map<String, dynamic>> orders) {
+    final total = orders.fold<double>(
+      0.0,
+      (sum, o) => sum + ((o['totalAmount'] as num?)?.toDouble() ?? 0),
+    );
+    final createdAt = orders.first['createdAt'] as String? ?? '';
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                orders.length > 1 ? 'Order from ${orders.length} restaurants' : 'Order',
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
+              Text('£${total.toStringAsFixed(2)}',
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.deepOrange)),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(_formatDate(createdAt), style: const TextStyle(color: Colors.grey, fontSize: 11)),
+          const Divider(height: 16),
+          ...orders.map((o) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                child: Row(
+                  children: [
+                    const Icon(Icons.restaurant, size: 14, color: Colors.deepOrange),
+                    const SizedBox(width: 6),
+                    Expanded(child: Text(o['restaurantName'] as String? ?? '', style: const TextStyle(fontSize: 13))),
+                    Text('£${((o['totalAmount'] as num?)?.toDouble() ?? 0).toStringAsFixed(2)}', style: const TextStyle(fontSize: 13, color: Colors.grey)),
+                  ],
+                ),
+              )),
+        ],
+      ),
+    );
+  }
+
   Widget _buildOrderTile(Map<String, dynamic> order) {
     final restaurantName = order['restaurantName'] as String? ?? 'Unknown';
     final status = order['status'] as String? ?? '';
