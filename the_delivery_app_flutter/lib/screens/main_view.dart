@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -54,7 +55,20 @@ class _MainViewState extends State<MainView> {
   String? _priceTier;
   bool _onlyDiscounted = false;
   String? _cuisine;
+  int? _orderStatusIndex;
+  String? _courierName;
+  double? _restaurantLat;
+  double? _restaurantLng;
+  Timer? _orderStatusTimer;
 
+  static const _orderStatuses = [
+    'Order placed',
+    'Payment confirmed',
+    'Courier assigned',
+    'Courier at the restaurant',
+    'Courier on the way to you',
+    'Delivered',
+  ];
   static const _cuisines = ['Thai', 'Chinese', 'Indian', 'Japanese', 'Vietnamese', 'Italian', 'American'];
 
   @override
