@@ -4,6 +4,7 @@ import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import '../main.dart';
 import '../view_models/settings_view_model.dart';
 import 'addresses_view.dart';
+import 'favourites_view.dart';
 import 'order_history_view.dart';
 import 'settings_view.dart';
 
@@ -87,6 +88,16 @@ class _AccountViewState extends State<AccountView> {
         ),
         const SizedBox(height: 32),
         const Divider(height: 1),
+        ListTile(
+          leading: const Icon(Icons.favorite, color: Colors.deepOrange),
+          title: const Text('Favourites'),
+          trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const FavouritesView()),
+          ),
+        ),
+        const Divider(height: 1, indent: 16, endIndent: 16),
         ListTile(
           leading: const Icon(Icons.receipt_long, color: Colors.deepOrange),
           title: const Text('Order History'),
