@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/food.dart';
+import '../models/food_sort_rule.dart';
 import '../models/restaurant.dart';
 import '../state/feed_state.dart';
 import 'restaurant_view.dart';
@@ -19,8 +20,12 @@ class FeedView extends StatelessWidget {
   final List<Restaurant> featuredRestaurants;
   final double? userLat;
   final double? userLng;
+  final FoodSortRule? sortRule;
+  final String? priceTier;
+  final bool onlyDiscounted;
+  final VoidCallback? onFilterTap;
 
-  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals, this.onSearchTap, this.onSeeMap, this.onProfileTap, this.onAddressTap, this.addressLabel = 'London, UK', this.featuredRestaurants = const [], this.userLat, this.userLng});
+  const FeedView({super.key, required this.state, this.onAddToBasket, this.onRetry, this.onLoadMore, this.onDeals, this.onSearchTap, this.onSeeMap, this.onProfileTap, this.onAddressTap, this.addressLabel = 'London, UK', this.featuredRestaurants = const [], this.userLat, this.userLng, this.sortRule, this.priceTier, this.onlyDiscounted = false, this.onFilterTap});
 
   Widget _buildHeader() {
     return Padding(
@@ -306,14 +311,82 @@ class FeedView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.fromLTRB(16, 16, 16, 12),
-          child: Text('All Restaurants', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('All Restaurants', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              if (onFilterTap != null)
+                ElevatedButton.icon(
+                  onPressed: onFilterTap,
+                  icon: const Icon(Icons.tune, size: 16),
+                  label: const Text('Filter'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.deepOrange,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    side: const BorderSide(color: Colors.deepOrange),
+                    textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  ),
+                ),
+            ],
+          ),
         ),
         ...groups.map((e) => _buildRestaurantListTile(context, e.key, e.value)),
         const SizedBox(height: 16),
       ],
     );
+  }
+
+  List<Food> _applyFilter(List<Food> items) {
+    var filtered = items;
+    if (onlyDiscounted) {
+      filtered = filtered.where((f) => f.isDiscounted).toList();
+    }
+    if (priceTier != null && filtered.isNotEmpty) {
+      final prices = filtered.map((f) => f.price).toList()..sort();
+      final q1 = prices[(prices.length * 0.25).floor()];
+      final q3 = prices[(prices.length * 0.75).floor()];
+      if (priceTier == 'low') {
+        filtered = filtered.where((f) => f.price <= q1).toList();
+      } else if (priceTier == 'mid') {
+        filtered = filtered.where((f) => f.price > q1 && f.price < q3).toList();
+      } else if (priceTier == 'high') {
+        filtered = filtered.where((f) => f.price >= q3).toList();
+      }
+    }
+    return filtered;
+  }
+
+  List<Food> _applySort(List<Food> items) {
+    if (sortRule == null) return items;
+    final sorted = List<Food>.from(items);
+    switch (sortRule!) {
+      case FoodSortRule.priceLowToHigh:
+        sorted.sort((a, b) => a.price.compareTo(b.price));
+        break;
+      case FoodSortRule.priceHighToLow:
+        sorted.sort((a, b) => b.price.compareTo(a.price));
+        break;
+      case FoodSortRule.rating:
+        sorted.sort((a, b) => b.rating.compareTo(a.rating));
+        break;
+      case FoodSortRule.recentOrdersFirst:
+        sorted.sort((a, b) => b.recentOrders.compareTo(a.recentOrders));
+        break;
+      case FoodSortRule.recentOrdersLast:
+        sorted.sort((a, b) => a.recentOrders.compareTo(b.recentOrders));
+        break;
+      case FoodSortRule.distanceClosestFirst:
+        sorted.sort((a, b) => a.deliveryTime.compareTo(b.deliveryTime));
+        break;
+      case FoodSortRule.distanceFarthestFirst:
+        sorted.sort((a, b) => b.deliveryTime.compareTo(a.deliveryTime));
+        break;
+    }
+    return sorted;
   }
 
   List<MapEntry<Restaurant, List<Food>>> _groupByRestaurant(List<Food> items) {
@@ -391,7 +464,9 @@ class FeedView extends StatelessWidget {
     if (state.errorMessage != null) {
       return Scaffold(body: _buildError(state.errorMessage!));
     }
-    final groups = _groupByRestaurant(state.feedItems);
+    final filteredFood = _applyFilter(state.feedItems);
+    final sortedFood = _applySort(filteredFood);
+    final groups = _groupByRestaurant(sortedFood);
     final canRank = userLat != null && userLng != null && featuredRestaurants.isNotEmpty;
     final nearYou = canRank ? _nearYouFromFeatured(groups) : <MapEntry<Restaurant, List<Food>>>[];
     return Scaffold(
