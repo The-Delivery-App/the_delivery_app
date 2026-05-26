@@ -79,6 +79,7 @@ class RestaurantAPIService implements IRestaurantAPIService {
         name: (r['name'] as String?) ?? '',
         latitude: (r['latitude'] as num?)?.toDouble(),
         longitude: (r['longitude'] as num?)?.toDouble(),
+        cuisine: r['cuisine'] as String?,
       );
     }).toList();
   }
