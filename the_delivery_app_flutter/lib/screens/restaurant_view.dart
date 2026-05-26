@@ -87,6 +87,68 @@ class _RestaurantViewState extends State<RestaurantView> {
     super.dispose();
   }
 
+  Future<void> _showRateDialog(Food food) async {
+    int rating = 5;
+    final comment = TextEditingController();
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setSt) => AlertDialog(
+          title: Text('Rate ${food.name}'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (i) {
+                  final star = i + 1;
+                  return IconButton(
+                    icon: Icon(
+                      star <= rating ? Icons.star : Icons.star_border,
+                      color: Colors.amber,
+                      size: 32,
+                    ),
+                    onPressed: () => setSt(() => rating = star),
+                  );
+                }),
+              ),
+              TextField(
+                controller: comment,
+                decoration: const InputDecoration(labelText: 'Comment (optional)'),
+                maxLines: 2,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+            TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Submit')),
+          ],
+        ),
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      final userRaw = await client.userProfileController.getCurrentUser();
+      final userId = jsonDecode(userRaw)['userId'] as int;
+      await client.reviewsController.createReview(jsonEncode({
+        'userId': userId,
+        'foodId': int.tryParse(food.id) ?? 0,
+        'rating': rating,
+        'comment': comment.text,
+      }));
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Thanks for your review!'), backgroundColor: Colors.deepOrange),
+      );
+      _loadReviews();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+    }
+  }
+
   Widget _buildMenuItem(Food food) {
     return Column(
       children: [
@@ -121,8 +183,12 @@ class _RestaurantViewState extends State<RestaurantView> {
                   color: Colors.deepOrange,
                 ),
               ),
-              if (widget.onAddToBasket != null) ...[
-                const SizedBox(width: 4),
+              IconButton(
+                icon: const Icon(Icons.star_outline, color: Colors.amber),
+                tooltip: 'Rate this dish',
+                onPressed: () => _showRateDialog(food),
+              ),
+              if (widget.onAddToBasket != null)
                 IconButton(
                   icon: const Icon(Icons.add_shopping_cart, color: Colors.deepOrange),
                   onPressed: () {
@@ -137,7 +203,6 @@ class _RestaurantViewState extends State<RestaurantView> {
                   },
                   tooltip: 'Add to basket',
                 ),
-              ],
             ],
           ),
         ),
