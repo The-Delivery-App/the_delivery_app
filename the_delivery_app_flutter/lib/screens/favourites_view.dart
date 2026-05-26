@@ -98,7 +98,22 @@ class _FavouritesViewState extends State<FavouritesView> {
         foregroundColor: Colors.black,
         elevation: 0,
       ),
-      body: const SizedBox.shrink(),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _favourites.isEmpty
+              ? const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.favorite_border, size: 64, color: Colors.grey),
+                      SizedBox(height: 16),
+                      Text('No favourites yet', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 8),
+                      Text('Tap the heart on a restaurant to save it', style: TextStyle(color: Colors.grey)),
+                    ],
+                  ),
+                )
+              : ListView(children: _favourites.map(_buildFavTile).toList()),
     );
   }
 }
