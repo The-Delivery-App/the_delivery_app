@@ -187,9 +187,9 @@ class _MainViewState extends State<MainView> {
                 Wrap(
                   spacing: 6,
                   children: [
-                    _tierChip('Low (≤Q1)', 'low', tier, (v) => setSheet(() => tier = v)),
-                    _tierChip('Mid (IQR)', 'mid', tier, (v) => setSheet(() => tier = v)),
-                    _tierChip('High (Q3≥)', 'high', tier, (v) => setSheet(() => tier = v)),
+                    _tierChip('£ Cheap', 'low', tier, (v) => setSheet(() => tier = v)),
+                    _tierChip('££ Mid', 'mid', tier, (v) => setSheet(() => tier = v)),
+                    _tierChip('£££ Premium', 'high', tier, (v) => setSheet(() => tier = v)),
                   ],
                 ),
                 const SizedBox(height: 16),
