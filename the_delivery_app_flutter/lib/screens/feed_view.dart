@@ -319,18 +319,29 @@ class FeedView extends StatelessWidget {
             children: [
               Text(hasFilters ? 'Filtered Foods' : 'All Restaurants', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               if (onFilterTap != null)
-                ElevatedButton.icon(
-                  onPressed: onFilterTap,
-                  icon: Icon(Icons.tune, size: 16, color: hasFilters ? Colors.white : Colors.deepOrange),
-                  label: Text(hasFilters ? 'Filters on' : 'Filter'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: hasFilters ? Colors.deepOrange : Colors.white,
-                    foregroundColor: hasFilters ? Colors.white : Colors.deepOrange,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    side: const BorderSide(color: Colors.deepOrange),
-                    textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: onFilterTap,
+                      icon: Icon(Icons.tune, size: 16, color: hasFilters ? Colors.white : Colors.deepOrange),
+                      label: Text(hasFilters ? 'Filters on' : 'Filter'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: hasFilters ? Colors.deepOrange : Colors.white,
+                        foregroundColor: hasFilters ? Colors.white : Colors.deepOrange,
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        side: const BorderSide(color: Colors.deepOrange),
+                        textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      ),
+                    ),
+                    if (hasFilters && onClearFilters != null)
+                      IconButton(
+                        icon: const Icon(Icons.close, color: Colors.deepOrange, size: 20),
+                        tooltip: 'Clear filters',
+                        onPressed: onClearFilters,
+                      ),
+                  ],
                 ),
             ],
           ),
