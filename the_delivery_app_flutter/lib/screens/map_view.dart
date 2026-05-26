@@ -379,8 +379,7 @@ class _MapViewState extends State<MapView> {
     final idx = widget.orderStatusIndex ?? 0;
     final statusText = idx < widget.orderStatuses.length ? widget.orderStatuses[idx] : '';
     final isDelivered = idx >= widget.orderStatuses.length - 1;
-    final first = widget.trackedDeliveries.isNotEmpty ? widget.trackedDeliveries.first : null;
-    final vehicleBits = [first?.courierVehicle, first?.courierPlate].where((s) => s != null && s.isNotEmpty).join(' · ');
+    final deliveries = widget.trackedDeliveries;
     return Container(
       margin: const EdgeInsets.all(12),
       padding: const EdgeInsets.all(12),
@@ -397,8 +396,10 @@ class _MapViewState extends State<MapView> {
               const Icon(Icons.delivery_dining, color: Colors.deepOrange),
               const SizedBox(width: 8),
               Expanded(
-                child: Text('Courier: ${first?.courierName ?? "Assigning..."}',
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                child: Text(
+                  deliveries.length > 1 ? '${deliveries.length} couriers' : 'Courier',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
               if (isDelivered && widget.onDismissOrder != null)
                 IconButton(
@@ -408,26 +409,8 @@ class _MapViewState extends State<MapView> {
                 ),
             ],
           ),
-          if (vehicleBits.isNotEmpty) ...[
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                const Icon(Icons.directions_car, size: 14, color: Colors.grey),
-                const SizedBox(width: 4),
-                Text(vehicleBits, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-              ],
-            ),
-          ],
-          if (first?.courierPhone != null && first!.courierPhone!.isNotEmpty) ...[
-            const SizedBox(height: 2),
-            Row(
-              children: [
-                const Icon(Icons.phone, size: 14, color: Colors.grey),
-                const SizedBox(width: 4),
-                Text(first.courierPhone!, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-              ],
-            ),
-          ],
+          const SizedBox(height: 6),
+          ...deliveries.map(_buildCourierRow),
           const SizedBox(height: 6),
           Text(statusText, style: const TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
@@ -436,6 +419,44 @@ class _MapViewState extends State<MapView> {
             backgroundColor: Colors.grey.shade200,
             valueColor: const AlwaysStoppedAnimation(Colors.deepOrange),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCourierRow(TrackedDelivery d) {
+    final vehicleBits = [d.courierVehicle, d.courierPlate].where((s) => s != null && s.isNotEmpty).join(' · ');
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${d.courierName ?? "Assigning..."} → ${d.restaurantName}',
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+          ),
+          if (vehicleBits.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Row(
+                children: [
+                  const Icon(Icons.directions_car, size: 12, color: Colors.grey),
+                  const SizedBox(width: 4),
+                  Text(vehicleBits, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                ],
+              ),
+            ),
+          if (d.courierPhone != null && d.courierPhone!.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Row(
+                children: [
+                  const Icon(Icons.phone, size: 12, color: Colors.grey),
+                  const SizedBox(width: 4),
+                  Text(d.courierPhone!, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                ],
+              ),
+            ),
         ],
       ),
     );
