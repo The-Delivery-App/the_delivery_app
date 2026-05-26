@@ -8,7 +8,7 @@ import 'checkout_view.dart';
 class BasketView extends StatefulWidget {
   final BasketViewModel viewModel;
   final VoidCallback? onBrowseRestaurants;
-  final void Function(List<String> restaurantIds)? onOrderPlaced;
+  final void Function(List<String> restaurantIds, List<int> orderIds)? onOrderPlaced;
 
   const BasketView({super.key, required this.viewModel, this.onBrowseRestaurants, this.onOrderPlaced});
 
