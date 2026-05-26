@@ -45,6 +45,16 @@ class _MapViewState extends State<MapView> {
   final Map<int, List<LatLng>> _routesByOrder = {};
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.orderStatusIndex != null) {
+      for (final d in widget.trackedDeliveries) {
+        _loadOrderRoute(d);
+      }
+    }
+  }
+
+  @override
   void didUpdateWidget(covariant MapView oldWidget) {
     super.didUpdateWidget(oldWidget);
     final justStarted = oldWidget.orderStatusIndex == null && widget.orderStatusIndex != null;
