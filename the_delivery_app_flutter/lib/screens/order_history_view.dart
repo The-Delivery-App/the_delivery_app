@@ -55,6 +55,55 @@ class _OrderHistoryViewState extends State<OrderHistoryView> {
     }
   }
 
+  Widget _buildOrderTile(Map<String, dynamic> order) {
+    final restaurantName = order['restaurantName'] as String? ?? 'Unknown';
+    final status = order['status'] as String? ?? '';
+    final total = (order['totalAmount'] as num?)?.toDouble() ?? 0.0;
+    final preview = order['previewItem'] as String? ?? '';
+    final createdAt = order['createdAt'] as String? ?? '';
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(child: Text(restaurantName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+              Text('£${total.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.deepOrange)),
+            ],
+          ),
+          if (preview.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(preview, style: const TextStyle(color: Colors.grey, fontSize: 13)),
+          ],
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFE5DC),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(status, style: const TextStyle(color: Colors.deepOrange, fontSize: 11, fontWeight: FontWeight.w600)),
+              ),
+              const Spacer(),
+              Text(_formatDate(createdAt), style: const TextStyle(color: Colors.grey, fontSize: 11)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
