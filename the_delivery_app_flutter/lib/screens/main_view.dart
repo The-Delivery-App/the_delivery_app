@@ -168,6 +168,39 @@ class _MainViewState extends State<MainView> {
     } catch (_) {}
   }
 
+  void _startOrderTracking({required String restaurantName, double? restaurantLat, double? restaurantLng}) {
+    final courierNames = ['Alex Carter', 'Sam Patel', 'Jordan Lee', 'Riley Khan', 'Chris Morgan'];
+    setState(() {
+      _orderStatusIndex = 0;
+      _courierName = courierNames[DateTime.now().millisecondsSinceEpoch % courierNames.length];
+      _restaurantLat = restaurantLat;
+      _restaurantLng = restaurantLng;
+      _selectedIndex = 2;
+    });
+    _orderStatusTimer?.cancel();
+    _orderStatusTimer = Timer.periodic(const Duration(seconds: 3), (t) {
+      if (!mounted) {
+        t.cancel();
+        return;
+      }
+      if ((_orderStatusIndex ?? 0) < _orderStatuses.length - 1) {
+        setState(() => _orderStatusIndex = (_orderStatusIndex ?? 0) + 1);
+      } else {
+        t.cancel();
+      }
+    });
+  }
+
+  void _clearOrderTracking() {
+    _orderStatusTimer?.cancel();
+    setState(() {
+      _orderStatusIndex = null;
+      _courierName = null;
+      _restaurantLat = null;
+      _restaurantLng = null;
+    });
+  }
+
   Future<void> _showFilterSheet() async {
     FoodSortRule? sort = _sortRule;
     String? tier = _priceTier;
