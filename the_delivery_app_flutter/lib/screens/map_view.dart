@@ -15,8 +15,14 @@ class MapView extends StatefulWidget {
   final void Function(Food)? onAddToBasket;
   final double? addressLat;
   final double? addressLng;
+  final int? orderStatusIndex;
+  final List<String> orderStatuses;
+  final String? courierName;
+  final double? orderRestaurantLat;
+  final double? orderRestaurantLng;
+  final VoidCallback? onDismissOrder;
 
-  const MapView({super.key, required this.state, this.onAddToBasket, this.addressLat, this.addressLng});
+  const MapView({super.key, required this.state, this.onAddToBasket, this.addressLat, this.addressLng, this.orderStatusIndex, this.orderStatuses = const [], this.courierName, this.orderRestaurantLat, this.orderRestaurantLng, this.onDismissOrder});
 
   @override
   State<MapView> createState() => _MapViewState();
