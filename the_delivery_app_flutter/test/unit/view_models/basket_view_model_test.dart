@@ -45,7 +45,7 @@ Food makeFood(String id) => Food(
 
 void main() {
   group('BasketViewModel', () {
-    test('addItem adds item, notifies, and updates repository', () {
+    test('TC-001 addItem adds item, notifies, and updates repository', () {
       final repo = FakeBasketRepository();
       final vm = BasketViewModel(repository: repo);
       var notified = 0;
@@ -62,7 +62,7 @@ void main() {
       expect(repo.lastUpdatedBasket!.items.length, 1);
     });
 
-    test('addItem rejects null at runtime via null-safety', () {
+    test('TC-002 addItem — null food rejects null at runtime', () {
       final repo = FakeBasketRepository();
       final vm = BasketViewModel(repository: repo);
 
@@ -72,39 +72,45 @@ void main() {
       expect(repo.lastUpdatedBasket, isNull);
     });
 
-    test('removeItem removes item if present and updates repo', () async {
-      final f1 = makeFood('f1');
-      final f2 = makeFood('f2');
-      final repo = FakeBasketRepository(basket: Basket(items: [f1, f2]));
-      final vm = BasketViewModel(repository: repo);
-      var notified = 0;
-      vm.addListener(() => notified++);
+    test(
+      'TC-003 removeItem removes item if present and updates repo',
+      () async {
+        final f1 = makeFood('f1');
+        final f2 = makeFood('f2');
+        final repo = FakeBasketRepository(basket: Basket(items: [f1, f2]));
+        final vm = BasketViewModel(repository: repo);
+        var notified = 0;
+        vm.addListener(() => notified++);
 
-      await vm.loadBasket();
-      vm.removeItem(f1);
+        await vm.loadBasket();
+        vm.removeItem(f1);
 
-      final state = vm.getState();
-      expect(state.basket.items.length, 1);
-      expect(state.basket.items.first.id, 'f2');
-      expect(notified, 2); // one for load, one for remove
-      expect(repo.lastUpdatedBasket, isNotNull);
-      expect(repo.lastUpdatedBasket!.items.length, 1);
-    });
+        final state = vm.getState();
+        expect(state.basket.items.length, 1);
+        expect(state.basket.items.first.id, 'f2');
+        expect(notified, 2); // one for load, one for remove
+        expect(repo.lastUpdatedBasket, isNotNull);
+        expect(repo.lastUpdatedBasket!.items.length, 1);
+      },
+    );
 
-    test('removeItem on non-existent item leaves basket unchanged', () async {
-      final f1 = makeFood('f1');
-      final repo = FakeBasketRepository(basket: Basket(items: []));
-      final vm = BasketViewModel(repository: repo);
-      await vm.loadBasket();
+    test(
+      'TC-004 removeItem on non-existent item leaves basket unchanged',
+      () async {
+        final f1 = makeFood('f1');
+        final repo = FakeBasketRepository(basket: Basket(items: []));
+        final vm = BasketViewModel(repository: repo);
+        await vm.loadBasket();
 
-      expect(() => vm.removeItem(f1), returnsNormally);
+        expect(() => vm.removeItem(f1), returnsNormally);
 
-      final state = vm.getState();
-      expect(state.basket.items, isEmpty);
-      expect(repo.lastUpdatedBasket, isNotNull);
-    });
+        final state = vm.getState();
+        expect(state.basket.items, isEmpty);
+        expect(repo.lastUpdatedBasket, isNotNull);
+      },
+    );
 
-    test('clearBasket empties basket and updates repo', () async {
+    test('TC-005 clearBasket empties basket and updates repo', () async {
       final f1 = makeFood('f1');
       final repo = FakeBasketRepository(basket: Basket(items: [f1]));
       final vm = BasketViewModel(repository: repo);
@@ -121,22 +127,25 @@ void main() {
       expect(repo.lastUpdatedBasket!.items, isEmpty);
     });
 
-    test('loadBasket sets state from repository and notifies', () async {
-      final f1 = makeFood('f1');
-      final repo = FakeBasketRepository(basket: Basket(items: [f1]));
-      final vm = BasketViewModel(repository: repo);
-      var notified = 0;
-      vm.addListener(() => notified++);
+    test(
+      'loadBasket sets state from repository and notifies (additional)',
+      () async {
+        final f1 = makeFood('f1');
+        final repo = FakeBasketRepository(basket: Basket(items: [f1]));
+        final vm = BasketViewModel(repository: repo);
+        var notified = 0;
+        vm.addListener(() => notified++);
 
-      await vm.loadBasket();
+        await vm.loadBasket();
 
-      final state = vm.getState();
-      expect(state.basket.items.length, 1);
-      expect(notified, 1);
-    });
+        final state = vm.getState();
+        expect(state.basket.items.length, 1);
+        expect(notified, 1);
+      },
+    );
 
     test(
-      'loadBasket handles repository error and returns empty basket',
+      'TC-006 loadBasket handles repository error and returns empty basket',
       () async {
         final repo = FakeBasketRepository(throwOnGet: true);
         final vm = BasketViewModel(repository: repo);
