@@ -11,7 +11,8 @@ class FakeBasketRepository implements IBasketRepository {
   Basket? lastUpdatedBasket;
   bool throwOnGet;
 
-  FakeBasketRepository({Basket? basket, this.throwOnGet = false}) : basket = basket ?? const Basket(items: []);
+  FakeBasketRepository({Basket? basket, this.throwOnGet = false})
+    : basket = basket ?? const Basket(items: []);
 
   @override
   Future<Basket> getBasket() async {
@@ -26,20 +27,21 @@ class FakeBasketRepository implements IBasketRepository {
 }
 
 Food makeFood(String id) => Food(
-    id: id,
-    name: 'Food $id',
-    price: 5.0,
-    rating: 4.5,
-    tags: const [],
-    imageUrl: '',
-    restaurantImageUrl: '',
-    restaurant: const Restaurant(id: 'r', name: 'R'),
-    recentOrders: 0,
-    deliveryTime: const Duration(minutes: 20),
-    unitType: FoodUnitType.pcs,
-    size: 1,
-    calories: 100,
-    isDiscounted: false);
+  id: id,
+  name: 'Food $id',
+  price: 5.0,
+  rating: 4.5,
+  tags: const [],
+  imageUrl: '',
+  restaurantImageUrl: '',
+  restaurant: const Restaurant(id: 'r', name: 'R'),
+  recentOrders: 0,
+  deliveryTime: const Duration(minutes: 20),
+  unitType: FoodUnitType.pcs,
+  size: 1,
+  calories: 100,
+  isDiscounted: false,
+);
 
 void main() {
   group('BasketViewModel', () {
@@ -58,6 +60,16 @@ void main() {
       expect(notified, 1);
       expect(repo.lastUpdatedBasket, isNotNull);
       expect(repo.lastUpdatedBasket!.items.length, 1);
+    });
+
+    test('addItem rejects null at runtime via null-safety', () {
+      final repo = FakeBasketRepository();
+      final vm = BasketViewModel(repository: repo);
+
+      // Dart null-safety prevents null Food at compile-time; dynamic simulates a bad caller.
+      expect(() => (vm as dynamic).addItem(null), throwsA(isA<TypeError>()));
+      expect(vm.getState().basket.items, isEmpty);
+      expect(repo.lastUpdatedBasket, isNull);
     });
 
     test('removeItem removes item if present and updates repo', () async {
@@ -84,7 +96,9 @@ void main() {
       final repo = FakeBasketRepository(basket: Basket(items: []));
       final vm = BasketViewModel(repository: repo);
       await vm.loadBasket();
-      vm.removeItem(f1);
+
+      expect(() => vm.removeItem(f1), returnsNormally);
+
       final state = vm.getState();
       expect(state.basket.items, isEmpty);
       expect(repo.lastUpdatedBasket, isNotNull);
@@ -121,17 +135,20 @@ void main() {
       expect(notified, 1);
     });
 
-    test('loadBasket handles repository error and returns empty basket', () async {
-      final repo = FakeBasketRepository(throwOnGet: true);
-      final vm = BasketViewModel(repository: repo);
-      var notified = 0;
-      vm.addListener(() => notified++);
+    test(
+      'loadBasket handles repository error and returns empty basket',
+      () async {
+        final repo = FakeBasketRepository(throwOnGet: true);
+        final vm = BasketViewModel(repository: repo);
+        var notified = 0;
+        vm.addListener(() => notified++);
 
-      await vm.loadBasket();
+        await vm.loadBasket();
 
-      final state = vm.getState();
-      expect(state.basket.items, isEmpty);
-      expect(notified, 1);
-    });
+        final state = vm.getState();
+        expect(state.basket.items, isEmpty);
+        expect(notified, 1);
+      },
+    );
   });
 }
