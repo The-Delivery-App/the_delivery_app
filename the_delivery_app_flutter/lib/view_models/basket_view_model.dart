@@ -10,13 +10,17 @@ class BasketViewModel extends ChangeNotifier {
   BasketState _state = const BasketState(basket: Basket(items: []));
 
   BasketViewModel({required IBasketRepository repository})
-      : _repository = repository;
+    : _repository = repository;
 
   BasketState getState() => _state;
 
   Future<void> loadBasket() async {
-    final basket = await _repository.getBasket();
-    _state = BasketState(basket: basket);
+    try {
+      final basket = await _repository.getBasket();
+      _state = BasketState(basket: basket);
+    } catch (_) {
+      _state = const BasketState(basket: Basket(items: []));
+    }
     notifyListeners();
   }
 
