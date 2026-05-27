@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:the_delivery_app_flutter/models/device_profile.dart';
 import 'package:the_delivery_app_flutter/models/food.dart';
@@ -15,11 +17,13 @@ class FakeFoodRepository implements IFoodRepository {
   List<Food> nextChunk;
   bool initializeCalled = false;
   int loadNextChunkCalls = 0;
+  Completer<List<Food>>? delayedLoadCompleter;
 
   FakeFoodRepository({
     this.throwOnInitialize = false,
     this.throwOnLoad = false,
     List<Food>? nextChunk,
+    this.delayedLoadCompleter,
   }) : nextChunk = nextChunk ?? const [];
 
   @override
@@ -37,6 +41,9 @@ class FakeFoodRepository implements IFoodRepository {
   Future<List<Food>> loadNextChunk() async {
     loadNextChunkCalls += 1;
     if (throwOnLoad) throw Exception('load failed');
+    if (delayedLoadCompleter != null) {
+      return delayedLoadCompleter!.future;
+    }
     return nextChunk;
   }
 
@@ -110,6 +117,24 @@ void main() {
       expect(state.isLoading, isFalse);
       expect(state.errorMessage, isNotNull);
       expect(notifyCount, 2); // start loading + failure state
+    });
+
+    test('TC-034 loadMore ignores second call while already loading', () async {
+      final completer = Completer<List<Food>>();
+      final repo = FakeFoodRepository(delayedLoadCompleter: completer);
+      final vm = FeedViewModel(repository: repo);
+
+      final firstLoad = vm.loadMore();
+      await vm.loadMore();
+
+      expect(repo.loadNextChunkCalls, 1);
+
+      completer.complete([makeFood('f3')]);
+      await firstLoad;
+
+      final state = vm.getState();
+      expect(state.feedItems.length, 1);
+      expect(state.isLoadingMore, isFalse);
     });
   });
 }
