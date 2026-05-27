@@ -16,8 +16,8 @@ Tapping a restaurant takes you to its full menu. Each food item shows the name, 
 Map view
 --------
  
-The map screen does two things. First, it shows nearby restaurants as pins on an interactive map — you can tap any of them to open their menu. Second, when you're tracking an order, it shows your courier's live location. 
- 
+The map screen does two things. First, it shows nearby restaurants as pins on an interactive map — you can tap any of them to open their menu. Second, when you have an active order, your courier appears as a live pin showing their name, vehicle, plate number, and phone number as they make their way to you.
+
 Basket
 ------
  
@@ -46,13 +46,23 @@ Users sign in through Serverpod's identity provider integration. Your account st
 Reviews
 -------
  
-After receiving an order you can leave a review on any of the food items. These feed into each item's overall rating shown in the feed.
- 
+Each restaurant page has a reviews section at the bottom. You can see all existing reviews for the food, and submit your own star rating and comment. Reviews feed into each item's overall rating shown in the feed.
+
 Special deals
 -------------
  
 Restaurants can run special deals that surface in the app as promoted or discounted items.
- 
+
+Favorites
+---------
+
+You can save food items and restaurants to your favourites from anywhere in the app. There's a dedicated favourites screen that pulls your saved items from the server, showing food with its price and restaurant name. You can remove anything from the list with a single tap.
+
+Order history
+-------------
+
+A dedicated order history screen shows all your past orders fetched from the server, including what you ordered, the total cost, and the delivery date and time.
+
 Settings
 --------
  
