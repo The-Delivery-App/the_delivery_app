@@ -48,6 +48,8 @@ void main() {
       expect(state.isLoading, isFalse);
       expect(state.deals, isNotEmpty);
       expect(state.deals.first.name, equals('Deal Pizza'));
+      // TC-053: discounted price is mapped into Food.price correctly
+      expect(state.deals.first.price, equals(3.0));
     });
 
     test('handles repository errors gracefully', () async {

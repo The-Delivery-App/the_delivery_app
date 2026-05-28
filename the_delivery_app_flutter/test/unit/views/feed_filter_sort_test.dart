@@ -139,6 +139,38 @@ void main() {
       expect(find.text('Food 4'), findsNothing);
     });
 
+    testWidgets('TC-043 filter no matches returns empty message', (
+      tester,
+    ) async {
+      final f1 = makeFoodWith(
+        id: '1',
+        price: 5.0,
+        discounted: false,
+        restName: 'A',
+      );
+      final f2 = makeFoodWith(
+        id: '2',
+        price: 10.0,
+        discounted: false,
+        restName: 'B',
+      );
+      final state = FeedState(feedItems: [f1, f2], isLoading: false);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: FeedView(
+            state: state,
+            cuisine: 'Martian',
+            restaurantCuisines: {'A': 'Italian', 'B': 'Japanese'},
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.text('No foods match your filters.'), findsOneWidget);
+    });
+
     testWidgets('TC-044 sort price low to high orders items ascending', (
       tester,
     ) async {

@@ -13,15 +13,24 @@ void main() {
                 leading: Icon(Icons.person, color: Colors.grey, size: 32),
                 title: Row(
                   children: [
-                    Text('Alice', style: TextStyle(fontWeight: FontWeight.w600)),
+                    Text(
+                      'Alice',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
                     SizedBox(width: 8),
-                    Text('⭐ 5.0', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    Text(
+                      '⭐ 5.0',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
                   ],
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Pizza', style: TextStyle(fontSize: 12, color: Colors.deepOrange)),
+                    Text(
+                      'Pizza',
+                      style: TextStyle(fontSize: 12, color: Colors.deepOrange),
+                    ),
                     Text('Excellent'),
                   ],
                 ),
@@ -33,7 +42,10 @@ void main() {
                   children: [
                     Text('Bob', style: TextStyle(fontWeight: FontWeight.w600)),
                     SizedBox(width: 8),
-                    Text('⭐ 3.0', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    Text(
+                      '⭐ 3.0',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
                   ],
                 ),
               ),

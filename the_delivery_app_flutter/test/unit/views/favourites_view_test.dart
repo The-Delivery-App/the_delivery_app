@@ -19,12 +19,27 @@ void main() {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Test Food', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                      Text('Food item', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                      Text(
+                        'Test Food',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
+                      Text(
+                        'Food item',
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
                     ],
                   ),
                 ),
-                Text('£4.50', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.deepOrange)),
+                Text(
+                  '£4.50',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepOrange,
+                  ),
+                ),
               ],
             ),
           ),

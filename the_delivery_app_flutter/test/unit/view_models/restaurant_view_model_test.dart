@@ -27,6 +27,21 @@ class FakeRestaurantRepository implements IRestaurantRepository {
   }
 }
 
+// Repo used to simulate invalid/empty id behavior for TC-049
+class ThrowOnEmptyIdRepo implements IRestaurantRepository {
+  @override
+  Future<List<Food>> loadMenu(
+    String restaurantId,
+    String restaurantName,
+  ) async {
+    if (restaurantId.isEmpty) throw Exception('invalid id');
+    return [];
+  }
+
+  @override
+  Future<List<Restaurant>> getRestaurantList() async => [];
+}
+
 void main() {
   group('RestaurantViewModel TC-048..TC-050', () {
     test('loads menu items and updates state', () async {
@@ -63,6 +78,19 @@ void main() {
       final vm = RestaurantViewModel(repository: repo);
 
       await vm.loadMenu('r1', 'Resto');
+
+      final state = vm.getState();
+      expect(state.isLoading, isFalse);
+      expect(state.menuItems, isEmpty);
+      expect(state.errorMessage, isNotNull);
+    });
+
+    test('TC-049 invalid restaurant id yields error state', () async {
+      // use top-level ThrowOnEmptyIdRepo which throws on empty id
+      final repo = ThrowOnEmptyIdRepo();
+      final vm = RestaurantViewModel(repository: repo);
+
+      await vm.loadMenu('', '');
 
       final state = vm.getState();
       expect(state.isLoading, isFalse);
