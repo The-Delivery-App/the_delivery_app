@@ -1,3 +1,14 @@
+# Ignore Flutter build outputs and generated files
+build/
+.dart_tool/
+\.packages
+pubspec.lock
+
+# Generated plugin registrants
+**/generated_plugin_registrant.*
+
+# Test artifacts
+test/*.xlsx
 # Miscellaneous
 *.class
 *.log
