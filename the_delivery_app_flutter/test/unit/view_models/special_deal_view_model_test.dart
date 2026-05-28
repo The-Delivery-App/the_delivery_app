@@ -62,5 +62,16 @@ void main() {
       expect(state.isLoading, isFalse);
       expect(state.deals, isEmpty);
     });
+
+    test('TC-052 empty deals yields empty state', () async {
+      final repo = FakeSpecialDealRepository(deals: []);
+      final vm = SpecialDealViewModel(repository: repo);
+
+      await vm.loadDeals();
+
+      final state = vm.getState();
+      expect(state.isLoading, isFalse);
+      expect(state.deals, isEmpty);
+    });
   });
 }
