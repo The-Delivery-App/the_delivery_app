@@ -149,6 +149,19 @@ void main() {
       expect(state.isLoadingMore, isFalse);
     });
 
+    test('TC-035 feed refresh completes within 3 seconds (approx)', () async {
+      final repo = FakeFoodRepository(nextChunk: [makeFood('f1')]);
+      final vm = FeedViewModel(repository: repo);
+
+      final sw = Stopwatch()..start();
+      await vm.loadFeed();
+      sw.stop();
+
+      expect(sw.elapsedMilliseconds < 3000, isTrue);
+      final state = vm.getState();
+      expect(state.feedItems, isNotEmpty);
+    });
+
     test(
       'TC-033 loadFeed returns friendly error when no restaurants in area',
       () async {

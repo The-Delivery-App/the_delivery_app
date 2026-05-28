@@ -114,5 +114,33 @@ void main() {
       final chunk = await repo.loadNextChunk();
       expect(chunk.length, 20);
     });
+
+    test('TC-039 memory cap evicts oldest items after 3 chunks', () async {
+      final ids = makeIds(65); // with chunkSize=30 -> chunks:30,30,5
+      final api = FakeApiService(ids);
+      final repo = FoodRepository(apiService: api, sessionId: 's');
+
+      await repo.initializeFeed(
+        location: Location(0, 0),
+        device: DeviceProfile(
+          screenResolutionX: 100,
+          screenResolutionY: 200,
+          dpi: 1.0,
+          dataTransferRateMbps: 5.0,
+        ),
+      );
+
+      final c1 = await repo.loadNextChunk(); // 30
+      final c2 = await repo.loadNextChunk(); // 30
+      final c3 = await repo.loadNextChunk(); // 5
+
+      final current = repo.getCurrentFeed();
+      // chunkSize expected 30 => maxItems = 60
+      expect(current.length, 60);
+      // ensure first id 'id0' was evicted
+      expect(current.any((f) => f.id == 'id0'), isFalse);
+      // ensure latest id 'id64' present
+      expect(current.any((f) => f.id == 'id64'), isTrue);
+    });
   });
 }
