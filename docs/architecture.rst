@@ -11,7 +11,7 @@ the_delivery_app_flutter
  
 This is the mobile app — what users actually see and tap on. It's broken up into a few folders:
  
-- screens — one file per screen (feed, basket, restaurant, order status, map, search, account, settings, sign-in, and special deals)
+- screens — one file per screen (feed, basket, checkout, restaurant, order status, order history, map, search, account, addresses, favourites, settings, sign-in, and special deals)
 - view_models — a view model for each screen that handles business logic and holds state (e.g. `FeedViewModel`, `BasketViewModel`, `MapViewModel`)
 - state — plain state objects that each view model manages and passes down to its screen
 - models — local data models like Food, Order, Basket, Restaurant, and User
