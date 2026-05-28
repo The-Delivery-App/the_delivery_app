@@ -63,6 +63,18 @@ class FakeFoodRepository implements IFoodRepository {
   }) async => const [];
 }
 
+class NoRestaurantsRepo extends FakeFoodRepository {
+  @override
+  Future<void> initializeFeed({
+    required Location location,
+    required DeviceProfile device,
+    FoodFilter? filter,
+    FoodSortRule? sortRule,
+  }) async {
+    throw Exception('No restaurants found in your area');
+  }
+}
+
 Food makeFood(String id) => Food(
   id: id,
   name: 'Food $id',
@@ -136,5 +148,22 @@ void main() {
       expect(state.feedItems.length, 1);
       expect(state.isLoadingMore, isFalse);
     });
+
+    test(
+      'TC-033 loadFeed returns friendly error when no restaurants in area',
+      () async {
+        final repo = NoRestaurantsRepo();
+        final vm = FeedViewModel(repository: repo);
+        var notifyCount = 0;
+        vm.addListener(() => notifyCount++);
+
+        await vm.loadFeed();
+
+        final state = vm.getState();
+        expect(state.feedItems, isEmpty);
+        expect(state.errorMessage, contains('No restaurants found'));
+        expect(notifyCount, 2);
+      },
+    );
   });
 }
